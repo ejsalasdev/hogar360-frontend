@@ -1,0 +1,37 @@
+.main-layout {
+  display: flex;
+  flex-direction: column; /* Coloca el header encima del container */
+  min-height: 100vh;
+}
+
+.mol-header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  /* Otros estilos del header */
+}
+
+.container {
+  display: flex; /* Coloca el sidebar y el content uno al lado del otro */
+  margin-top: 2rem; /* Empuja hacia abajo para dejar espacio al header (ajusta según la altura del header) */
+  flex-grow: 1; /* Ocupa el espacio restante */
+}
+
+.side-menu {
+  width: 20vw; /* Ancho del sidebar */
+  overflow-y: auto;
+  height: calc(
+    100vh - 56px
+  ); /* Ocupa toda la altura restante después del header */
+  position: fixed; /* Fija el sidebar */
+  top: 56px; /* Empieza debajo del header */
+  left: 0;
+}
+
+.content {
+  flex-grow: 1; /* Ocupa el espacio restante */
+  margin-left: 5vw; /* Empuja el contenido a la derecha del sidebar */
+  //padding: 2rem;
+}

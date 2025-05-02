@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  justify-content: space-between; /* Espacio entre logo e info de usuario */
+  align-items: center; /* Centrar verticalmente los elementos */
+  padding: 1rem 2rem; /* Espaciado interno arriba/abajo y derecha/izquierda */
+  background-color: #f8f9fa; /* Un fondo gris claro */
+  border-bottom: 1px solid #e0e0e0; /* Línea divisoria inferior sutil */
+}
+
+.logo {
+  font-family: "Manrope", sans-serif; /* Aplica la fuente Manrope */
+  font-size: 1.5rem; /* Tamaño de la fuente del logo */
+  font-weight: bold; /* Texto en negrita */
+  color: #333; /* Color de texto oscuro */
+}
+
+.user-info {
+  display: flex;
+  align-items: center; /* Centrar verticalmente los elementos */
+}
+
+.welcome {
+  font-family: "Manrope", sans-serif; /* Aplica la fuente Manrope */
+  margin-right: 1rem; /* Espacio entre el saludo y el avatar */
+  color: #555; /* Color de texto secundario */
+}
+
+.avatar {
+  width: 30px; /* Ancho del contenedor del avatar */
+  height: 30px; /* Alto del contenedor del avatar */
+  border-radius: 50%; /* Forma circular */
+  overflow: hidden; /* Recorta cualquier parte de la imagen que sobresalga */
+  border: 1px solid #ccc; /* Borde sutil */
+
+  img {
+    width: 100%; /* La imagen ocupa todo el contenedor */
+    height: 100%;
+    object-fit: cover; /* La imagen cubre el contenedor manteniendo su proporción */
+  }
+}

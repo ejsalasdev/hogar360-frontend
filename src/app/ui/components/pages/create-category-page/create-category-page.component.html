@@ -1,0 +1,25 @@
+<div class="create-category-page">
+  <h2>Crear Categoría</h2>
+  <form (ngSubmit)="onSubmit()">
+    <atm-form-input
+      label="Nombre de la Categoría"
+      placeholder="Escribe el nombre de la categoria (maximo 50 caracteres)"
+      type="text"
+      [(ngModel)]="categoryName"
+      name="name"
+    ></atm-form-input>
+
+    <atm-form-input
+      label="Descripción"
+      placeholder="Enter category description"
+      type="text"
+      [(ngModel)]="categoryDescription"
+      name="description"
+    ></atm-form-input>
+
+    <div class="button-container">
+      <button type="submit">Crear</button>
+    </div>
+  </form>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</div>

@@ -1,0 +1,17 @@
+h2 {
+    margin-top: 0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+button {
+    height: 2.5em;
+    width: 8em;
+    background-color: #2563EB;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+}

@@ -1,0 +1,11 @@
+<div class="side-menu">
+  <a
+    *ngFor="let item of menuItems"
+    [routerLink]="item.route"
+    routerLinkActive="active"
+    class="menu-item"
+  >
+    <img [src]="'/assets/icons/' + item.icon" alt="{{ item.label }} Icon" />
+    {{ item.label }}
+  </a>
+</div>

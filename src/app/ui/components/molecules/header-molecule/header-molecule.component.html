@@ -1,0 +1,13 @@
+<div class="header">
+  <div class="logo">{{ logoText }}</div>
+  <div class="user-info">
+    <span class="welcome">{{ welcomeMessage }}, {{ userName }}</span>
+    <div class="avatar" *ngIf="userAvatarUrl">
+      <img [src]="userAvatarUrl" alt="Avatar" />
+      <p>URL: {{ userAvatarUrl }}</p>
+    </div>
+    <div class="avatar" *ngIf="!userAvatarUrl">
+      <i class="fa fa-user-circle"></i>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.side-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 200px;
+  //padding-top: 1rem;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  color: #333;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  img {
+    margin-right: 0.75rem;
+    width: 1.25rem; /* Ajusta el tamaño según tus iconos */
+    height: 1.25rem; /* Ajusta el tamaño según tus iconos */
+    object-fit: contain; /* Asegura que la imagen se ajuste dentro del contenedor sin recortar */
+  }
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+
+  &.active {
+    background-color: #007bff;
+    color: white;
+  }
+}

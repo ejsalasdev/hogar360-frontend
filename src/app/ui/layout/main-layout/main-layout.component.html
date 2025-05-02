@@ -1,0 +1,14 @@
+<div class="main-layout">
+  <mol-header
+    [logoText]="'Hogar 360'"
+    [welcomeMessage]="user.welcomeMessage"
+    [userName]="user.name"
+    [userAvatarUrl]="user.avatarUrl"
+  ></mol-header>
+  <div class="container">
+    <mol-side-menu [menuItems]="menuItems"></mol-side-menu>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
