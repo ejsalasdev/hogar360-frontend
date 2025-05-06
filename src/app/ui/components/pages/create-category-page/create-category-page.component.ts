@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 
@@ -12,8 +17,15 @@ export class CreateCategoryPageComponent implements OnInit {
   categoryName: string = '';
   categoryDescription: string = '';
   errorMessage: string | null = null;
+  successMessage: string | null = null;
 
-  constructor(private categoryService: CategoryService) {}
+  maxLengthName: number = 50; // Define la longitud máxima para el nombre
+  maxLengthDescription: number = 90; // Define la longitud máxima para la descripción
+
+  constructor(
+    private categoryService: CategoryService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     // Lógica de inicialización si es necesaria
@@ -21,6 +33,7 @@ export class CreateCategoryPageComponent implements OnInit {
 
   onSubmit(): void {
     this.errorMessage = null;
+    this.successMessage = null;
     const newCategory: Category = {
       name: this.categoryName,
       description: this.categoryDescription,
@@ -28,16 +41,20 @@ export class CreateCategoryPageComponent implements OnInit {
     this.categoryService.createCategory(newCategory).subscribe({
       next: (response) => {
         console.log('Categoría creada exitosamente:', response);
-        // Aquí podrías mostrar un mensaje de éxito o redirigir al usuario
+        this.successMessage = 'La categoría se ha creado exitosamente.'; // Asignar mensaje de éxito
+        this.changeDetectorRef.detectChanges(); // Forzar la detección de cambios
       },
       error: (error) => {
         console.error('Error al crear la categoría:', error);
-        if (error.error && error.error.message) {
+        if (error?.status === 409) {
+          this.errorMessage = 'La categoría con este nombre ya existe.';
+        } else if (error?.error?.message) {
           this.errorMessage = error.error.message;
         } else {
           this.errorMessage =
             'Error al crear la categoría. Por favor, inténtalo de nuevo.';
         }
+        this.changeDetectorRef.detectChanges(); // Forzar la detección de cambios
       },
     });
   }

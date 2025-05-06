@@ -25,6 +25,7 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   @Input() type: string = 'text';
   @Input() label: string = '';
   @Input() placeholder: string = '';
+  @Input() maxlength: number | null = null; // Añadimos el Input para maxlength
   @Output() valueChange = new EventEmitter<any>();
 
   private _value: any = '';

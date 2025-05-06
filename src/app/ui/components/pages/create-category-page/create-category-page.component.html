@@ -1,25 +1,51 @@
 <div class="create-category-page">
   <h2>Crear Categoría</h2>
-  <form (ngSubmit)="onSubmit()">
+  <form #createCategoryForm="ngForm" (ngSubmit)="onSubmit()">
     <atm-form-input
-      label="Nombre de la Categoría"
-      placeholder="Escribe el nombre de la categoria (maximo 50 caracteres)"
+      label="Nombre de la Categoría *"
+      placeholder="Escribe el nombre de la categoría (máximo 50 caracteres)"
       type="text"
       [(ngModel)]="categoryName"
       name="name"
+      required
+      minlength="5"
+      [maxlength]="maxLengthName"
+      #nameInput="ngModel"
     ></atm-form-input>
+    <p *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['required']" class="error-message">
+      El nombre de la categoría es requerido.
+    </p>
+    <p *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['minlength']" class="error-message">
+      El nombre debe tener al menos {{ nameInput.errors?.['minlength']?.requiredLength }} caracteres.
+    </p>
+    <p *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['maxlength']" class="error-message">
+      El nombre no puede tener más de {{ nameInput.errors?.['maxlength']?.requiredLength }} caracteres.
+    </p>
+    <p *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['appForbiddenCharacters']" class="error-message">
+      Solo se permiten caracteres alfabeticos.
+    </p>
 
     <atm-form-input
-      label="Descripción"
+      label="Descripción *"
       placeholder="Enter category description"
       type="text"
       [(ngModel)]="categoryDescription"
       name="description"
+      required
+      [maxlength]="maxLengthDescription"
+      #descriptionInput="ngModel"
     ></atm-form-input>
+    <p *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['required']" class="error-message">
+      La descripción es requerida.
+    </p>
+    <p *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['maxlength']" class="error-message">
+      La descripción no puede tener más de {{ descriptionInput.errors?.['maxlength']?.requiredLength }} caracteres.
+    </p>
 
     <div class="button-container">
-      <button type="submit">Crear</button>
+      <button type="submit" [disabled]="createCategoryForm.invalid">Crear</button>
     </div>
   </form>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 </div>

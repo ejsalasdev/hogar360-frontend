@@ -1,10 +1,20 @@
 <div class="form-group">
   <label *ngIf="label">{{ label }}</label>
-  <input
-    [type]="type"
-    class="form-control"
-    [placeholder]="placeholder"
-    [value]="value"
-    (input)="onInputChange($event)"
-  />
+  <div class="input-container">
+    <input
+      [type]="type"
+      class="form-control"
+      [placeholder]="placeholder"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [attr.maxlength]="maxlength"
+    />
+    <span
+      *ngIf="maxlength"
+      class="character-counter"
+      [ngClass]="{ 'over-limit': value ? value.length > maxlength : false }"
+    >
+      {{ value ? value.length : 0 }}/{{ maxlength }}
+    </span>
+  </div>
 </div>

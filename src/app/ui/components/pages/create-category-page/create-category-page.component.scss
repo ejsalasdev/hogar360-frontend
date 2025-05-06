@@ -1,6 +1,32 @@
+.create-category-page {
+    padding: 1rem 3rem;
+}
+
 h2 {
     margin-top: 0;
 }
+
+.success-message {
+    color: green;
+    font-size: 0.9em; /* Un poco más grande o más pequeño */
+    margin-top: 0.5rem; /* Más espacio arriba del mensaje */
+    margin-bottom: 0.5rem; /* Un poco de espacio debajo también */
+    padding: 0.5rem; /* Un poco de relleno alrededor del texto */
+    background-color: #ddffe0; /* Un fondo rojo muy claro */
+    border: 1px solid #a3face; /* Un borde verde claro */
+    border-radius: 4px; /* Bordes redondeados */
+  }
+
+.error-message {
+    color: red;
+    font-size: 0.9em; /* Un poco más grande o más pequeño */
+    margin-top: 0.5rem; /* Más espacio arriba del mensaje */
+    margin-bottom: 0.5rem; /* Un poco de espacio debajo también */
+    padding: 0.5rem; /* Un poco de relleno alrededor del texto */
+    background-color: #ffebee; /* Un fondo rojo muy claro */
+    border: 1px solid #ef9a9a; /* Un borde rojo claro */
+    border-radius: 4px; /* Bordes redondeados */
+  }
 
 .button-container {
     display: flex;
@@ -8,8 +34,8 @@ h2 {
 }
 
 button {
-    height: 2.5em;
-    width: 8em;
+    height: 2.8em;
+    width: 9em;
     background-color: #2563EB;
     border-radius: 10px;
     color: #fff;
