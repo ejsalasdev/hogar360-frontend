@@ -3,9 +3,11 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'pg-create-category',
@@ -19,8 +21,10 @@ export class CreateCategoryPageComponent implements OnInit {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  maxLengthName: number = 50; // Define la longitud máxima para el nombre
-  maxLengthDescription: number = 90; // Define la longitud máxima para la descripción
+  maxLengthName: number = 50;
+  maxLengthDescription: number = 90;
+
+  @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
 
   constructor(
     private categoryService: CategoryService,
@@ -34,14 +38,20 @@ export class CreateCategoryPageComponent implements OnInit {
   onSubmit(): void {
     this.errorMessage = null;
     this.successMessage = null;
+
+    if (this.createCategoryForm.invalid) {
+      return;
+    }
+
     const newCategory: Category = {
       name: this.categoryName,
       description: this.categoryDescription,
     };
+
     this.categoryService.createCategory(newCategory).subscribe({
       next: (response) => {
         console.log('Categoría creada exitosamente:', response);
-        this.successMessage = 'La categoría se ha creado exitosamente.'; // Asignar mensaje de éxito
+        this.successMessage = 'La categoría se ha creado exitosamente.';
         this.changeDetectorRef.detectChanges(); // Forzar la detección de cambios
       },
       error: (error) => {

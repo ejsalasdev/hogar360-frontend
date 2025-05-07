@@ -62,7 +62,7 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   }
 
   onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     this.value = target.value;
     this._onTouched();
   }

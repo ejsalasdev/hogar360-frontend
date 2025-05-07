@@ -1,10 +1,12 @@
+@import '../../../../../styles/colors';
+
 .header {
   display: flex;
   justify-content: space-between; /* Espacio entre logo e info de usuario */
   align-items: center; /* Centrar verticalmente los elementos */
   padding: 1rem 2rem; /* Espaciado interno arriba/abajo y derecha/izquierda */
-  background-color: #f8f9fa; /* Un fondo gris claro */
-  border-bottom: 1px solid #e0e0e0; /* Línea divisoria inferior sutil */
+  background-color: $color-white; /* Un fondo gris claro */
+  border-bottom: 1px solid $color-border; /* Línea divisoria inferior sutil */
 }
 
 .logo {
@@ -12,6 +14,14 @@
   font-size: 1.5rem; /* Tamaño de la fuente del logo */
   font-weight: bold; /* Texto en negrita */
   color: #333; /* Color de texto oscuro */
+  display: flex;
+  align-items: center;
+}
+
+.logo__blue {
+  color: $color-primary;
+  font-weight: bold;
+  margin-right: 2px;
 }
 
 .user-info {
@@ -22,15 +32,19 @@
 .welcome {
   font-family: "Manrope", sans-serif; /* Aplica la fuente Manrope */
   margin-right: 1rem; /* Espacio entre el saludo y el avatar */
-  color: #555; /* Color de texto secundario */
+  color: $color-text-light;
+  font-size: 1rem;
 }
 
 .avatar {
-  width: 30px; /* Ancho del contenedor del avatar */
-  height: 30px; /* Alto del contenedor del avatar */
+  width: 36px; /* Ancho del contenedor del avatar */
+  height: 36px; /* Alto del contenedor del avatar */
   border-radius: 50%; /* Forma circular */
   overflow: hidden; /* Recorta cualquier parte de la imagen que sobresalga */
-  border: 1px solid #ccc; /* Borde sutil */
+  border: 1.5px solid $color-border; /* Borde sutil */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
     width: 100%; /* La imagen ocupa todo el contenedor */

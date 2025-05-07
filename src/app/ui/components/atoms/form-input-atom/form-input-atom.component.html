@@ -2,17 +2,32 @@
   <label *ngIf="label">{{ label }}</label>
   <div class="input-container">
     <input
+      *ngIf="type !== 'textarea'"
       [type]="type"
       class="form-control"
       [placeholder]="placeholder"
       [value]="value"
       (input)="onInputChange($event)"
       [attr.maxlength]="maxlength"
+      [disabled]="isDisabled"
     />
+    <textarea
+      *ngIf="type === 'textarea'"
+      class="form-control"
+      [placeholder]="placeholder"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [attr.maxlength]="maxlength"
+      [disabled]="isDisabled"
+      rows="5"
+    ></textarea>
     <span
       *ngIf="maxlength"
       class="character-counter"
-      [ngClass]="{ 'over-limit': value ? value.length > maxlength : false }"
+      [ngClass]="{
+        'over-limit': value ? value.length > maxlength : false,
+        'character-counter--textarea': type === 'textarea'
+      }"
     >
       {{ value ? value.length : 0 }}/{{ maxlength }}
     </span>

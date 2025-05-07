@@ -5,9 +5,11 @@
     [userName]="user.name"
     [userAvatarUrl]="user.avatarUrl"
   ></mol-header>
-  <div class="container">
-    <mol-side-menu [menuItems]="menuItems"></mol-side-menu>
-    <div class="content">
+  <div class="main-layout__container">
+    <div class="main-layout__sidebar">
+      <mol-side-menu [menuItems]="menuItems"></mol-side-menu>
+    </div>
+    <div class="main-layout__content">
       <router-outlet></router-outlet>
     </div>
   </div>
