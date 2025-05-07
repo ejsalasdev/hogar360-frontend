@@ -5,6 +5,8 @@ import {
   forwardRef,
   Input,
   Output,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -28,6 +30,7 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   @Input() maxlength: number | null = null; // Añadimos el Input para maxlength
   @Input() required: boolean = false;
   @Output() valueChange = new EventEmitter<any>();
+  @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
 
   private _value: any = '';
   private _onChange: any = () => {};
@@ -66,5 +69,11 @@ export class FormInputAtomComponent implements ControlValueAccessor {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     this.value = target.value;
     this._onTouched();
+  }
+
+  focus(): void {
+    if (this.type === 'textarea' && this.textareaElement) {
+      this.textareaElement.nativeElement.focus();
+    }
   }
 }

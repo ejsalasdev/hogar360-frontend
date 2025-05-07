@@ -4,10 +4,12 @@ import {
   OnInit,
   ChangeDetectorRef,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { NgForm } from '@angular/forms';
+import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 
 @Component({
   selector: 'pg-create-category',
@@ -26,6 +28,7 @@ export class CreateCategoryPageComponent implements OnInit {
   maxLengthDescription: number = 90;
 
   @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
+  @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
 
   constructor(
     private categoryService: CategoryService,
@@ -41,8 +44,14 @@ export class CreateCategoryPageComponent implements OnInit {
     this.toastType = 'error';
     this.showToast = true;
     setTimeout(() => {
+      this.descriptionInput.focus();
+    }, 0);
+    setTimeout(() => {
       this.showToast = false;
       this.changeDetectorRef.detectChanges();
+      setTimeout(() => {
+        this.descriptionInput.focus();
+      }, 0);
     }, 3000);
   }
 
@@ -51,8 +60,14 @@ export class CreateCategoryPageComponent implements OnInit {
     this.toastType = 'success';
     this.showToast = true;
     setTimeout(() => {
+      this.descriptionInput.focus();
+    }, 0);
+    setTimeout(() => {
       this.showToast = false;
       this.changeDetectorRef.detectChanges();
+      setTimeout(() => {
+        this.descriptionInput.focus();
+      }, 0);
     }, 3000);
   }
 
@@ -69,6 +84,7 @@ export class CreateCategoryPageComponent implements OnInit {
     this.categoryService.createCategory(newCategory).subscribe({
       next: (response) => {
         this.showSuccess('La categoría se ha creado exitosamente.');
+        this.createCategoryForm.resetForm();
         this.changeDetectorRef.detectChanges();
       },
       error: (error) => {
