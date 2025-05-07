@@ -27,7 +27,6 @@ body,
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         padding: 2rem;
-        margin-bottom: 2rem;
         border: 1px solid $color-border-light;
         max-width: 90%;
         margin-left: 0;
@@ -43,7 +42,6 @@ body,
 
     &__field {
         position: relative;
-        margin-bottom: 1rem;
     }
 
     &__error-container {
@@ -60,7 +58,6 @@ body,
     &__button-container {
         display: flex;
         justify-content: flex-end;
-        margin-top: 2rem;
     }
 
     &__button {
