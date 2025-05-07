@@ -1,5 +1,8 @@
 <div class="form-group">
-  <label *ngIf="label">{{ label }}</label>
+  <label *ngIf="label">
+    {{ label }}
+    <span *ngIf="required" class="required-asterisk">*</span>
+  </label>
   <div class="input-container">
     <input
       *ngIf="type !== 'textarea'"

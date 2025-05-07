@@ -10,7 +10,7 @@
   }
 
   .input-container {
-    position: relative; /* Para posicionar el contador */
+    position: relative;
   }
 
   .form-control {
@@ -81,4 +81,10 @@
       font-size: 1rem;
     }
   }
+}
+
+.required-asterisk {
+  color: $color-error;
+  margin-left: 0.1em;
+  font-size: 1em;
 }

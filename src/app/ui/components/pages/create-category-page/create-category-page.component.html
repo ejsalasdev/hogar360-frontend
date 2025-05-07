@@ -4,12 +4,12 @@
     <form #createCategoryForm="ngForm" (ngSubmit)="onSubmit()" class="create-category__form">
       <div class="create-category__field">
         <atm-form-input
-          label="Nombre de la Categoría *"
+          label="Nombre de la Categoría"
           placeholder="Escribe el nombre de la categoría (máximo 50 caracteres)"
           type="text"
           [(ngModel)]="categoryName"
           name="name"
-          required
+          [required]="true"
           minlength="5"
           [maxlength]="maxLengthName"
           #nameInput="ngModel"
@@ -46,12 +46,12 @@
 
       <div class="create-category__field">
         <atm-form-input
-          label="Descripción *"
+          label="Descripción"
           placeholder="Enter category description"
           type="textarea"
           [(ngModel)]="categoryDescription"
           name="description"
-          required
+          [required]="true"
           [maxlength]="maxLengthDescription"
           #descriptionInput="ngModel"
         ></atm-form-input>
@@ -79,10 +79,5 @@
       </div>
     </form>
   </div>
-  <p *ngIf="successMessage" class="create-category__message create-category__message--success">
-    {{ successMessage }}
-  </p>
-  <p *ngIf="errorMessage" class="create-category__message create-category__message--error">
-    {{ errorMessage }}
-  </p>
+  <atm-toast [message]="toastMessage" [type]="toastType" [show]="showToast"></atm-toast>
 </div>
