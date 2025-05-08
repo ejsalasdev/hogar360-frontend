@@ -6,6 +6,7 @@
   <div class="input-container">
     <input
       *ngIf="type !== 'textarea'"
+      #inputElement
       [type]="type"
       class="form-control"
       [placeholder]="placeholder"

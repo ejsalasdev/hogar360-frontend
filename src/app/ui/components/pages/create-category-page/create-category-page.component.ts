@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild
+  ViewChild,
+  NgZone
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Category } from '../../../../core/models/category.model';
@@ -29,45 +30,57 @@ export class CreateCategoryPageComponent implements OnInit {
   @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
   @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
 
+  private toastTimeout?: number;
+
   constructor(
     private categoryService: CategoryService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
     // Lógica de inicialización si es necesaria
   }
 
+  private clearToastTimeout() {
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+      this.toastTimeout = undefined;
+    }
+  }
+
   showError(message: string) {
+    this.clearToastTimeout();
     this.toastMessage = message;
     this.toastType = 'error';
     this.showToast = true;
-    setTimeout(() => {
-      this.descriptionInput.focus();
-    }, 0);
-    setTimeout(() => {
-      this.showToast = false;
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        this.descriptionInput.focus();
-      }, 0);
-    }, 3000);
+    this.changeDetectorRef.detectChanges();
+
+    this.ngZone.runOutsideAngular(() => {
+      this.toastTimeout = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.showToast = false;
+          this.changeDetectorRef.detectChanges();
+        });
+      }, 3000);
+    });
   }
 
   showSuccess(message: string) {
+    this.clearToastTimeout();
     this.toastMessage = message;
     this.toastType = 'success';
     this.showToast = true;
-    setTimeout(() => {
-      this.descriptionInput.focus();
-    }, 0);
-    setTimeout(() => {
-      this.showToast = false;
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        this.descriptionInput.focus();
-      }, 0);
-    }, 3000);
+    this.changeDetectorRef.detectChanges();
+
+    this.ngZone.runOutsideAngular(() => {
+      this.toastTimeout = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.showToast = false;
+          this.changeDetectorRef.detectChanges();
+        });
+      }, 3000);
+    });
   }
 
   onSubmit(): void {
@@ -83,19 +96,24 @@ export class CreateCategoryPageComponent implements OnInit {
     this.categoryService.createCategory(newCategory).subscribe({
       next: (response) => {
         this.showSuccess('La categoría se ha creado exitosamente.');
-        this.createCategoryForm.resetForm();
-        this.changeDetectorRef.detectChanges();
+        this.resetForm();
       },
       error: (error) => {
         if (error?.status === 409) {
           this.showError('La categoría con este nombre ya existe.');
-        } else if (error?.error?.message) {
-          this.showError(error.error.message);
         } else {
           this.showError('Error al crear la categoría. Por favor, inténtalo de nuevo.');
         }
-        this.changeDetectorRef.detectChanges();
       },
+    });
+  }
+
+  private resetForm(): void {
+    this.categoryName = '';
+    this.categoryDescription = '';
+    this.createCategoryForm.resetForm({
+      name: '',
+      description: ''
     });
   }
 }
