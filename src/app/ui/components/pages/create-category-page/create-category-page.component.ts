@@ -38,9 +38,7 @@ export class CreateCategoryPageComponent implements OnInit {
     private ngZone: NgZone
   ) {}
 
-  ngOnInit(): void {
-    // Lógica de inicialización si es necesaria
-  }
+  ngOnInit(): void {}
 
   private clearToastTimeout() {
     if (this.toastTimeout) {

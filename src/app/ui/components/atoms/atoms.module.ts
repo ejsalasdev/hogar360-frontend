@@ -7,15 +7,15 @@ import { ToastAtomComponent } from './toast-atom/toast-atom.component';
 @NgModule({
   declarations: [
     FormInputAtomComponent,
-    ToastAtomComponent,
+    ToastAtomComponent
   ],
   imports: [
-    CommonModule, // Importa CommonModule para directivas básicas como *ngIf, *ngFor
-    FormsModule, // Necesario para el FormInputAtomComponent
+    CommonModule,
+    FormsModule
   ],
-  exports: [ // Exporta los componentes que quieres usar en otros módulos
+  exports: [
     FormInputAtomComponent,
-    ToastAtomComponent,
+    ToastAtomComponent
   ]
 })
 export class AtomsModule { }

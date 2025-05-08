@@ -235,4 +235,38 @@ describe('CreateCategoryPageComponent', () => {
 
     expect(submitButton.nativeElement.disabled).toBeFalsy();
   });
+
+  it('should clear toast timeout when new toast is shown', fakeAsync(() => {
+    // Simular un timeout existente
+    component['toastTimeout'] = setTimeout(() => {}, 3000);
+    const clearTimeoutSpy = jest.spyOn(window, 'clearTimeout');
+
+    // Mostrar un nuevo toast
+    component.showSuccess('Test message');
+    
+    // Verificar que se limpió el timeout anterior
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    expect(component['toastTimeout']).toBeDefined();
+
+    // Limpiar el timeout para evitar fugas de memoria
+    clearTimeout(component['toastTimeout']);
+    discardPeriodicTasks();
+  }));
+
+  it('should not submit form when invalid', () => {
+    // Espiar el método del servicio
+    const createCategorySpy = jest.spyOn(categoryService, 'createCategory');
+    
+    // Asegurarnos que el formulario es inválido
+    const form = component.createCategoryForm;
+    form.controls['name'].setValue('');  // Campo requerido vacío
+    form.controls['description'].setValue('');  // Campo requerido vacío
+    expect(form.invalid).toBeTruthy();
+
+    // Intentar enviar el formulario
+    component.onSubmit();
+
+    // Verificar que no se llamó al servicio
+    expect(createCategorySpy).not.toHaveBeenCalled();
+  });
 });

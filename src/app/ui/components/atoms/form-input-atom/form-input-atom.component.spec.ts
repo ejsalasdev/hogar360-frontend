@@ -2,10 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { FormInputAtomComponent } from './form-input-atom.component';
+import { NgZone } from '@angular/core';
 
 describe('FormInputAtomComponent', () => {
   let component: FormInputAtomComponent;
   let fixture: ComponentFixture<FormInputAtomComponent>;
+  let ngZone: NgZone;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +17,7 @@ describe('FormInputAtomComponent', () => {
 
     fixture = TestBed.createComponent(FormInputAtomComponent);
     component = fixture.componentInstance;
+    ngZone = TestBed.inject(NgZone);
     fixture.detectChanges();
   });
 
@@ -119,5 +122,59 @@ describe('FormInputAtomComponent', () => {
     component.value = testValue; // Set the same value again
     
     expect(valueChangeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should focus input when focus method is called', () => {
+    // Asegurarnos que estamos usando un input normal
+    component.type = 'text';
+    fixture.detectChanges();
+
+    // Espiar el método focus del input
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    const focusSpy = jest.spyOn(inputElement, 'focus');
+
+    // Llamar al método focus
+    component.focus();
+
+    // Verificar que se llamó al método focus
+    expect(focusSpy).toHaveBeenCalled();
+  });
+
+  describe('NgZone handling', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should handle type changes using NgZone', () => {
+      // Espiar los métodos de NgZone
+      const runOutsideAngularSpy = jest.spyOn(ngZone, 'runOutsideAngular');
+      const runSpy = jest.spyOn(ngZone, 'run');
+      const detectChangesSpy = jest.spyOn(component['cdr'], 'detectChanges');
+
+      // Simular un cambio en el tipo
+      component.type = 'textarea';
+      component.ngOnChanges({
+        type: {
+          currentValue: 'textarea',
+          previousValue: 'text',
+          firstChange: false,
+          isFirstChange: () => false
+        }
+      });
+
+      // Verificar que se ejecutó fuera de la zona de Angular
+      expect(runOutsideAngularSpy).toHaveBeenCalled();
+
+      // Simular el setTimeout
+      jest.runAllTimers();
+
+      // Verificar que se volvió a la zona de Angular
+      expect(runSpy).toHaveBeenCalled();
+      expect(detectChangesSpy).toHaveBeenCalled();
+    });
   });
 });
