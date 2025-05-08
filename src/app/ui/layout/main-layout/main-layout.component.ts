@@ -22,7 +22,7 @@ export class MainLayoutComponent implements OnInit {
   user: UserInfo = {
     name: 'Admin',
     welcomeMessage: 'Bienvenido',
-    avatarUrl: '/assets/images/avatar.jpg', // Asegúrate de que esta ruta sea correcta
+    avatarUrl: '/assets/images/avatar.jpg',
   };
 
   menuItems: MenuItem[] = [
@@ -33,9 +33,8 @@ export class MainLayoutComponent implements OnInit {
     { label: 'Configuración', icon: 'config.png', route: '/admin/settings' },
   ];
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
-    // Aquí podrías cargar la información del usuario y el menú desde servicios
   }
 }

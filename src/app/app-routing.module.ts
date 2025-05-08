@@ -8,8 +8,14 @@ const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: 'admin/create-category', component: CreateCategoryPageComponent },
-      { path: '', redirectTo: 'admin/create-category', pathMatch: 'full' }
+      { 
+        path: 'admin/categories',
+        children: [
+          { path: 'create', component: CreateCategoryPageComponent },
+          { path: '', redirectTo: 'create', pathMatch: 'full' }
+        ]
+      },
+      { path: '', redirectTo: 'admin/categories', pathMatch: 'full' }
     ],
   }
 ];

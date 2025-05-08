@@ -30,12 +30,12 @@
 }
 
 .side-menu__item--active {
-  background: $color-primary !important;
-  color: $color-white !important;
+  background: $color-white !important;
+  color: $color-primary !important;
   font-weight: 600;
 
   .side-menu__icon {
-    filter: brightness(0) invert(1);
+    filter: invert(32%) sepia(98%) saturate(1234%) hue-rotate(202deg) brightness(97%) contrast(101%);
   }
 }
 
