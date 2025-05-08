@@ -38,7 +38,7 @@
             {{ nameInput.errors?.['maxlength']?.requiredLength }} caracteres.
           </span>
           <span
-            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['pattern']"
+            *ngIf="shouldShowPatternError(nameInput)"
             class="create-category__error-text"
           >
             Solo se permiten caracteres alfabéticos, espacios y acentos.
@@ -54,6 +54,7 @@
           [(ngModel)]="categoryDescription"
           name="description"
           [required]="true"
+          minlength="10"
           [maxlength]="maxLengthDescription"
           [ngModelOptions]="{ updateOn: 'blur' }"
           #descriptionInput="ngModel"
@@ -68,6 +69,12 @@
             La descripción es requerida.
           </span>
           <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['minlength']"
+            class="create-category__error-text"
+          >
+            La descripción debe tener al menos {{ descriptionInput.errors?.['minlength']?.requiredLength }} caracteres.
+          </span>
+          <span
             *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['maxlength']"
             class="create-category__error-text"
           >
@@ -75,7 +82,7 @@
             {{ descriptionInput.errors?.['maxlength']?.requiredLength }} caracteres.
           </span>
           <span
-            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['pattern']"
+            *ngIf="shouldShowPatternError(descriptionInput)"
             class="create-category__error-text"
           >
             Solo se permiten caracteres alfabéticos, espacios y acentos.

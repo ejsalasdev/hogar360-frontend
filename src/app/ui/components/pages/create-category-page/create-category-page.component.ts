@@ -114,4 +114,15 @@ export class CreateCategoryPageComponent implements OnInit {
       description: ''
     });
   }
+
+  shouldShowPatternError(control: any): boolean {
+    if (!control.invalid || !control.dirty && !control.touched) {
+      return false;
+    }
+    
+    const hasMinLengthError = control.errors?.['minlength'];
+    const hasPatternError = control.errors?.['pattern'];
+    
+    return hasPatternError && !hasMinLengthError;
+  }
 }
