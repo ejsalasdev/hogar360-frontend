@@ -1,14 +1,13 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
-  ChangeDetectorRef,
-  ViewChild,
-  ElementRef,
+  ViewChild
 } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
-import { NgForm } from '@angular/forms';
 import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 
 @Component({

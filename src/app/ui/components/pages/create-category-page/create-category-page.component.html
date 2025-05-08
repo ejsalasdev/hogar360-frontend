@@ -12,7 +12,9 @@
           [required]="true"
           minlength="5"
           [maxlength]="maxLengthName"
+          [ngModelOptions]="{ updateOn: 'blur' }"
           #nameInput="ngModel"
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
         ></atm-form-input>
         <div class="create-category__error-container">
           <span
@@ -36,10 +38,10 @@
             {{ nameInput.errors?.['maxlength']?.requiredLength }} caracteres.
           </span>
           <span
-            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['appForbiddenCharacters']"
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['pattern']"
             class="create-category__error-text"
           >
-            Solo se permiten caracteres alfabeticos.
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
           </span>
         </div>
       </div>
@@ -53,8 +55,10 @@
           name="description"
           [required]="true"
           [maxlength]="maxLengthDescription"
+          [ngModelOptions]="{ updateOn: 'blur' }"
           #descriptionInput="ngModel"
           #descriptionInputRef
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
         ></atm-form-input>
         <div class="create-category__error-container">
           <span
@@ -69,6 +73,12 @@
           >
             La descripción no puede tener más de
             {{ descriptionInput.errors?.['maxlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['pattern']"
+            class="create-category__error-text"
+          >
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
           </span>
         </div>
       </div>
