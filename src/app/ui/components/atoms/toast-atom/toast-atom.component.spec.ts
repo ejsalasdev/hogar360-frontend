@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ToastAtomComponent } from './toast-atom.component';
 import { By } from '@angular/platform-browser';
 
@@ -16,67 +16,77 @@ describe('ToastAtomComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    jest.clearAllTimers();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show message when show is true', () => {
-    component.message = 'Test message';
-    component.show = true;
+  it('should show message when config has message', fakeAsync(() => {
+    component.config = { message: 'Test message', type: 'info', duration: 3000 };
     fixture.detectChanges();
+    tick();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
     expect(toastElement).toBeTruthy();
-    expect(toastElement.nativeElement.textContent.trim()).toBe('Test message');
-  });
+    expect(toastElement.nativeElement.textContent.trim()).toContain('Test message');
 
-  it('should not show message when show is false', () => {
-    component.message = 'Test message';
-    component.show = false;
+    tick(3000);
+  }));
+
+  it('should not show message when config has no message', () => {
+    component.config = { message: '', type: 'info', duration: 3000 };
     fixture.detectChanges();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
     expect(toastElement).toBeFalsy();
   });
 
-  it('should apply success class when type is success', () => {
-    component.message = 'Test message';
-    component.type = 'success';
-    component.show = true;
+  it('should apply success class when type is success', fakeAsync(() => {
+    component.config = { message: 'Test message', type: 'success', duration: 3000 };
     fixture.detectChanges();
+    tick();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
-    expect(toastElement.nativeElement.classList).toContain('success');
-  });
+    expect(toastElement.nativeElement.classList.contains('success')).toBeTruthy();
 
-  it('should apply error class when type is error', () => {
-    component.message = 'Test message';
-    component.type = 'error';
-    component.show = true;
+    tick(3000);
+  }));
+
+  it('should apply error class when type is error', fakeAsync(() => {
+    component.config = { message: 'Test message', type: 'error', duration: 3000 };
     fixture.detectChanges();
+    tick();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
-    expect(toastElement.nativeElement.classList).toContain('error');
-  });
+    expect(toastElement.nativeElement.classList.contains('error')).toBeTruthy();
 
-  it('should apply info class when type is info', () => {
-    component.message = 'Test message';
-    component.type = 'info';
-    component.show = true;
+    tick(3000);
+  }));
+
+  it('should apply info class when type is info', fakeAsync(() => {
+    component.config = { message: 'Test message', type: 'info', duration: 3000 };
     fixture.detectChanges();
+    tick();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
-    expect(toastElement.nativeElement.classList).toContain('info');
-  });
+    expect(toastElement.nativeElement.classList.contains('info')).toBeTruthy();
 
-  it('should apply show class when show is true', () => {
-    component.message = 'Test message';
-    component.show = true;
+    tick(3000);
+  }));
+
+  it('should apply show class when config has message', fakeAsync(() => {
+    component.config = { message: 'Test message', type: 'info', duration: 3000 };
     fixture.detectChanges();
+    tick();
 
     const toastElement = fixture.debugElement.query(By.css('.toast'));
-    expect(toastElement.nativeElement.classList).toContain('show');
-  });
+    expect(toastElement.nativeElement.classList.contains('show')).toBeTruthy();
+
+    tick(3000);
+  }));
 
   it('should have default type as info', () => {
     expect(component.type).toBe('info');
@@ -86,7 +96,39 @@ describe('ToastAtomComponent', () => {
     expect(component.message).toBe('');
   });
 
-  it('should have show as false by default', () => {
-    expect(component.show).toBe(false);
+  it('should emit closed event when onClose is called', () => {
+    const closedSpy = jest.spyOn(component.closed, 'emit');
+    component.onClose();
+    expect(closedSpy).toHaveBeenCalled();
   });
+
+  it('should clear timeout when onClose is called', fakeAsync(() => {
+    const clearTimeoutSpy = jest.spyOn(window, 'clearTimeout');
+    component.config = { message: 'Test message', type: 'info', duration: 3000 };
+    fixture.detectChanges();
+    tick();
+
+    component.onClose();
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    clearTimeoutSpy.mockRestore();
+
+    tick(3000);
+  }));
+
+  it('should clear message when onClose is called', () => {
+    component.config = { message: 'Test message', type: 'info', duration: 3000 };
+    fixture.detectChanges();
+    component.onClose();
+    expect(component.message).toBe('');
+  });
+
+  it('should auto-close after duration', fakeAsync(() => {
+    const duration = 3000;
+    component.config = { message: 'Test message', type: 'info', duration };
+    fixture.detectChanges();
+    
+    expect(component.message).toBe('Test message');
+    tick(duration);
+    expect(component.message).toBe('');
+  }));
 }); 

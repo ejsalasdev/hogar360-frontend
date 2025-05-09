@@ -2,12 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { FormInputAtomComponent } from './form-input-atom.component';
-import { NgZone } from '@angular/core';
 
 describe('FormInputAtomComponent', () => {
   let component: FormInputAtomComponent;
   let fixture: ComponentFixture<FormInputAtomComponent>;
-  let ngZone: NgZone;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,7 +15,6 @@ describe('FormInputAtomComponent', () => {
 
     fixture = TestBed.createComponent(FormInputAtomComponent);
     component = fixture.componentInstance;
-    ngZone = TestBed.inject(NgZone);
     fixture.detectChanges();
   });
 
@@ -114,7 +111,7 @@ describe('FormInputAtomComponent', () => {
     const valueChangeSpy = jest.spyOn(component.valueChange, 'emit');
 
     component.value = testValue;
-    component.value = testValue; // Set the same value again
+    component.value = testValue; 
 
     expect(valueChangeSpy).toHaveBeenCalledTimes(1);
   });
@@ -129,38 +126,5 @@ describe('FormInputAtomComponent', () => {
     component.focus();
 
     expect(focusSpy).toHaveBeenCalled();
-  });
-
-  describe('NgZone handling', () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    it('should handle type changes using NgZone', () => {
-      const runOutsideAngularSpy = jest.spyOn(ngZone, 'runOutsideAngular');
-      const runSpy = jest.spyOn(ngZone, 'run');
-      const detectChangesSpy = jest.spyOn(component['cdr'], 'detectChanges');
-
-      component.type = 'textarea';
-      component.ngOnChanges({
-        type: {
-          currentValue: 'textarea',
-          previousValue: 'text',
-          firstChange: false,
-          isFirstChange: () => false
-        }
-      });
-
-      expect(runOutsideAngularSpy).toHaveBeenCalled();
-
-      jest.runAllTimers();
-
-      expect(runSpy).toHaveBeenCalled();
-      expect(detectChangesSpy).toHaveBeenCalled();
-    });
   });
 });

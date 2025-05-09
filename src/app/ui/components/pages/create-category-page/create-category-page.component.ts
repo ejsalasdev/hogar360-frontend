@@ -22,7 +22,6 @@ export class CreateCategoryPageComponent implements OnInit {
   categoryDescription: string = '';
   toastMessage = '';
   toastType: ToastType = 'info';
-  showToast = false;
 
   readonly maxLengthName: number = 50;
   readonly maxLengthDescription: number = 90;
@@ -37,43 +36,27 @@ export class CreateCategoryPageComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  showError(message: string): void {
-    this.toastMessage = message;
-    this.toastType = 'error';
-    this.showToast = true;
-    this.changeDetectorRef.detectChanges();
-  }
-
-  showSuccess(message: string): void {
-    this.toastMessage = message;
-    this.toastType = 'success';
-    this.showToast = true;
-    this.changeDetectorRef.detectChanges();
-  }
-
   onSubmit(): void {
-    if (this.createCategoryForm.invalid) {
-      return;
+    if (this.createCategoryForm.valid) {
+      const category: Category = {
+        name: this.categoryName,
+        description: this.categoryDescription,
+      };
+
+      this.categoryService.createCategory(category).subscribe({
+        next: () => {
+          this.showSuccess('La categoría se ha creado exitosamente.');
+          this.resetForm();
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            this.showError('La categoría con este nombre ya existe.');
+          } else {
+            this.showError('Error al crear la categoría. Por favor, inténtalo de nuevo.');
+          }
+        },
+      });
     }
-
-    const newCategory: Category = {
-      name: this.categoryName,
-      description: this.categoryDescription,
-    };
-
-    this.categoryService.createCategory(newCategory).subscribe({
-      next: () => {
-        this.showSuccess('La categoría se ha creado exitosamente.');
-        this.resetForm();
-      },
-      error: (error) => {
-        if (error?.status === 409) {
-          this.showError('La categoría con este nombre ya existe.');
-        } else {
-          this.showError('Error al crear la categoría. Por favor, inténtalo de nuevo.');
-        }
-      },
-    });
   }
 
   private resetForm(): void {
@@ -83,16 +66,34 @@ export class CreateCategoryPageComponent implements OnInit {
       name: '',
       description: ''
     });
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private showSuccess(message: string): void {
+    this.toastMessage = message;
+    this.toastType = 'success';
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private showError(message: string): void {
+    this.toastMessage = message;
+    this.toastType = 'error';
+    this.changeDetectorRef.markForCheck();
+  }
+
+  onToastClosed(): void {
+    this.toastMessage = '';
+    this.changeDetectorRef.markForCheck();
   }
 
   shouldShowPatternError(control: any): boolean {
-    if (!control.invalid || !control.dirty && !control.touched) {
-      return false;
-    }
-    
-    const hasMinLengthError = control.errors?.['minlength'];
-    const hasPatternError = control.errors?.['pattern'];
-    
-    return hasPatternError && !hasMinLengthError;
+    return (
+      control.invalid &&
+      (control.dirty || control.touched) &&
+      control.errors?.['pattern'] &&
+      !control.errors?.['required'] &&
+      !control.errors?.['minlength'] &&
+      !control.errors?.['maxlength']
+    );
   }
 }

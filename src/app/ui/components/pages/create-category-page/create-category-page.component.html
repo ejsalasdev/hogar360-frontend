@@ -97,12 +97,12 @@
       </div>
     </form>
   </div>
-  <atm-toast 
+  <atm-toast
     [config]="{
       message: toastMessage,
       type: toastType,
       duration: 3000
     }"
-    (closed)="showToast = false"
+    (closed)="onToastClosed()"
   ></atm-toast>
 </div>

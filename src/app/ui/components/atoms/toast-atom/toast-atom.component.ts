@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -16,10 +16,14 @@ export interface ToastConfig {
 })
 export class ToastAtomComponent implements OnChanges {
   @Input() set config(value: ToastConfig) {
-    this._config = {
-      ...this._config,
-      ...value
-    };
+    if (value?.message !== this._config.message) {
+      this._config = {
+        ...this._config,
+        ...value
+      };
+      this.startTimeout();
+      this.cdr.markForCheck();
+    }
   }
   get config(): ToastConfig {
     return this._config;
@@ -34,6 +38,8 @@ export class ToastAtomComponent implements OnChanges {
   };
 
   private timeoutId?: number;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   get message(): string {
     return this._config.message;
@@ -71,11 +77,14 @@ export class ToastAtomComponent implements OnChanges {
   private startTimeout(): void {
     if (this.timeoutId) {
       window.clearTimeout(this.timeoutId);
+      this.timeoutId = undefined;
     }
     
-    this.timeoutId = window.setTimeout(() => {
-      this.onClose();
-    }, this._config.duration);
+    if (this._config.message) {
+      this.timeoutId = window.setTimeout(() => {
+        this.onClose();
+      }, this._config.duration);
+    }
   }
 
   onClose(): void {
@@ -85,5 +94,6 @@ export class ToastAtomComponent implements OnChanges {
     }
     this._config.message = '';
     this.closed.emit();
+    this.cdr.markForCheck();
   }
 } 

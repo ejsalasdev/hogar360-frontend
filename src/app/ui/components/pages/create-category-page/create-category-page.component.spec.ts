@@ -103,15 +103,14 @@ describe('CreateCategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
-
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
+    component.categoryName = testCategory.name;
+    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
     component.onSubmit();
@@ -126,14 +125,15 @@ describe('CreateCategoryPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.categoryName).toBe('');
-    expect(component.categoryDescription).toBe('');
-    expect(component.showToast).toBeTruthy();
+    expect(component.toastMessage).toBe('La categoría se ha creado exitosamente.');
     expect(component.toastType).toBe('success');
 
     tick(3000);
     fixture.detectChanges();
-    expect(component.showToast).toBeFalsy();
+
+    expect(component.categoryName).toBe('');
+    expect(component.categoryDescription).toBe('');
+    expect(component.toastMessage).toBe('');
 
     discardPeriodicTasks();
   }));
@@ -144,15 +144,14 @@ describe('CreateCategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
-
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
+    component.categoryName = testCategory.name;
+    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
     component.onSubmit();
@@ -167,13 +166,12 @@ describe('CreateCategoryPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.showToast).toBeTruthy();
-    expect(component.toastType).toBe('error');
     expect(component.toastMessage).toBe('La categoría con este nombre ya existe.');
+    expect(component.toastType).toBe('error');
 
     tick(3000);
     fixture.detectChanges();
-    expect(component.showToast).toBeFalsy();
+    expect(component.toastMessage).toBe('');
 
     discardPeriodicTasks();
   }));
@@ -184,15 +182,14 @@ describe('CreateCategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
-
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
+    component.categoryName = testCategory.name;
+    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
     component.onSubmit();
@@ -207,13 +204,12 @@ describe('CreateCategoryPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(component.showToast).toBeTruthy();
-    expect(component.toastType).toBe('error');
     expect(component.toastMessage).toBe('Error al crear la categoría. Por favor, inténtalo de nuevo.');
+    expect(component.toastType).toBe('error');
 
     tick(3000);
     fixture.detectChanges();
-    expect(component.showToast).toBeFalsy();
+    expect(component.toastMessage).toBe('');
 
     discardPeriodicTasks();
   }));
@@ -236,19 +232,6 @@ describe('CreateCategoryPageComponent', () => {
     expect(submitButton.nativeElement.disabled).toBeFalsy();
   });
 
-  it('should clear toast timeout when new toast is shown', fakeAsync(() => {
-    component['toastTimeout'] = setTimeout(() => { }, 3000);
-    const clearTimeoutSpy = jest.spyOn(window, 'clearTimeout');
-
-    component.showSuccess('Test message');
-
-    expect(clearTimeoutSpy).toHaveBeenCalled();
-    expect(component['toastTimeout']).toBeDefined();
-
-    clearTimeout(component['toastTimeout']);
-    discardPeriodicTasks();
-  }));
-
   it('should not submit form when invalid', () => {
     const createCategorySpy = jest.spyOn(categoryService, 'createCategory');
 
@@ -256,7 +239,6 @@ describe('CreateCategoryPageComponent', () => {
     form.controls['name'].setValue('');
     form.controls['description'].setValue('');
     expect(form.invalid).toBeTruthy();
-
 
     component.onSubmit();
 
