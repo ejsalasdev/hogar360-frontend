@@ -97,5 +97,12 @@
       </div>
     </form>
   </div>
-  <atm-toast [message]="toastMessage" [type]="toastType" [show]="showToast"></atm-toast>
+  <atm-toast 
+    [config]="{
+      message: toastMessage,
+      type: toastType,
+      duration: 3000
+    }"
+    (closed)="showToast = false"
+  ></atm-toast>
 </div>

@@ -8,14 +8,11 @@ import {
   Output,
   ViewChild,
   ElementRef,
-  OnChanges,
-  SimpleChanges,
   NgZone
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 type InputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'textarea';
-
 
 @Component({
   selector: 'atm-form-input',
@@ -30,41 +27,29 @@ type InputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'tex
     },
   ],
 })
-export class FormInputAtomComponent implements ControlValueAccessor, OnChanges {
+export class FormInputAtomComponent implements ControlValueAccessor {
   @Input() type: InputType = 'text';
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() maxlength: number | null = null;
   @Input() required: boolean = false;
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange = new EventEmitter<string>();
 
   @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
 
-  private _value: any = '';
-  private _onChange: any = () => { };
-  private _onTouched: any = () => { };
+  private _value: string = '';
+  private _onChange: (value: string) => void = () => {};
+  private _onTouched: () => void = () => {};
   public isDisabled: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  constructor(private cdr: ChangeDetectorRef) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['type']) {
-      this.ngZone.runOutsideAngular(() => {
-        setTimeout(() => {
-          this.ngZone.run(() => {
-            this.cdr.detectChanges();
-          });
-        });
-      });
-    }
-  }
-
-  get value(): any {
+  get value(): string {
     return this._value;
   }
 
-  set value(newValue: any) {
+  set value(newValue: string) {
     if (this._value !== newValue) {
       this._value = newValue;
       this._onChange(newValue);
@@ -73,18 +58,18 @@ export class FormInputAtomComponent implements ControlValueAccessor, OnChanges {
     }
   }
 
-  writeValue(value: any): void {
+  writeValue(value: string): void {
     if (this._value !== value) {
       this._value = value;
       this.cdr.markForCheck();
     }
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this._onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
 
@@ -100,10 +85,7 @@ export class FormInputAtomComponent implements ControlValueAccessor, OnChanges {
   }
 
   focus(): void {
-    if (this.type === 'textarea' && this.textareaElement) {
-      this.textareaElement.nativeElement.focus();
-    } else if (this.inputElement) {
-      this.inputElement.nativeElement.focus();
-    }
+    const element = this.type === 'textarea' ? this.textareaElement : this.inputElement;
+    element?.nativeElement?.focus();
   }
 }

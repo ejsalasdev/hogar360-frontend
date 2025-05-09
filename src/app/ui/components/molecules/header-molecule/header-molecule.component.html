@@ -1,14 +1,34 @@
-<div class="header">
-  <div class="logo">
-    <span class="logo__blue">Hogar</span> 360
+<header class="header" role="banner">
+  <div class="logo" (click)="onLogoClick()" role="button" tabindex="0" (keyup.enter)="onLogoClick()">
+    <span class="logo__blue">{{ logoText.split(' ')[0] }}</span> {{ logoText.split(' ')[1] }}
   </div>
   <div class="user-info">
     <span class="welcome">{{ welcomeMessage }}, {{ userName }}</span>
-    <div class="avatar" *ngIf="userAvatarUrl">
-      <img [src]="userAvatarUrl" alt="Avatar" />
-    </div>
-    <div class="avatar" *ngIf="!userAvatarUrl">
-      <i class="fa fa-user-circle"></i>
+    <div class="avatar-container" *ngIf="showUserMenu">
+      <button 
+        class="avatar-button" 
+        (click)="onUserMenuClick()"
+        [attr.aria-expanded]="isUserMenuOpen"
+        [attr.aria-label]="'Menú de usuario de ' + userName"
+      >
+        <div class="avatar" *ngIf="userAvatarUrl">
+          <img [src]="userAvatarUrl" [alt]="userName" />
+        </div>
+        <div class="avatar" *ngIf="!userAvatarUrl">
+          <i class="fa fa-user-circle" [attr.aria-label]="userName"></i>
+        </div>
+      </button>
+      <div 
+        class="user-menu" 
+        *ngIf="isUserMenuOpen"
+        (clickOutside)="onUserMenuOutsideClick()"
+        role="menu"
+      >
+        <button class="menu-item" role="menuitem">
+          <i class="fa fa-sign-out"></i>
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
   </div>
-</div>
+</header>

@@ -4,12 +4,12 @@ import {
   Component,
   OnInit,
   ViewChild,
-  NgZone
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
+import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 
 @Component({
   selector: 'pg-create-category',
@@ -21,64 +21,34 @@ export class CreateCategoryPageComponent implements OnInit {
   categoryName: string = '';
   categoryDescription: string = '';
   toastMessage = '';
-  toastType: 'success' | 'error' | 'info' = 'info';
+  toastType: ToastType = 'info';
   showToast = false;
 
-  maxLengthName: number = 50;
-  maxLengthDescription: number = 90;
+  readonly maxLengthName: number = 50;
+  readonly maxLengthDescription: number = 90;
 
   @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
   @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
 
-  private toastTimeout?: number;
-
   constructor(
     private categoryService: CategoryService,
     private changeDetectorRef: ChangeDetectorRef,
-    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {}
 
-  private clearToastTimeout() {
-    if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
-      this.toastTimeout = undefined;
-    }
-  }
-
-  showError(message: string) {
-    this.clearToastTimeout();
+  showError(message: string): void {
     this.toastMessage = message;
     this.toastType = 'error';
     this.showToast = true;
     this.changeDetectorRef.detectChanges();
-
-    this.ngZone.runOutsideAngular(() => {
-      this.toastTimeout = setTimeout(() => {
-        this.ngZone.run(() => {
-          this.showToast = false;
-          this.changeDetectorRef.detectChanges();
-        });
-      }, 3000);
-    });
   }
 
-  showSuccess(message: string) {
-    this.clearToastTimeout();
+  showSuccess(message: string): void {
     this.toastMessage = message;
     this.toastType = 'success';
     this.showToast = true;
     this.changeDetectorRef.detectChanges();
-
-    this.ngZone.runOutsideAngular(() => {
-      this.toastTimeout = setTimeout(() => {
-        this.ngZone.run(() => {
-          this.showToast = false;
-          this.changeDetectorRef.detectChanges();
-        });
-      }, 3000);
-    });
   }
 
   onSubmit(): void {
@@ -92,7 +62,7 @@ export class CreateCategoryPageComponent implements OnInit {
     };
 
     this.categoryService.createCategory(newCategory).subscribe({
-      next: (response) => {
+      next: () => {
         this.showSuccess('La categoría se ha creado exitosamente.');
         this.resetForm();
       },

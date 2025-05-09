@@ -1,13 +1,19 @@
 <div class="main-layout">
   <mol-header
-    [logoText]="'Hogar 360'"
-    [welcomeMessage]="user.welcomeMessage"
-    [userName]="user.name"
-    [userAvatarUrl]="user.avatarUrl"
+    [config]="{
+      logoText: 'Hogar 360',
+      welcomeMessage: user.welcomeMessage,
+      userName: user.name,
+      userAvatarUrl: user.avatarUrl
+    }"
   ></mol-header>
   <div class="main-layout__container">
     <div class="main-layout__sidebar">
-      <mol-side-menu [menuItems]="menuItems"></mol-side-menu>
+      <mol-side-menu 
+        [menuItems]="menuItems"
+        [activeItemId]="activeItemId"
+        (itemClick)="onMenuItemClick($event)"
+      ></mol-side-menu>
     </div>
     <div class="main-layout__content">
       <router-outlet></router-outlet>
