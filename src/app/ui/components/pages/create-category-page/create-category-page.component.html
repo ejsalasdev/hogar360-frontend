@@ -1,0 +1,108 @@
+<div class="create-category">
+  <h2 class="create-category__title">Crear Categoría</h2>
+  <div class="create-category__card">
+    <form #createCategoryForm="ngForm" (ngSubmit)="onSubmit()" class="create-category__form">
+      <div class="create-category__field">
+        <atm-form-input
+          label="Nombre de la Categoría"
+          placeholder="Escribe el nombre de la categoría (máximo 50 caracteres)"
+          type="text"
+          [(ngModel)]="categoryName"
+          name="name"
+          [required]="true"
+          minlength="5"
+          [maxlength]="maxLengthName"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          #nameInput="ngModel"
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
+        ></atm-form-input>
+        <div class="create-category__error-container">
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['required']"
+            class="create-category__error-text"
+          >
+            El nombre de la categoría es requerido.
+          </span>
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['minlength']"
+            class="create-category__error-text"
+          >
+            El nombre debe tener al menos
+            {{ nameInput.errors?.['minlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['maxlength']"
+            class="create-category__error-text"
+          >
+            El nombre no puede tener más de
+            {{ nameInput.errors?.['maxlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="shouldShowPatternError(nameInput)"
+            class="create-category__error-text"
+          >
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
+          </span>
+        </div>
+      </div>
+
+      <div class="create-category__field">
+        <atm-form-input
+          label="Descripción"
+          placeholder="Escribe la descripción de la categoría (máximo 90 caracteres)"
+          type="textarea"
+          [(ngModel)]="categoryDescription"
+          name="description"
+          [required]="true"
+          minlength="10"
+          [maxlength]="maxLengthDescription"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          #descriptionInput="ngModel"
+          #descriptionInputRef
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
+        ></atm-form-input>
+        <div class="create-category__error-container">
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['required']"
+            class="create-category__error-text"
+          >
+            La descripción es requerida.
+          </span>
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['minlength']"
+            class="create-category__error-text"
+          >
+            La descripción debe tener al menos {{ descriptionInput.errors?.['minlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['maxlength']"
+            class="create-category__error-text"
+          >
+            La descripción no puede tener más de
+            {{ descriptionInput.errors?.['maxlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="shouldShowPatternError(descriptionInput)"
+            class="create-category__error-text"
+          >
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
+          </span>
+        </div>
+      </div>
+
+      <div class="create-category__button-container">
+        <button type="submit" [disabled]="createCategoryForm.invalid" class="create-category__button">
+          Crear
+        </button>
+      </div>
+    </form>
+  </div>
+  <atm-toast
+    [config]="{
+      message: toastMessage,
+      type: toastType,
+      duration: 3000
+    }"
+    (closed)="onToastClosed()"
+  ></atm-toast>
+</div>

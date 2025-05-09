@@ -1,0 +1,33 @@
+@import '../../../../styles/colors';
+
+.main-layout {
+  min-height: 100vh;
+  background: $color-bg;
+}
+
+.main-layout__container {
+  display: flex;
+  align-items: flex-start;
+  height: 100vh;
+  margin-top: 0.5rem;
+}
+
+.main-layout__sidebar {
+  flex: 0 0 220px;
+  background: $color-white;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  z-index: 10;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.main-layout__content {
+  flex: 1 1 0%;
+  min-width: 0;
+  padding: 0;
+  margin-left: 2rem;
+  display: block;
+}

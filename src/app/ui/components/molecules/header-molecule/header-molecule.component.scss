@@ -1,0 +1,149 @@
+@import '../../../../../styles/colors';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 40px;
+  font-family: 'Manrope', sans-serif;
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    font-family: 'Manrope', sans-serif;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:focus {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+
+    &__blue {
+      color: #007bff;
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .welcome {
+      font-size: 1.1rem;
+      color: #666;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .avatar-container {
+      position: relative;
+    }
+
+    .avatar-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &:focus {
+        outline: 2px solid #007bff;
+        outline-offset: 2px;
+      }
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      i {
+        font-size: 1.75rem;
+        color: #666;
+      }
+    }
+
+    .user-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      min-width: 160px;
+      z-index: 1000;
+      animation: slideDown 0.2s ease;
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        color: #333;
+        transition: background-color 0.2s ease;
+        font-family: 'Manrope', sans-serif;
+
+        i {
+          width: 20px;
+          color: #666;
+        }
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &:focus {
+          outline: none;
+          background-color: #f0f0f0;
+        }
+      }
+
+      .menu-divider {
+        height: 1px;
+        background-color: #eee;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

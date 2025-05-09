@@ -1,0 +1,20 @@
+<nav class="side-menu" role="navigation" aria-label="Menú principal">
+  <a
+    *ngFor="let item of menuItems; trackBy: trackByFn"
+    [routerLink]="item.disabled ? null : item.route"
+    [class.side-menu__item--active]="isItemActive(item)"
+    [class.side-menu__item--disabled]="item.disabled"
+    class="side-menu__item"
+    (click)="onItemClick(item)"
+    [attr.aria-current]="isItemActive(item) ? 'page' : null"
+    [attr.aria-disabled]="item.disabled"
+  >
+    <img 
+      [src]="'/assets/icons/' + item.icon" 
+      [alt]="item.label + ' Icon'" 
+      class="side-menu__icon"
+      [class.side-menu__icon--disabled]="item.disabled"
+    />
+    <span class="side-menu__label">{{ item.label }}</span>
+  </a>
+</nav>

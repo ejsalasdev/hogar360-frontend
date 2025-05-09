@@ -1,0 +1,91 @@
+@import '../../../../../styles/colors';
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .input-container {
+    position: relative;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 0.5rem;
+    box-sizing: border-box;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    background: $color-white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);
+    }
+
+    &::placeholder {
+      color: $color-text-light;
+      font-family: "Manrope", sans-serif;
+      font-size: 1rem;
+    }
+  }
+
+  .character-counter {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: #777;
+
+    &.over-limit {
+      color: red;
+      font-weight: bold;
+    }
+
+    &.character-counter--textarea {
+      top: auto;
+      bottom: 0.5rem;
+      right: 1rem;
+      transform: none;
+      font-size: 0.85em;
+      color: $color-text-light;
+    }
+  }
+
+  textarea.form-control {
+    width: 100%;
+    min-height: 90px;
+    resize: none;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: $color-white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);
+    }
+
+    &::placeholder {
+      color: $color-text-light;
+      font-family: "Manrope", sans-serif;
+      font-size: 1rem;
+    }
+  }
+}
+
+.required-asterisk {
+  color: $color-error;
+  margin-left: 0.1em;
+  font-size: 1em;
+}
