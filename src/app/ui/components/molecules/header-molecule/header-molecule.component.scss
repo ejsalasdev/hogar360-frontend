@@ -2,18 +2,18 @@
 
 .header {
   display: flex;
-  justify-content: space-between; /* Espacio entre logo e info de usuario */
-  align-items: center; /* Centrar verticalmente los elementos */
-  padding: 1rem 2rem; /* Espaciado interno arriba/abajo y derecha/izquierda */
-  background-color: $color-white; /* Un fondo gris claro */
-  border-bottom: 1px solid $color-border; /* Línea divisoria inferior sutil */
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: $color-white;
+  border-bottom: 1px solid $color-border;
 }
 
 .logo {
-  font-family: "Manrope", sans-serif; /* Aplica la fuente Manrope */
-  font-size: 1.5rem; /* Tamaño de la fuente del logo */
-  font-weight: bold; /* Texto en negrita */
-  color: #333; /* Color de texto oscuro */
+  font-family: "Manrope", sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
   display: flex;
   align-items: center;
 }
@@ -26,29 +26,29 @@
 
 .user-info {
   display: flex;
-  align-items: center; /* Centrar verticalmente los elementos */
+  align-items: center;
 }
 
 .welcome {
-  font-family: "Manrope", sans-serif; /* Aplica la fuente Manrope */
-  margin-right: 1rem; /* Espacio entre el saludo y el avatar */
+  font-family: "Manrope", sans-serif;
+  margin-right: 1rem;
   color: $color-text-light;
   font-size: 1rem;
 }
 
 .avatar {
-  width: 36px; /* Ancho del contenedor del avatar */
-  height: 36px; /* Alto del contenedor del avatar */
-  border-radius: 50%; /* Forma circular */
-  overflow: hidden; /* Recorta cualquier parte de la imagen que sobresalga */
-  border: 1.5px solid $color-border; /* Borde sutil */
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid $color-border;
   display: flex;
   align-items: center;
   justify-content: center;
 
   img {
-    width: 100%; /* La imagen ocupa todo el contenedor */
+    width: 100%;
     height: 100%;
-    object-fit: cover; /* La imagen cubre el contenedor manteniendo su proporción */
+    object-fit: cover;
   }
 }

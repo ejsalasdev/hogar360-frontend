@@ -37,9 +37,9 @@ describe('FormInputAtomComponent', () => {
   it('should update value and emit valueChange event', () => {
     const testValue = 'test value';
     const valueChangeSpy = jest.spyOn(component.valueChange, 'emit');
-    
+
     component.value = testValue;
-    
+
     expect(component.value).toBe(testValue);
     expect(valueChangeSpy).toHaveBeenCalledWith(testValue);
   });
@@ -77,26 +77,22 @@ describe('FormInputAtomComponent', () => {
     const onTouchedSpy = jest.spyOn(component as any, '_onTouched');
 
     input.triggerEventHandler('input', { target: { value: testValue } });
-    
+
     expect(component.value).toBe(testValue);
     expect(onTouchedSpy).toHaveBeenCalled();
   });
 
   it('should handle textarea type', () => {
-    // Verificamos el estado inicial
     expect(component.type).toBe('text');
     expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
     expect(fixture.debugElement.query(By.css('textarea'))).toBeFalsy();
 
-    // Cambiamos a textarea
     component.type = 'textarea';
     fixture.detectChanges();
 
-    // Esperamos a que se complete el cambio
     fixture.whenStable().then(() => {
       fixture.detectChanges();
-      
-      // Verificamos que los elementos se muestran/ocultan correctamente
+
       expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
       expect(fixture.debugElement.query(By.css('textarea'))).toBeTruthy();
     });
@@ -106,10 +102,9 @@ describe('FormInputAtomComponent', () => {
     component.type = 'textarea';
     fixture.detectChanges();
 
-    // Mock the textarea element
     const mockTextarea = { focus: jest.fn() };
     component.textareaElement = { nativeElement: mockTextarea } as any;
-    
+
     component.focus();
     expect(mockTextarea.focus).toHaveBeenCalled();
   });
@@ -117,26 +112,22 @@ describe('FormInputAtomComponent', () => {
   it('should not emit valueChange when value is the same', () => {
     const testValue = 'test value';
     const valueChangeSpy = jest.spyOn(component.valueChange, 'emit');
-    
+
     component.value = testValue;
     component.value = testValue; // Set the same value again
-    
+
     expect(valueChangeSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should focus input when focus method is called', () => {
-    // Asegurarnos que estamos usando un input normal
     component.type = 'text';
     fixture.detectChanges();
 
-    // Espiar el método focus del input
     const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     const focusSpy = jest.spyOn(inputElement, 'focus');
 
-    // Llamar al método focus
     component.focus();
 
-    // Verificar que se llamó al método focus
     expect(focusSpy).toHaveBeenCalled();
   });
 
@@ -150,12 +141,10 @@ describe('FormInputAtomComponent', () => {
     });
 
     it('should handle type changes using NgZone', () => {
-      // Espiar los métodos de NgZone
       const runOutsideAngularSpy = jest.spyOn(ngZone, 'runOutsideAngular');
       const runSpy = jest.spyOn(ngZone, 'run');
       const detectChangesSpy = jest.spyOn(component['cdr'], 'detectChanges');
 
-      // Simular un cambio en el tipo
       component.type = 'textarea';
       component.ngOnChanges({
         type: {
@@ -166,13 +155,10 @@ describe('FormInputAtomComponent', () => {
         }
       });
 
-      // Verificar que se ejecutó fuera de la zona de Angular
       expect(runOutsideAngularSpy).toHaveBeenCalled();
 
-      // Simular el setTimeout
       jest.runAllTimers();
 
-      // Verificar que se volvió a la zona de Angular
       expect(runSpy).toHaveBeenCalled();
       expect(detectChangesSpy).toHaveBeenCalled();
     });

@@ -5,24 +5,22 @@ import { CategoryService } from './category.service';
 
 describe('CategoryService', () => {
   let service: CategoryService;
-  let httpMock: HttpTestingController; // Para simular las peticiones HTTP
-
+  let httpMock: HttpTestingController;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Importa el módulo de pruebas de HttpClient
-      providers: [CategoryService]       // Asegúrate de que el servicio esté en providers
+      imports: [HttpClientTestingModule],
+      providers: [CategoryService]
     });
     service = TestBed.inject(CategoryService);
-    httpMock = TestBed.inject(HttpTestingController); // Inyecta el mock del controlador HTTP
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpMock.verify(); // Asegura que no haya peticiones pendientes al final de cada prueba
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // Aquí puedes añadir más pruebas para los métodos de tu servicio
 });

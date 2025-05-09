@@ -26,7 +26,7 @@ describe('CreateCategoryPageComponent', () => {
       providers: [CategoryService],
       schemas: [NO_ERRORS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -53,13 +53,13 @@ describe('CreateCategoryPageComponent', () => {
   it('should validate required fields', () => {
     const form = component.createCategoryForm;
     expect(form.valid).toBeFalsy();
-    
+
     const nameInput = form.controls['name'];
     const descriptionInput = form.controls['description'];
-    
+
     expect(nameInput.valid).toBeFalsy();
     expect(descriptionInput.valid).toBeFalsy();
-    
+
     expect(nameInput.errors?.['required']).toBeTruthy();
     expect(descriptionInput.errors?.['required']).toBeTruthy();
   });
@@ -67,13 +67,13 @@ describe('CreateCategoryPageComponent', () => {
   it('should validate name length constraints', () => {
     const form = component.createCategoryForm;
     const nameInput = form.controls['name'];
-    
+
     nameInput.setValue('abc');
     expect(nameInput.errors?.['minlength']).toBeTruthy();
-    
+
     nameInput.setValue('a'.repeat(51));
     expect(nameInput.errors?.['maxlength']).toBeTruthy();
-    
+
     nameInput.setValue('Valid Name');
     expect(nameInput.errors?.['minlength']).toBeFalsy();
     expect(nameInput.errors?.['maxlength']).toBeFalsy();
@@ -83,16 +83,16 @@ describe('CreateCategoryPageComponent', () => {
     const form = component.createCategoryForm;
     const nameInput = form.controls['name'];
     const descriptionInput = form.controls['description'];
-    
+
     nameInput.setValue('Invalid123');
     descriptionInput.setValue('Invalid@#$');
-    
+
     expect(nameInput.errors?.['pattern']).toBeTruthy();
     expect(descriptionInput.errors?.['pattern']).toBeTruthy();
-    
+
     nameInput.setValue('Valid Name áéíóú');
     descriptionInput.setValue('Valid Description ñÑ');
-    
+
     expect(nameInput.errors?.['pattern']).toBeFalsy();
     expect(descriptionInput.errors?.['pattern']).toBeFalsy();
   });
@@ -105,13 +105,13 @@ describe('CreateCategoryPageComponent', () => {
 
     component.categoryName = testCategory.name;
     component.categoryDescription = testCategory.description;
-    
+
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
-    
+
     fixture.detectChanges();
 
     component.onSubmit();
@@ -121,7 +121,7 @@ describe('CreateCategoryPageComponent', () => {
     const req = httpMock.expectOne('http://localhost:8081/api/v1/category/create');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(testCategory);
-    
+
     req.flush({ message: 'Category created successfully' });
     tick();
     fixture.detectChanges();
@@ -146,13 +146,13 @@ describe('CreateCategoryPageComponent', () => {
 
     component.categoryName = testCategory.name;
     component.categoryDescription = testCategory.description;
-    
+
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
-    
+
     fixture.detectChanges();
 
     component.onSubmit();
@@ -186,13 +186,13 @@ describe('CreateCategoryPageComponent', () => {
 
     component.categoryName = testCategory.name;
     component.categoryDescription = testCategory.description;
-    
+
     const form = component.createCategoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
-    
+
     fixture.detectChanges();
 
     component.onSubmit();
@@ -228,7 +228,7 @@ describe('CreateCategoryPageComponent', () => {
     form.controls['description'].setValue('Valid Description');
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
-    
+
     component.categoryName = 'Valid Name';
     component.categoryDescription = 'Valid Description';
     fixture.detectChanges();
@@ -237,36 +237,29 @@ describe('CreateCategoryPageComponent', () => {
   });
 
   it('should clear toast timeout when new toast is shown', fakeAsync(() => {
-    // Simular un timeout existente
-    component['toastTimeout'] = setTimeout(() => {}, 3000);
+    component['toastTimeout'] = setTimeout(() => { }, 3000);
     const clearTimeoutSpy = jest.spyOn(window, 'clearTimeout');
 
-    // Mostrar un nuevo toast
     component.showSuccess('Test message');
-    
-    // Verificar que se limpió el timeout anterior
+
     expect(clearTimeoutSpy).toHaveBeenCalled();
     expect(component['toastTimeout']).toBeDefined();
 
-    // Limpiar el timeout para evitar fugas de memoria
     clearTimeout(component['toastTimeout']);
     discardPeriodicTasks();
   }));
 
   it('should not submit form when invalid', () => {
-    // Espiar el método del servicio
     const createCategorySpy = jest.spyOn(categoryService, 'createCategory');
-    
-    // Asegurarnos que el formulario es inválido
+
     const form = component.createCategoryForm;
-    form.controls['name'].setValue('');  // Campo requerido vacío
-    form.controls['description'].setValue('');  // Campo requerido vacío
+    form.controls['name'].setValue('');
+    form.controls['description'].setValue('');
     expect(form.invalid).toBeTruthy();
 
-    // Intentar enviar el formulario
+
     component.onSubmit();
 
-    // Verificar que no se llamó al servicio
     expect(createCategorySpy).not.toHaveBeenCalled();
   });
 });
