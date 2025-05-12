@@ -28,7 +28,6 @@ export class CategoryPageComponent implements OnInit {
   readonly maxLengthName: number = 50;
   readonly maxLengthDescription: number = 90;
 
-  // --- Listado y paginación ---
   categories: CategoryResponse[] = [];
   pageInfo: PageInfo<CategoryResponse> | null = null;
   currentPage: number = 0;
@@ -41,7 +40,7 @@ export class CategoryPageComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -50,23 +49,30 @@ export class CategoryPageComponent implements OnInit {
 
   getCategories(page: number = this.currentPage): void {
     this.isLoading = true;
-    this.categoryService.getCategories(page, this.pageSize, this.orderAsc).subscribe({
-      next: (data) => {
-        this.pageInfo = data;
-        this.categories = data.content;
-        this.currentPage = data.currentPage;
-        this.isLoading = false;
-        this.changeDetectorRef.markForCheck();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.showError('Error al cargar las categorías.');
-      }
-    });
+    this.categoryService
+      .getCategories(page, this.pageSize, this.orderAsc)
+      .subscribe({
+        next: (data) => {
+          this.pageInfo = data;
+          this.categories = data.content;
+          this.currentPage = data.currentPage;
+          this.isLoading = false;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.showError('Error al cargar las categorías.');
+        },
+      });
   }
 
   onPageChange(page: number): void {
-    if (page !== this.currentPage && this.pageInfo && page >= 0 && page < this.pageInfo.totalPages) {
+    if (
+      page !== this.currentPage &&
+      this.pageInfo &&
+      page >= 0 &&
+      page < this.pageInfo.totalPages
+    ) {
       this.getCategories(page);
     }
   }
@@ -82,13 +88,15 @@ export class CategoryPageComponent implements OnInit {
         next: () => {
           this.showSuccess('La categoría se ha creado exitosamente.');
           this.resetForm();
-          this.getCategories(0); // Refrescar la lista y volver a la primera página
+          this.getCategories(0);
         },
         error: (error) => {
           if (error.status === 409) {
             this.showError('La categoría con este nombre ya existe.');
           } else {
-            this.showError('Error al crear la categoría. Por favor, inténtalo de nuevo.');
+            this.showError(
+              'Error al crear la categoría. Por favor, inténtalo de nuevo.'
+            );
           }
         },
       });
@@ -100,7 +108,7 @@ export class CategoryPageComponent implements OnInit {
     this.categoryDescription = '';
     this.createCategoryForm.resetForm({
       name: '',
-      description: ''
+      description: '',
     });
     this.changeDetectorRef.markForCheck();
   }
@@ -146,17 +154,14 @@ export class CategoryPageComponent implements OnInit {
       }
     } else {
       if (current <= 2) {
-        // Al principio
         for (let i = 0; i < maxButtons; i++) buttons.push(i);
         buttons.push('...');
         buttons.push(total - 1);
       } else if (current >= total - 3) {
-        // Al final
         buttons.push(0);
         buttons.push('...');
         for (let i = total - maxButtons; i < total; i++) buttons.push(i);
       } else {
-        // En el medio
         buttons.push(0);
         buttons.push('...');
         for (let i = current - 1; i <= current + 1; i++) buttons.push(i);
@@ -181,4 +186,4 @@ export class CategoryPageComponent implements OnInit {
     this.orderAsc = !this.orderAsc;
     this.getCategories(0);
   }
-} 
+}

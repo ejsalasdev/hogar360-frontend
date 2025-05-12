@@ -35,7 +35,6 @@ describe('CategoryPageComponent', () => {
     categoryService = TestBed.inject(CategoryService);
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-    // Mock GET categories al inicializar el componente
     httpMock.expectOne(req => req.method === 'GET' && req.url.includes('/api/v1/category/read'))
       .flush({ content: [], totalElements: 0, totalPages: 0, currentPage: 0, pageSize: 5, hasNext: false, hasPrevious: false });
     fixture.detectChanges();
@@ -127,7 +126,6 @@ describe('CategoryPageComponent', () => {
 
     req.flush({ message: 'Category created successfully' });
 
-    // Mock GET categories después de crear la categoría
     httpMock.expectOne(req => req.method === 'GET' && req.url.includes('/api/v1/category/read'))
       .flush({ content: [], totalElements: 0, totalPages: 0, currentPage: 0, pageSize: 5, hasNext: false, hasPrevious: false });
 
@@ -252,5 +250,177 @@ describe('CategoryPageComponent', () => {
     component.onSubmit();
 
     expect(createCategorySpy).not.toHaveBeenCalled();
+  });
+
+  describe('Pagination', () => {
+    it('should get pagination buttons for small number of pages', () => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 10,
+        totalPages: 3,
+        currentPage: 0,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: false
+      };
+      component.currentPage = 0;
+
+      const buttons = component.getPaginationButtons();
+      expect(buttons).toEqual([0, 1, 2]);
+    });
+
+    it('should get pagination buttons for current page near start', () => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 50,
+        totalPages: 10,
+        currentPage: 1,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: true
+      };
+      component.currentPage = 1;
+
+      const buttons = component.getPaginationButtons();
+      expect(buttons).toEqual([0, 1, 2, 3, 4, '...', 9]);
+    });
+
+    it('should get pagination buttons for current page near end', () => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 50,
+        totalPages: 10,
+        currentPage: 8,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: true
+      };
+      component.currentPage = 8;
+
+      const buttons = component.getPaginationButtons();
+      expect(buttons).toEqual([0, '...', 5, 6, 7, 8, 9]);
+    });
+
+    it('should get pagination buttons for current page in middle', () => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 50,
+        totalPages: 10,
+        currentPage: 5,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: true
+      };
+      component.currentPage = 5;
+
+      const buttons = component.getPaginationButtons();
+      expect(buttons).toEqual([0, '...', 4, 5, 6, '...', 9]);
+    });
+
+    it('should handle page button click', fakeAsync(() => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 10,
+        totalPages: 3,
+        currentPage: 0,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: false
+      };
+      component.currentPage = 0;
+      const getCategoriesSpy = jest.spyOn(component, 'getCategories');
+      component.handlePageButtonClick(2);
+      httpMock.expectOne(req => req.method === 'GET' && req.url.includes('/api/v1/category/read') && req.params.get('page') === '2')
+        .flush({ content: [], totalElements: 0, totalPages: 0, currentPage: 2, pageSize: 5, hasNext: false, hasPrevious: false });
+      expect(getCategoriesSpy).toHaveBeenCalledWith(2);
+    }));
+
+    it('should not handle page button click for non-number', () => {
+      const getCategoriesSpy = jest.spyOn(component, 'getCategories');
+      component.handlePageButtonClick('...');
+      expect(getCategoriesSpy).not.toHaveBeenCalled();
+    });
+
+    it('should get page number for number button', () => {
+      expect(component.getPageNumber(2)).toBe(3);
+    });
+
+    it('should return null for non-number button', () => {
+      expect(component.getPageNumber('...')).toBeNull();
+    });
+
+    it('should change page when valid', fakeAsync(() => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 10,
+        totalPages: 3,
+        currentPage: 0,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: false
+      };
+      component.currentPage = 0;
+      const getCategoriesSpy = jest.spyOn(component, 'getCategories').mockImplementation(() => {
+        // Simula la petición HTTP y su respuesta
+        component.isLoading = false;
+      });
+      component.onPageChange(1);
+      expect(getCategoriesSpy).toHaveBeenCalledWith(1);
+    }));
+
+    it('should not change page when invalid', fakeAsync(() => {
+      component.pageInfo = {
+        content: [],
+        totalElements: 10,
+        totalPages: 3,
+        currentPage: 0,
+        pageSize: 5,
+        hasNext: true,
+        hasPrevious: false
+      };
+      component.currentPage = 0;
+
+      const getCategoriesSpy = jest.spyOn(component, 'getCategories');
+      component.onPageChange(3); // Invalid page
+      expect(getCategoriesSpy).not.toHaveBeenCalled();
+    }));
+  });
+
+  describe('Sorting', () => {
+    it('should toggle order and refresh categories', fakeAsync(() => {
+      const getCategoriesSpy = jest.spyOn(component, 'getCategories').mockImplementation(() => {
+        // Simula la petición HTTP y su respuesta
+        component.isLoading = false;
+      });
+      component.toggleOrder();
+      expect(component.orderAsc).toBeFalsy();
+      expect(getCategoriesSpy).toHaveBeenCalledWith(0);
+    }));
+  });
+
+  describe('Error Handling', () => {
+    it('should handle error when loading categories', fakeAsync(() => {
+      component.getCategories();
+      tick();
+      fixture.detectChanges();
+
+      const req = httpMock.expectOne(req => req.method === 'GET' && req.url.includes('/api/v1/category/read'));
+      req.flush(
+        { message: 'Server error' },
+        { status: 500, statusText: 'Internal Server Error' }
+      );
+      tick();
+      fixture.detectChanges();
+
+      expect(component.toastMessage).toBe('Error al cargar las categorías.');
+      expect(component.toastType).toBe('error');
+      expect(component.isLoading).toBeFalsy();
+
+      tick(3000);
+      fixture.detectChanges();
+      expect(component.toastMessage).toBe('');
+
+      discardPeriodicTasks();
+    }));
   });
 }); 
