@@ -423,4 +423,82 @@ describe('CategoryPageComponent', () => {
       discardPeriodicTasks();
     }));
   });
+
+  it('should show confirm dialog when confirmDelete is called', () => {
+    const testCategory = { id: 1, name: 'Test Category', description: 'Test Description' };
+    component.confirmDelete(testCategory);
+    expect(component.showConfirmDialog).toBeTruthy();
+    expect(component.categoryToDelete).toEqual(testCategory);
+  });
+
+  it('should handle category deletion successfully', fakeAsync(() => {
+    const testCategory = { id: 1, name: 'Test Category', description: 'Test Description' };
+    component.categoryToDelete = testCategory;
+    
+    component.onConfirmDelete();
+    tick();
+    fixture.detectChanges();
+
+    const req = httpMock.expectOne(`http://localhost:8081/api/v1/category/${testCategory.id}`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ message: 'Category deleted successfully' });
+
+    httpMock.expectOne(req => req.method === 'GET' && req.url.includes('/api/v1/category/read'))
+      .flush({ content: [], totalElements: 0, totalPages: 0, currentPage: 0, pageSize: 5, hasNext: false, hasPrevious: false });
+
+    tick();
+    fixture.detectChanges();
+
+    expect(component.showConfirmDialog).toBeFalsy();
+    expect(component.categoryToDelete).toBeNull();
+    expect(component.toastMessage).toBe('Category deleted successfully');
+    expect(component.toastType).toBe('success');
+
+    tick(3000);
+    fixture.detectChanges();
+    expect(component.toastMessage).toBe('');
+
+    discardPeriodicTasks();
+  }));
+
+  it('should handle category deletion error', fakeAsync(() => {
+    const testCategory = { id: 1, name: 'Test Category', description: 'Test Description' };
+    component.categoryToDelete = testCategory;
+    
+    component.onConfirmDelete();
+    tick();
+    fixture.detectChanges();
+
+    const req = httpMock.expectOne(`http://localhost:8081/api/v1/category/${testCategory.id}`);
+    req.flush(
+      { message: 'Error deleting category' },
+      { status: 500, statusText: 'Internal Server Error' }
+    );
+
+    tick();
+    fixture.detectChanges();
+
+    expect(component.showConfirmDialog).toBeFalsy();
+    expect(component.categoryToDelete).toBeNull();
+    expect(component.toastMessage).toBe('Error deleting category');
+    expect(component.toastType).toBe('error');
+
+    tick(3000);
+    fixture.detectChanges();
+    expect(component.toastMessage).toBe('');
+
+    discardPeriodicTasks();
+  }));
+
+  it('should close dialog when canceling deletion', () => {
+    const testCategory = { id: 1, name: 'Test Category', description: 'Test Description' };
+    component.categoryToDelete = testCategory;
+    component.showConfirmDialog = true;
+    
+    component.onCancelDelete();
+    fixture.detectChanges();
+
+    expect(component.showConfirmDialog).toBeFalsy();
+    expect(component.categoryToDelete).toBeNull();
+  });
 }); 
