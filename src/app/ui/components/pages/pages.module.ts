@@ -3,13 +3,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AtomsModule } from '../atoms/atoms.module';
-import { CreateCategoryPageComponent } from './create-category-page/create-category-page.component';
+import { CategoryPageComponent } from './category-page/category-page.component';
 
 @NgModule({
-  declarations: [CreateCategoryPageComponent],
+  declarations: [CategoryPageComponent],
   imports: [CommonModule, FormsModule, AtomsModule, HttpClientModule],
   exports: [
-    CreateCategoryPageComponent,
+    CategoryPageComponent,
   ],
 })
 export class PagesModule {}

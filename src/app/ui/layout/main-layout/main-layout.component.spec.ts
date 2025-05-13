@@ -1,11 +1,31 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, Input } from '@angular/core';
 import { MainLayoutComponent } from './main-layout.component';
-import { HeaderMoleculeComponent } from '../../components/molecules/header-molecule/header-molecule.component';
-import { SideMenuMoleculeComponent } from '../../components/molecules/side-menu-molecule/side-menu-molecule.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'mol-header',
+  template: ''
+})
+class MockHeaderComponent {
+  @Input() logoText: string = '';
+  @Input() welcomeMessage: string = '';
+  @Input() userName: string = '';
+  @Input() userAvatarUrl: string = '';
+  @Input() config: any = {};
+}
+
+@Component({
+  selector: 'mol-side-menu',
+  template: ''
+})
+class MockSideMenuComponent {
+  @Input() menuItems: any[] = [];
+  @Input() activeItemId: string | null = null;
+}
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
@@ -15,20 +35,21 @@ describe('MainLayoutComponent', () => {
 
   beforeEach(async () => {
     navigationEndSubject = new Subject<NavigationEnd>();
-    
     await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [
         MainLayoutComponent,
-        HeaderMoleculeComponent,
-        SideMenuMoleculeComponent
+        MockHeaderComponent,
+        MockSideMenuComponent
       ],
-      imports: [RouterTestingModule],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
+    router = TestBed.inject(Router);
+    jest.spyOn(router.events, 'pipe').mockReturnValue(navigationEndSubject);
+
     fixture = TestBed.createComponent(MainLayoutComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -49,54 +70,69 @@ describe('MainLayoutComponent', () => {
     expect(component.menuItems[0].route).toBe('/dashboard');
   });
 
-  it('should update active menu item when route changes', fakeAsync(() => {
-    const navigationEnd = new NavigationEnd(1, '/dashboard', '/dashboard');
-    component['updateActiveMenuItem']('/dashboard');
-    tick();
-    
-    expect(component.activeItemId).toBe('dashboard');
-  }));
+  describe('Route Listener', () => {
+    it('should update active menu item on navigation end', () => {
+      const mockEvent = new NavigationEnd(1, '/admin/categories', '/admin/categories');
+      navigationEndSubject.next(mockEvent);
+      expect(component.activeItemId).toBe('categories');
+    });
 
-  it('should set activeItemId to null when no matching route', fakeAsync(() => {
-    component['updateActiveMenuItem']('/non-existent-route');
-    tick();
-    
+    it('should handle navigation to unknown route', () => {
+      const mockEvent = new NavigationEnd(1, '/unknown', '/unknown');
+      navigationEndSubject.next(mockEvent);
     expect(component.activeItemId).toBeNull();
-  }));
+    });
+  });
 
-  it('should navigate when menu item is clicked', fakeAsync(() => {
+  describe('Menu Item Click', () => {
+    it('should navigate to valid route', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    const menuItem = { id: 'dashboard', label: 'Dashboard', route: '/dashboard', icon: 'dashboard.png' };
-    
-    component.onMenuItemClick(menuItem);
-    tick();
-    
-    expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
-  }));
+      component.onMenuItemClick({
+        id: 'categories',
+        route: '/admin/categories',
+        disabled: false,
+        label: 'Categories',
+        icon: 'pi-list'
+      });
+      expect(navigateSpy).toHaveBeenCalledWith(['/admin/categories']);
+    });
 
-  it('should not navigate when menu item is disabled', fakeAsync(() => {
+    it('should not navigate if item is disabled', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    const menuItem = { 
-      id: 'dashboard', 
-      label: 'Dashboard', 
-      route: '/dashboard', 
-      icon: 'dashboard.png',
-      disabled: true 
-    };
-    
-    component.onMenuItemClick(menuItem);
-    tick();
-    
+      component.onMenuItemClick({
+        id: 'categories',
+        route: '/admin/categories',
+        disabled: true,
+        label: 'Categories',
+        icon: 'pi-list'
+      });
     expect(navigateSpy).not.toHaveBeenCalled();
-  }));
+    });
 
-  it('should handle route changes through router events', fakeAsync(() => {
-    const navigationEnd = new NavigationEnd(1, '/dashboard', '/dashboard');
-    const routerEventsSpy = jest.spyOn(router.events, 'pipe');
-    
-    component.ngOnInit();
-    tick();
-    
-    expect(routerEventsSpy).toHaveBeenCalled();
-  }));
+    it('should navigate to empty route if route is invalid', () => {
+      const navigateSpy = jest.spyOn(router, 'navigate');
+      component.onMenuItemClick({
+        id: 'invalid',
+        route: '',
+        disabled: false,
+        label: 'Invalid',
+        icon: 'pi-times'
+      });
+      expect(navigateSpy).toHaveBeenCalledWith(['']);
+    });
+  });
+
+  describe('Active Menu Item', () => {
+    it('should update active item for matching route', () => {
+      const mockEvent = new NavigationEnd(1, '/admin/categories', '/admin/categories');
+      navigationEndSubject.next(mockEvent);
+      expect(component.activeItemId).toBe('categories');
+    });
+
+    it('should set active item to null for non-matching route', () => {
+      const mockEvent = new NavigationEnd(1, '/unknown', '/unknown');
+      navigationEndSubject.next(mockEvent);
+      expect(component.activeItemId).toBeNull();
+    });
 });
+}); 

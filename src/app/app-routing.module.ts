@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateCategoryPageComponent } from './ui/components/pages/create-category-page/create-category-page.component';
+import { CategoryPageComponent } from './ui/components/pages/category-page/category-page.component';
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
 
 const routes: Routes = [
@@ -11,7 +11,7 @@ const routes: Routes = [
       { 
         path: 'admin/categories',
         children: [
-          { path: 'create', component: CreateCategoryPageComponent },
+          { path: 'create', component: CategoryPageComponent },
           { path: '', redirectTo: 'create', pathMatch: 'full' }
         ]
       },

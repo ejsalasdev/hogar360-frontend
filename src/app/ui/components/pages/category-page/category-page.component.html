@@ -1,0 +1,202 @@
+<div class="category">
+  <h2 class="category__title">Crear Categoría</h2>
+  <div class="category__card">
+    <form
+      #createCategoryForm="ngForm"
+      (ngSubmit)="onSubmit()"
+      class="category__form"
+    >
+      <div class="category__field">
+        <atm-form-input
+          label="Nombre de la Categoría"
+          placeholder="Escribe el nombre de la categoría (máximo 50 caracteres)"
+          type="text"
+          [(ngModel)]="categoryName"
+          name="name"
+          [required]="true"
+          minlength="5"
+          [maxlength]="maxLengthName"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          #nameInput="ngModel"
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
+        ></atm-form-input>
+        <div class="category__error-container">
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['required']"
+            class="category__error-text"
+          >
+            El nombre de la categoría es requerido.
+          </span>
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['minlength']"
+            class="category__error-text"
+          >
+            El nombre debe tener al menos
+            {{ nameInput.errors?.['minlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched) && nameInput.errors?.['maxlength']"
+            class="category__error-text"
+          >
+            El nombre no puede tener más de
+            {{ nameInput.errors?.['maxlength']?.requiredLength }} caracteres.
+          </span>
+          <span
+            *ngIf="shouldShowPatternError(nameInput)"
+            class="category__error-text"
+          >
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
+          </span>
+        </div>
+      </div>
+
+      <div class="category__field">
+        <atm-form-input
+          label="Descripción"
+          placeholder="Escribe la descripción de la categoría (máximo 90 caracteres)"
+          type="textarea"
+          [(ngModel)]="categoryDescription"
+          name="description"
+          [required]="true"
+          minlength="10"
+          [maxlength]="maxLengthDescription"
+          [ngModelOptions]="{ updateOn: 'blur' }"
+          #descriptionInput="ngModel"
+          #descriptionInputRef
+          [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'"
+        ></atm-form-input>
+        <div class="category__error-container">
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['required']"
+            class="category__error-text"
+          >
+            La descripción es requerida.
+          </span>
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['minlength']"
+            class="category__error-text"
+          >
+            La descripción debe tener al menos
+            {{ descriptionInput.errors?.['minlength']?.requiredLength }}
+            caracteres.
+          </span>
+          <span
+            *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched) && descriptionInput.errors?.['maxlength']"
+            class="category__error-text"
+          >
+            La descripción no puede tener más de
+            {{ descriptionInput.errors?.['maxlength']?.requiredLength }}
+            caracteres.
+          </span>
+          <span
+            *ngIf="shouldShowPatternError(descriptionInput)"
+            class="category__error-text"
+          >
+            Solo se permiten caracteres alfabéticos, espacios y acentos.
+          </span>
+        </div>
+      </div>
+
+      <div class="category__button-container">
+        <button
+          type="submit"
+          [disabled]="createCategoryForm.invalid"
+          class="category__button"
+        >
+          Crear
+        </button>
+      </div>
+    </form>
+  </div>
+  <atm-toast
+    [config]="{
+      message: toastMessage,
+      type: toastType,
+      duration: 3000
+    }"
+    (closed)="onToastClosed()"
+  ></atm-toast>
+
+  <atm-confirm-dialog
+    [show]="showConfirmDialog"
+    title="Eliminar categoría"
+    [message]="categoryToDelete ? '¿Estás seguro de que deseas eliminar la categoría \'' + categoryToDelete.name + '\'?' : ''"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()"
+  ></atm-confirm-dialog>
+
+  <div class="category__subtitle-container">
+    <h2 class="category__subtitle">Categorías existentes</h2>
+  </div>
+  <div class="category__list-container">
+    <table class="category__table" *ngIf="categories.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th (click)="toggleOrder()" style="cursor: pointer">
+            Name
+            <span *ngIf="orderAsc">&#9650;</span>
+            <span *ngIf="!orderAsc">&#9660;</span>
+          </th>
+          <th>Description</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let cat of categories; let i = index"
+          [class.first-row]="i === 0"
+          [class.last-row]="i === categories.length - 1"
+        >
+          <td>#CAT-{{ cat.id }}</td>
+          <td>{{ cat.name }}</td>
+          <td>{{ cat.description }}</td>
+          <td>
+            <button class="category__delete-btn" 
+                    title="Eliminar"
+                    (click)="confirmDelete(cat)">
+              <img src="/assets/icons/delete.png" 
+                   alt="Eliminar" 
+                   class="category__delete-icon" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="categories.length === 0 && !isLoading" class="category__empty">
+      No hay categorías para mostrar.
+    </div>
+    <div *ngIf="isLoading" class="category__loading">Cargando...</div>
+
+    <div
+      class="category__pagination"
+      *ngIf="pageInfo && pageInfo.totalPages > 1"
+    >
+      <button
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="!pageInfo.hasPrevious"
+      >
+        &lt;
+      </button>
+      <ng-container *ngFor="let btn of getPaginationButtons(); let i = index">
+        <ng-container *ngIf="btn !== '...'">
+          <button
+            (click)="handlePageButtonClick(btn)"
+            [class.active]="btn === currentPage"
+          >
+            {{ getPageNumber(btn) }}
+          </button>
+        </ng-container>
+        <span *ngIf="btn === '...'" class="category__pagination-ellipsis"
+          >...</span
+        >
+      </ng-container>
+      <button
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="!pageInfo.hasNext"
+      >
+        &gt;
+      </button>
+    </div>
+  </div>
+</div>
