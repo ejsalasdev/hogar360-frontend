@@ -38,6 +38,9 @@ export class CategoryPageComponent implements OnInit {
   @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
   @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
 
+  showConfirmDialog: boolean = false;
+  categoryToDelete: CategoryResponse | null = null;
+
   constructor(
     private categoryService: CategoryService,
     private changeDetectorRef: ChangeDetectorRef
@@ -185,5 +188,39 @@ export class CategoryPageComponent implements OnInit {
   toggleOrder(): void {
     this.orderAsc = !this.orderAsc;
     this.getCategories(0);
+  }
+
+  confirmDelete(category: CategoryResponse): void {
+    this.categoryToDelete = category;
+    this.showConfirmDialog = true;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  onConfirmDelete(): void {
+    if (this.categoryToDelete) {
+      this.deleteCategory(this.categoryToDelete.id);
+      this.showConfirmDialog = false;
+      this.categoryToDelete = null;
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  onCancelDelete(): void {
+    this.showConfirmDialog = false;
+    this.categoryToDelete = null;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  deleteCategory(id: number): void {
+    this.categoryService.deleteCategory(id).subscribe({
+      next: (response) => {
+        this.showSuccess(response.message);
+        this.getCategories();
+      },
+      error: (error) => {
+        console.error('Error deleting category:', error);
+        this.showError(error.error.message || 'Error al eliminar la categoría');
+      }
+    });
   }
 }

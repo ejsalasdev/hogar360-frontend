@@ -117,6 +117,14 @@
     (closed)="onToastClosed()"
   ></atm-toast>
 
+  <atm-confirm-dialog
+    [show]="showConfirmDialog"
+    title="Eliminar categoría"
+    [message]="categoryToDelete ? '¿Estás seguro de que deseas eliminar la categoría \'' + categoryToDelete.name + '\'?' : ''"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()"
+  ></atm-confirm-dialog>
+
   <div class="category__subtitle-container">
     <h2 class="category__subtitle">Categorías existentes</h2>
   </div>
@@ -144,12 +152,12 @@
           <td>{{ cat.name }}</td>
           <td>{{ cat.description }}</td>
           <td>
-            <button class="category__delete-btn" title="Eliminar">
-              <img
-                src="/assets/icons/delete.png"
-                alt="Eliminar"
-                class="category__delete-icon"
-              />
+            <button class="category__delete-btn" 
+                    title="Eliminar"
+                    (click)="confirmDelete(cat)">
+              <img src="/assets/icons/delete.png" 
+                   alt="Eliminar" 
+                   class="category__delete-icon" />
             </button>
           </td>
         </tr>

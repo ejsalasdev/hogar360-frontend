@@ -24,4 +24,8 @@ export class CategoryService {
       .set('orderAsc', orderAsc);
     return this.http.get<PageInfo<CategoryResponse>>(`${this.apiUrl}/read`, { params });
   }
+
+  deleteCategory(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
 }
