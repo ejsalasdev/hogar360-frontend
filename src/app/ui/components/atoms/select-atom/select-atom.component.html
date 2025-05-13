@@ -1,0 +1,16 @@
+<div class="select">
+  <label *ngIf="label" class="select__label" [class.select__label--required]="required">{{ label }}</label>
+  <select
+    class="select__field"
+    [class.select__field--disabled]="isDisabled"
+    [(ngModel)]="value"
+    (change)="onSelectChange($event)"
+    [disabled]="isDisabled"
+    [required]="required"
+  >
+    <option [ngValue]="null">{{ placeholder }}</option>
+    <option *ngFor="let option of options" [ngValue]="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+</div>
