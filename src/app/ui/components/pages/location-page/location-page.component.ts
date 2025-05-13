@@ -9,22 +9,17 @@ import { NgForm } from '@angular/forms';
 import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 import { SelectAtomComponent, SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
+import { DepartmentService } from '../../../../core/services/department.service';
 
-interface Department extends SelectOption {
+interface DepartmentOption extends SelectOption {
   id: number;
   name: string;
 }
 
-interface City extends SelectOption {
+interface CityOption extends SelectOption {
   id: number;
   name: string;
   departmentId: number;
-}
-
-interface Location {
-  departmentId: number;
-  cityId: number;
-  sector: string;
 }
 
 @Component({
@@ -34,16 +29,16 @@ interface Location {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationPageComponent implements OnInit {
-  departments: Department[] = [];
-  cities: City[] = [];
+  departments: DepartmentOption[] = [];
+  cities: CityOption[] = [];
   selectedDepartmentId: number | null = null;
   selectedCityId: number | null = null;
   sector: string = '';
-  toastMessage = '';
+  toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
 
-  readonly maxLengthSector: number = 50;
+  readonly maxLengthSector: number = 100;
 
   @ViewChild('createLocationForm') createLocationForm!: NgForm;
   @ViewChild('sectorInputRef') sectorInput!: FormInputAtomComponent;
@@ -51,19 +46,35 @@ export class LocationPageComponent implements OnInit {
   @ViewChild('citySelectRef') citySelect!: SelectAtomComponent;
 
   constructor(
+    private departmentService: DepartmentService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // TODO: Implementar carga de departamentos cuando esté el endpoint
-    this.departments = [
-      { id: 1, name: 'Departamento 1', value: 1, label: 'Departamento 1' },
-      { id: 2, name: 'Departamento 2', value: 2, label: 'Departamento 2' }
-    ];
+    this.loadDepartments();
   }
 
-  onDepartmentChange(departmentId: string | number): void {
-    this.selectedDepartmentId = Number(departmentId);
+  loadDepartments(): void {
+    this.departmentService.getAllDepartments().subscribe({
+      next: (departments) => {
+        this.departments = departments.map(dept => ({
+          id: dept.id,
+          name: dept.name,
+          value: dept.id,
+          label: dept.name
+        }));
+        this.changeDetectorRef.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error loading departments:', error);
+        this.showToast('Error al cargar los departamentos', 'error');
+      }
+    });
+  }
+
+  onDepartmentChange(departmentId: string | number | null): void {
+    console.log('Department changed:', departmentId);
+    this.selectedDepartmentId = departmentId ? Number(departmentId) : null;
     this.selectedCityId = null;
     this.cities = [];
     
@@ -79,43 +90,29 @@ export class LocationPageComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.createLocationForm.valid) {
-      const location: Location = {
-        departmentId: this.selectedDepartmentId!,
-        cityId: this.selectedCityId!,
-        sector: this.sector
-      };
-
-      // TODO: Implementar creación de ubicación cuando esté el endpoint
-      console.log('Location to create:', location);
-      this.showSuccess('La ubicación se ha creado exitosamente.');
-      this.resetForm();
+    if (!this.selectedDepartmentId || !this.selectedCityId || !this.sector) {
+      return;
     }
+
+    // TODO: Implementar la creación de ubicación cuando esté el endpoint
+    console.log('Form submitted:', {
+      departmentId: this.selectedDepartmentId,
+      cityId: this.selectedCityId,
+      sector: this.sector
+    });
+
+    this.showToast('Ubicación creada exitosamente', 'success');
   }
 
-  private resetForm(): void {
-    this.selectedDepartmentId = null;
-    this.selectedCityId = null;
-    this.sector = '';
-    this.cities = [];
-    this.createLocationForm.resetForm();
-    this.changeDetectorRef.markForCheck();
-  }
-
-  private showSuccess(message: string): void {
+  private showToast(message: string, type: ToastType): void {
     this.toastMessage = message;
-    this.toastType = 'success';
-    this.changeDetectorRef.markForCheck();
-  }
-
-  private showError(message: string): void {
-    this.toastMessage = message;
-    this.toastType = 'error';
+    this.toastType = type;
     this.changeDetectorRef.markForCheck();
   }
 
   onToastClosed(): void {
-    this.toastMessage = '';
+    this.toastMessage = null;
+    this.toastType = 'info';
     this.changeDetectorRef.markForCheck();
   }
 }
