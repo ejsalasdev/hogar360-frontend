@@ -80,13 +80,13 @@ describe('MainLayoutComponent', () => {
     it('should handle navigation to unknown route', () => {
       const mockEvent = new NavigationEnd(1, '/unknown', '/unknown');
       navigationEndSubject.next(mockEvent);
-      expect(component.activeItemId).toBeNull();
+    expect(component.activeItemId).toBeNull();
     });
   });
 
   describe('Menu Item Click', () => {
     it('should navigate to valid route', () => {
-      const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = jest.spyOn(router, 'navigate');
       component.onMenuItemClick({
         id: 'categories',
         route: '/admin/categories',
@@ -98,7 +98,7 @@ describe('MainLayoutComponent', () => {
     });
 
     it('should not navigate if item is disabled', () => {
-      const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = jest.spyOn(router, 'navigate');
       component.onMenuItemClick({
         id: 'categories',
         route: '/admin/categories',
@@ -106,7 +106,7 @@ describe('MainLayoutComponent', () => {
         label: 'Categories',
         icon: 'pi-list'
       });
-      expect(navigateSpy).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
     });
 
     it('should navigate to empty route if route is invalid', () => {
@@ -134,5 +134,5 @@ describe('MainLayoutComponent', () => {
       navigationEndSubject.next(mockEvent);
       expect(component.activeItemId).toBeNull();
     });
-  });
+});
 }); 
