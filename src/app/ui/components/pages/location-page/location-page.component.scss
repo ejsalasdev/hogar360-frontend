@@ -69,4 +69,19 @@ body,
             cursor: not-allowed;
         }
     }
+
+    &__error-container {
+        min-height: 22px;
+        margin-top: 2px;
+    }
+
+    &__error-text {
+        color: #e74c3c;
+        font-size: 0.95rem;
+        line-height: 1.2;
+        display: block;
+        min-height: 20px;
+        margin-top: 2px;
+        transition: color 0.2s;
+    }
 }
