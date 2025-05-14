@@ -1,0 +1,45 @@
+@import '../../../../../styles/colors';
+
+.input-atom__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.input-atom__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-atom__control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $color-text;
+  background: $color-white;
+  transition: border-color 0.2s;
+  &:focus {
+    border-color: $color-primary;
+    outline: none;
+  }
+  &:disabled {
+    background: $color-bg;
+    color: $color-text-light;
+    cursor: not-allowed;
+  }
+}
+.input-atom__required-asterisk {
+  color: $color-error;
+  margin-left: 0.25rem;
+}
+.input-atom__character-counter {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: $color-text-light;
+  &--over {
+    color: $color-error;
+  }
+} 

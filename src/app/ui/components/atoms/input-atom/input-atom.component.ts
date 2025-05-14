@@ -7,27 +7,26 @@ import {
   Input,
   Output,
   ViewChild,
-  ElementRef,
-  NgZone
+  ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-type InputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'textarea';
+type InputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
 
 @Component({
-  selector: 'atm-form-input',
-  templateUrl: './form-input-atom.component.html',
-  styleUrls: ['./form-input-atom.component.scss'],
+  selector: 'atm-input',
+  templateUrl: './input-atom.component.html',
+  styleUrls: ['./input-atom.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormInputAtomComponent),
+      useExisting: forwardRef(() => InputAtomComponent),
       multi: true,
     },
   ],
 })
-export class FormInputAtomComponent implements ControlValueAccessor {
+export class InputAtomComponent implements ControlValueAccessor {
   @Input() type: InputType = 'text';
   @Input() label: string = '';
   @Input() placeholder: string = '';
@@ -35,7 +34,6 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   @Input() required: boolean = false;
   @Output() valueChange = new EventEmitter<string>();
 
-  @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
 
   private _value: string = '';
@@ -79,13 +77,12 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   }
 
   onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const target = event.target as HTMLInputElement;
     this.value = target.value;
     this._onTouched();
   }
 
   focus(): void {
-    const element = this.type === 'textarea' ? this.textareaElement : this.inputElement;
-    element?.nativeElement?.focus();
+    this.inputElement?.nativeElement?.focus();
   }
-}
+} 

@@ -1,0 +1,15 @@
+<button
+  [type]="type"
+  [disabled]="disabled || loading"
+  [ngClass]="'atm-button--' + variant"
+  class="atm-button"
+>
+  <ng-container *ngIf="loading">
+    <span class="atm-button__spinner"></span>
+  </ng-container>
+  <ng-container *ngIf="icon && !loading">
+    <img [src]="'/assets/icons/' + icon + '.png'" class="atm-button__icon" [alt]="label" />
+  </ng-container>
+  <span *ngIf="label">{{ label }}</span>
+  <ng-content *ngIf="!label"></ng-content>
+</button> 

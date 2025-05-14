@@ -1,0 +1,25 @@
+<div class="input-atom__group">
+  <label *ngIf="label">
+    {{ label }}
+    <span *ngIf="required" class="input-atom__required-asterisk">*</span>
+  </label>
+  <div class="input-atom__container">
+    <input
+      #inputElement
+      [type]="type"
+      class="input-atom__control"
+      [placeholder]="placeholder"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [attr.maxlength]="maxlength"
+      [disabled]="isDisabled"
+    />
+    <span
+      *ngIf="maxlength"
+      class="input-atom__character-counter"
+      [ngClass]="{'input-atom__character-counter--over': value ? value.length > maxlength : false}"
+    >
+      {{ value ? value.length : 0 }}/{{ maxlength }}
+    </span>
+  </div>
+</div> 

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AtomsModule } from '../atoms/atoms.module';
 import { CategoryPageComponent } from './category-page/category-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
+import { MoleculesModule } from '../molecules/molecules.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { LocationPageComponent } from './location-page/location-page.component';
     CommonModule,
     FormsModule,
     AtomsModule,
-    HttpClientModule
+    HttpClientModule,
+    MoleculesModule
   ],
   exports: [
     CategoryPageComponent,

@@ -1,0 +1,47 @@
+@import '../../../../../styles/colors';
+
+.textarea-atom__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.textarea-atom__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.textarea-atom__control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $color-text;
+  background: $color-white;
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 100px;
+  &:focus {
+    border-color: $color-primary;
+    outline: none;
+  }
+  &:disabled {
+    background: $color-bg;
+    color: $color-text-light;
+    cursor: not-allowed;
+  }
+}
+.textarea-atom__required-asterisk {
+  color: $color-error;
+  margin-left: 0.25rem;
+}
+.textarea-atom__character-counter {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: $color-text-light;
+  &--over {
+    color: $color-error;
+  }
+} 

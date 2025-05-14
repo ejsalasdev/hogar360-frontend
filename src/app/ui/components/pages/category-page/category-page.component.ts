@@ -8,7 +8,6 @@ import {
 import { NgForm } from '@angular/forms';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
-import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { CategoryResponse } from '../../../../core/models/category-response.model';
 import { PageInfo } from '../../../../core/models/page-info.model';
@@ -36,10 +35,42 @@ export class CategoryPageComponent implements OnInit {
   isLoading: boolean = false;
 
   @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
-  @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
 
   showConfirmDialog: boolean = false;
   categoryToDelete: CategoryResponse | null = null;
+
+  categoryFormFields = [
+    {
+      name: 'name',
+      label: 'Nombre de la Categoría',
+      type: 'text',
+      required: true,
+      minlength: 5,
+      maxlength: 50,
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$',
+      placeholder: 'Escribe el nombre de la categoría (máximo 50 caracteres)'
+    },
+    {
+      name: 'description',
+      label: 'Descripción',
+      type: 'textarea',
+      required: true,
+      minlength: 10,
+      maxlength: 90,
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$',
+      placeholder: 'Escribe la descripción de la categoría (máximo 90 caracteres)'
+    }
+  ];
+  categoryModel = { name: '', description: '' };
+
+  categoryTableColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Nombre' },
+    { key: 'description', label: 'Descripción' }
+  ];
+  tableActions = [
+    { type: 'delete', icon: 'delete', tooltip: 'Eliminar' }
+  ];
 
   constructor(
     private categoryService: CategoryService,
@@ -223,4 +254,34 @@ export class CategoryPageComponent implements OnInit {
       }
     });
   }
+
+  onFormSubmit(model: any): void {
+    if (model.name && model.description) {
+      const category: Category = {
+        name: model.name,
+        description: model.description,
+      };
+      this.categoryService.createCategory(category).subscribe({
+        next: () => {
+          this.showSuccess('La categoría se ha creado exitosamente.');
+          this.resetForm();
+          this.getCategories(0);
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            this.showError('La categoría con este nombre ya existe.');
+          } else {
+            this.showError('Error al crear la categoría. Por favor, inténtalo de nuevo.');
+          }
+        },
+      });
+    }
+  }
+
+  onTableAction(event: any): void {
+    if (event.type === 'delete') {
+      this.confirmDelete(event.row);
+    }
+  }
 }
+ 

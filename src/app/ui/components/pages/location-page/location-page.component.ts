@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 import {
   SelectAtomComponent,
   SelectOption,
@@ -45,7 +44,6 @@ export class LocationPageComponent implements OnInit {
   readonly maxLengthSector: number = 50;
 
   @ViewChild('createLocationForm') createLocationForm!: NgForm;
-  @ViewChild('sectorInputRef') sectorInput!: FormInputAtomComponent;
   @ViewChild('departmentSelectRef') departmentSelect!: SelectAtomComponent;
   @ViewChild('citySelectRef') citySelect!: SelectAtomComponent;
 

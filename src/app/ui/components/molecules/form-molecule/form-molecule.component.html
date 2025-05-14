@@ -1,0 +1,26 @@
+<form (ngSubmit)="onSubmit()">
+  <ng-container *ngFor="let field of fields">
+    <atm-input
+      *ngIf="field.type !== 'textarea'"
+      [label]="field.label"
+      [type]="field.type"
+      [placeholder]="field.placeholder"
+      [maxlength]="field.maxlength"
+      [required]="field.required"
+      [(ngModel)]="model[field.name]"
+      name="{{field.name}}"
+    ></atm-input>
+    <atm-textarea
+      *ngIf="field.type === 'textarea'"
+      [label]="field.label"
+      [placeholder]="field.placeholder"
+      [maxlength]="field.maxlength"
+      [required]="field.required"
+      [(ngModel)]="model[field.name]"
+      name="{{field.name}}"
+    ></atm-textarea>
+  </ng-container>
+  <div class="form-molecule__button-container">
+    <atm-button type="submit" variant="primary" [label]="submitLabel"></atm-button>
+  </div>
+</form> 
