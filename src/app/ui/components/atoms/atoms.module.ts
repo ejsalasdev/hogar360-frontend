@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { FormInputAtomComponent } from './form-input-atom/form-input-atom.component';
 import { ToastAtomComponent } from './toast-atom/toast-atom.component';
 import { ConfirmDialogAtomComponent } from './confirm-dialog-atom/confirm-dialog-atom.component';
+import { SelectAtomComponent } from './select-atom/select-atom.component';
 
 @NgModule({
   declarations: [
     FormInputAtomComponent,
     ToastAtomComponent,
-    ConfirmDialogAtomComponent
+    ConfirmDialogAtomComponent,
+    SelectAtomComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +20,8 @@ import { ConfirmDialogAtomComponent } from './confirm-dialog-atom/confirm-dialog
   exports: [
     FormInputAtomComponent,
     ToastAtomComponent,
-    ConfirmDialogAtomComponent
+    ConfirmDialogAtomComponent,
+    SelectAtomComponent
   ]
 })
 export class AtomsModule { }

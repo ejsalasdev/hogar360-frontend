@@ -65,7 +65,7 @@ describe('MainLayoutComponent', () => {
   });
 
   it('should initialize with menu items', () => {
-    expect(component.menuItems.length).toBe(5);
+    expect(component.menuItems.length).toBe(6);
     expect(component.menuItems[0].label).toBe('Dashboard');
     expect(component.menuItems[0].route).toBe('/dashboard');
   });
