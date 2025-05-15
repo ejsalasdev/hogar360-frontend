@@ -13,6 +13,10 @@ import {
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { DepartmentService } from '../../../../core/services/department.service';
 import { CityService } from '../../../../core/services/city.service';
+import {
+  UbicationService,
+  SaveUbicationRequest,
+} from '../../../../core/services/ubication.service';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -50,6 +54,7 @@ export class LocationPageComponent implements OnInit {
   constructor(
     private departmentService: DepartmentService,
     private cityService: CityService,
+    private ubicationService: UbicationService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -118,14 +123,43 @@ export class LocationPageComponent implements OnInit {
     if (!this.selectedDepartmentId || !this.selectedCityId || !this.sector) {
       return;
     }
-    // TODO: Implementar la creación de ubicación cuando esté el endpoint
-    console.log('Form submitted:', {
-      departmentId: Number(this.selectedDepartmentId),
-      cityId: Number(this.selectedCityId),
+
+    const selectedCity = this.cities.find(
+      (city) => String(city.id) === String(this.selectedCityId)
+    );
+    const selectedDepartment = this.departments.find(
+      (dept) => dept.id === Number(this.selectedDepartmentId)
+    );
+    if (!selectedCity) {
+      this.showToast('Ciudad no encontrada', 'error');
+      return;
+    }
+    const request: SaveUbicationRequest = {
       sector: this.sector,
+      cityName: selectedCity.name,
+      departmentName: selectedDepartment ? selectedDepartment.name : undefined,
+    };
+    this.isLoading = true;
+    this.ubicationService.createUbication(request).subscribe({
+      next: (response) => {
+        this.showToast('Ubicación creada exitosamente', 'success');
+        this.resetForm();
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          this.showToast(
+            'La ubicación ya existe en la ciudad seleccionada.',
+            'error'
+          );
+        } else {
+          this.showToast('Error al crear la ubicación', 'error');
+        }
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+      },
     });
-    this.showToast('Ubicación creada exitosamente', 'success');
-    this.resetForm();
   }
 
   resetForm(): void {

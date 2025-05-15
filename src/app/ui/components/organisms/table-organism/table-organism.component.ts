@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'mol-table',
-  templateUrl: './table-molecule.component.html',
-  styleUrls: ['./table-molecule.component.scss']
+  selector: 'org-table',
+  templateUrl: './table-organism.component.html',
+  styleUrls: ['./table-organism.component.scss']
 })
-export class TableMoleculeComponent {
+export class TableOrganismComponent {
   @Input() columns: any[] = [];
   @Input() data: any[] = [];
   @Input() actions: any[] = [];

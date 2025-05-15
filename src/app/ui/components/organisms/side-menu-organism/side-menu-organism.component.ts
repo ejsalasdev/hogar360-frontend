@@ -1,4 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 
 export interface MenuItem {
   id: string;
@@ -9,12 +15,12 @@ export interface MenuItem {
 }
 
 @Component({
-  selector: 'mol-side-menu',
-  templateUrl: './side-menu-molecule.component.html',
-  styleUrls: ['./side-menu-molecule.component.scss'],
+  selector: 'org-side-menu',
+  templateUrl: './side-menu-organism.component.html',
+  styleUrls: ['./side-menu-organism.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideMenuMoleculeComponent {
+export class SideMenuOrganismComponent {
   @Input() menuItems: MenuItem[] = [];
   @Input() activeItemId: string | null = null;
   @Output() itemClick = new EventEmitter<MenuItem>();

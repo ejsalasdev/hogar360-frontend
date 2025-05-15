@@ -8,6 +8,7 @@ import { AtomsModule } from './ui/components/atoms/atoms.module';
 import { MoleculesModule } from './ui/components/molecules/molecules.module';
 import { PagesModule } from './ui/components/pages/pages.module';
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
+import { OrganismsModule } from './ui/components/organisms/organisms.module';
 
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent],
@@ -18,6 +19,7 @@ import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.compone
     AtomsModule,
     MoleculesModule,
     PagesModule,
+    OrganismsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

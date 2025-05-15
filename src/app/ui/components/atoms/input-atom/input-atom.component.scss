@@ -28,6 +28,11 @@
     color: $color-text-light;
     cursor: not-allowed;
   }
+  &::placeholder {
+    color: $color-text-light;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+  }
 }
 .input-atom__required-asterisk {
   color: $color-error;

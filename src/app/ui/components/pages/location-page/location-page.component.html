@@ -36,7 +36,7 @@
     </div>
 
     <div class="location__form-group">
-      <atm-form-input
+      <atm-input
         #sectorInputRef
         label="Sector"
         placeholder="Escribe el sector (máximo 50 caracteres)"
@@ -50,7 +50,7 @@
         #sectorInput="ngModel"
         [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'"
       >
-      </atm-form-input>
+      </atm-input>
       <div class="location__error-container">
         <ng-container *ngIf="sectorInput.invalid && (sectorInput.dirty || sectorInput.touched)">
           <span *ngIf="sectorInput.errors?.['required']" class="location__error-text">

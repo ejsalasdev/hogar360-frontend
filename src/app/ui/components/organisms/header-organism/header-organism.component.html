@@ -1,12 +1,19 @@
 <header class="header" role="banner">
-  <div class="logo" (click)="onLogoClick()" role="button" tabindex="0" (keyup.enter)="onLogoClick()">
-    <span class="logo__blue">{{ logoText.split(' ')[0] }}</span> {{ logoText.split(' ')[1] }}
+  <div
+    class="logo"
+    (click)="onLogoClick()"
+    role="button"
+    tabindex="0"
+    (keyup.enter)="onLogoClick()"
+  >
+    <span class="logo__blue">{{ logoText.split(" ")[0] }}</span>
+    {{ logoText.split(" ")[1] }}
   </div>
   <div class="user-info">
     <span class="welcome">{{ welcomeMessage }}, {{ userName }}</span>
     <div class="avatar-container" *ngIf="showUserMenu">
-      <button 
-        class="avatar-button" 
+      <button
+        class="avatar-button"
         (click)="onUserMenuClick()"
         [attr.aria-expanded]="isUserMenuOpen"
         [attr.aria-label]="'Menú de usuario de ' + userName"
@@ -18,8 +25,8 @@
           <i class="fa fa-user-circle" [attr.aria-label]="userName"></i>
         </div>
       </button>
-      <div 
-        class="user-menu" 
+      <div
+        class="user-menu"
         *ngIf="isUserMenuOpen"
         (clickOutside)="onUserMenuOutsideClick()"
         role="menu"

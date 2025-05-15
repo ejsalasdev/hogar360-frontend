@@ -20,24 +20,14 @@
   <atm-confirm-dialog
     [show]="showConfirmDialog"
     title="Eliminar categoría"
-    [message]="categoryToDelete ? '¿Estás seguro de que deseas eliminar la categoría \' ' + categoryToDelete.name + '\'?' : ''"
+    [message]="
+      categoryToDelete
+        ? '¿Estás seguro de que deseas eliminar la categoría \' ' +
+          categoryToDelete.name +
+          '\'?'
+        : ''
+    "
     (confirm)="onConfirmDelete()"
     (cancel)="onCancelDelete()"
   ></atm-confirm-dialog>
-
-  <div class="category__subtitle-container">
-    <h2 class="category__subtitle">Categorías existentes</h2>
-  </div>
-  <div class="category__list-container">
-    <mol-table
-      [columns]="categoryTableColumns"
-      [data]="categories"
-      [actions]="tableActions"
-      [pagination]="pageInfo"
-      [loading]="isLoading"
-      (action)="onTableAction($event)"
-      (pageChange)="onPageChange($event)"
-    ></mol-table>
-  </div>
 </div>
- 

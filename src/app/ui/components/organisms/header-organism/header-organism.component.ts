@@ -17,12 +17,12 @@ const DEFAULT_CONFIG: HeaderConfig = {
 };
 
 @Component({
-  selector: 'mol-header',
-  templateUrl: './header-molecule.component.html',
-  styleUrls: ['./header-molecule.component.scss'],
+  selector: 'org-header',
+  templateUrl: './header-organism.component.html',
+  styleUrls: ['./header-organism.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderMoleculeComponent {
+export class HeaderOrganismComponent {
   @Input() set config(value: Partial<HeaderConfig>) {
     this._config = { ...DEFAULT_CONFIG, ...value };
   }
@@ -68,4 +68,4 @@ export class HeaderMoleculeComponent {
   onUserMenuOutsideClick(): void {
     this.isUserMenuOpen = false;
   }
-}
+} 
