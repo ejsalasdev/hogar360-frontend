@@ -2,12 +2,14 @@
   <h2 class="category__title">Crear Categoría</h2>
   <div class="category__card">
     <mol-form
+      *ngIf="categoryForm"
       [fields]="categoryFormFields"
-      [model]="categoryModel"
+      [formGroup]="categoryForm"
       submitLabel="Crear"
-      (submit)="onFormSubmit($event)"
+      (formSubmit)="onFormSubmit()"
     ></mol-form>
   </div>
+
   <atm-toast
     [config]="{
       message: toastMessage,

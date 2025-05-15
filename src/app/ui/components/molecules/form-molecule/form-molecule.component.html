@@ -1,36 +1,36 @@
-<form (ngSubmit)="onSubmit()">
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <ng-container *ngFor="let field of fields">
-    <atm-input
-      *ngIf="field.type === 'input'"
-      [label]="field.label"
-      [type]="field.inputType || 'text'"
-      [placeholder]="field.placeholder"
-      [maxlength]="field.maxlength"
-      [required]="field.required"
-      [(ngModel)]="model[field.name]"
-      name="{{field.name}}"
-    ></atm-input>
-    <atm-textarea
-      *ngIf="field.type === 'textarea'"
-      [label]="field.label"
-      [placeholder]="field.placeholder"
-      [maxlength]="field.maxlength"
-      [required]="field.required"
-      [(ngModel)]="model[field.name]"
-      name="{{field.name}}"
-    ></atm-textarea>
-    <atm-select
-      *ngIf="field.type === 'select'"
-      [label]="field.label"
-      [options]="field.options"
-      [required]="field.required"
-      [isDisabled]="field.isDisabled"
-      [(ngModel)]="model[field.name]"
-      name="{{field.name}}"
-      [placeholder]="field.placeholder"
-    ></atm-select>
+    <ng-container *ngIf="field.type === 'input'">
+      <atm-input
+        [label]="field.label"
+        [formControl]="asFormControl(formGroup.get(field.name))"
+        [type]="field.inputType || 'text'"
+        [placeholder]="field.placeholder"
+        [maxlength]="field.maxlength"
+        [required]="field.required"
+      ></atm-input>
+    </ng-container>
+    <ng-container *ngIf="field.type === 'textarea'">
+      <atm-textarea
+        [label]="field.label"
+        [formControl]="asFormControl(formGroup.get(field.name))"
+        [placeholder]="field.placeholder"
+        [maxlength]="field.maxlength"
+        [required]="field.required"
+      ></atm-textarea>
+    </ng-container>
+    <ng-container *ngIf="field.type === 'select'">
+      <atm-select
+        [label]="field.label"
+        [formControl]="asFormControl(formGroup.get(field.name))"
+        [options]="field.options"
+        [required]="field.required"
+        [isDisabled]="field.isDisabled"
+        [placeholder]="field.placeholder"
+      ></atm-select>
+    </ng-container>
   </ng-container>
   <div class="form-molecule__button-container">
-    <atm-button type="submit" variant="primary" [label]="submitLabel"></atm-button>
+    <atm-button type="submit" variant="primary" [label]="submitLabel" [disabled]="formGroup.invalid || areFieldsEmpty()"></atm-button>
   </div>
 </form> 

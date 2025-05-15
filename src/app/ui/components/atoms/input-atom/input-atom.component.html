@@ -1,25 +1,30 @@
-<div class="input-atom__group">
-  <label *ngIf="label">
-    {{ label }}
-    <span *ngIf="required" class="input-atom__required-asterisk">*</span>
-  </label>
+<div class="atm-input">
+  <label *ngIf="label">{{ label }}</label>
   <div class="input-atom__container">
     <input
       #inputElement
       [type]="type"
-      class="input-atom__control"
       [placeholder]="placeholder"
-      [value]="value"
-      (input)="onInputChange($event)"
       [attr.maxlength]="maxlength"
-      [disabled]="isDisabled"
+      [required]="required"
+      [formControl]="formControl"
+      (input)="onInputChange($event)"
+      [ngClass]="{
+        'input-atom__control': true,
+        'atm-input--error': formControl.invalid && (formControl.dirty || formControl.touched)
+      }"
     />
     <span
       *ngIf="maxlength"
       class="input-atom__character-counter"
-      [ngClass]="{'input-atom__character-counter--over': value ? value.length > maxlength : false}"
+      [ngClass]="{'input-atom__character-counter--over': formControl.value?.length > maxlength}"
     >
-      {{ value ? value.length : 0 }}/{{ maxlength }}
+      {{ formControl.value ? formControl.value.length : 0 }}/{{ maxlength }}
+    </span>
+  </div>
+  <div class="atm-input__error">
+    <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
+      {{ getErrorMessage() }}
     </span>
   </div>
 </div> 

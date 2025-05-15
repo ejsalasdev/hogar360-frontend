@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'mol-form',
@@ -11,11 +12,23 @@ export class FormMoleculeComponent {
    * type puede ser 'input', 'textarea' o 'select'.
    */
   @Input() fields: any[] = [];
-  @Input() model: any = {};
+  @Input() formGroup!: FormGroup;
   @Input() submitLabel: string = 'Enviar';
-  @Output() submit = new EventEmitter<any>();
+  @Output() formSubmit = new EventEmitter<void>();
 
   onSubmit() {
-    this.submit.emit(this.model);
+    console.log('Form-molecule submit');
+    this.formSubmit.emit();
+  }
+
+  asFormControl(control: AbstractControl | null): FormControl {
+    return control as FormControl;
+  }
+
+  areFieldsEmpty(): boolean {
+    if (!this.formGroup) return true;
+    const values = this.formGroup.value;
+    // Ajusta los nombres de los campos según los que existan en tu formulario
+    return (!values.name || !values.name.trim()) && (!values.description || !values.description.trim());
   }
 } 

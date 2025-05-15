@@ -2,13 +2,15 @@
   <label *ngIf="label" class="select__label" [class.select__label--required]="required">{{ label }}</label>
   <select
     class="select__field"
+    [formControl]="formControl"
     [class.select__field--disabled]="isDisabled"
-    [(ngModel)]="value"
-    (change)="onSelectChange($event)"
     [disabled]="isDisabled"
     [required]="required"
   >
     <option [ngValue]="null">{{ placeholder }}</option>
     <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
   </select>
+  <div *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)" class="select-atom__error">
+    <span *ngIf="formControl.errors?.['required']">Este campo es requerido.</span>
+  </div>
 </div>

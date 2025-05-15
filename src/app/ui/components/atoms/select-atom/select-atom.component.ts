@@ -5,9 +5,11 @@ import {
   EventEmitter,
   forwardRef,
   Input,
-  Output
+  Output,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, AbstractControl } from '@angular/forms';
 
 export interface SelectOption {
   value: string | number;
@@ -33,6 +35,7 @@ export class SelectAtomComponent implements ControlValueAccessor {
   @Input() options: SelectOption[] = [];
   @Input() required: boolean = false;
   @Input() isDisabled: boolean = false;
+  @Input() formControl!: FormControl;
   @Output() valueChange = new EventEmitter<string>();
 
   private _value: string | number | null = null;

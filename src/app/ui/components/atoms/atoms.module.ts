@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ToastAtomComponent } from './toast-atom/toast-atom.component';
 import { ConfirmDialogAtomComponent } from './confirm-dialog-atom/confirm-dialog-atom.component';
 import { SelectAtomComponent } from './select-atom/select-atom.component';
@@ -15,19 +15,17 @@ import { TextareaAtomComponent } from './textarea-atom/textarea-atom.component';
     ToastAtomComponent,
     ConfirmDialogAtomComponent,
     SelectAtomComponent,
-    ButtonAtomComponent
+    ButtonAtomComponent,
   ],
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   exports: [
     InputAtomComponent,
     TextareaAtomComponent,
     ToastAtomComponent,
     ConfirmDialogAtomComponent,
     SelectAtomComponent,
-    ButtonAtomComponent
-  ]
+    ButtonAtomComponent,
+    ReactiveFormsModule,
+  ],
 })
-export class AtomsModule { }
+export class AtomsModule {}

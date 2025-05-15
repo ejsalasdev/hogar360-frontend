@@ -9,7 +9,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'atm-textarea',
@@ -29,6 +29,8 @@ export class TextareaAtomComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';
   @Input() maxlength: number | null = null;
   @Input() required: boolean = false;
+  @Input() formControl!: FormControl;
+  @Input() isDisabled: boolean = false;
   @Output() valueChange = new EventEmitter<string>();
 
   @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
@@ -36,7 +38,6 @@ export class TextareaAtomComponent implements ControlValueAccessor {
   private _value: string = '';
   private _onChange: (value: string) => void = () => {};
   private _onTouched: () => void = () => {};
-  public isDisabled: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -81,5 +82,14 @@ export class TextareaAtomComponent implements ControlValueAccessor {
 
   focus(): void {
     this.textareaElement?.nativeElement?.focus();
+  }
+
+  getErrorMessage(): string {
+    if (!this.formControl) return '';
+    if (this.formControl.hasError('required')) return 'Este campo es obligatorio';
+    if (this.formControl.hasError('minlength')) return 'Muy corto';
+    if (this.formControl.hasError('maxlength')) return 'Muy largo';
+    if (this.formControl.hasError('pattern')) return 'Formato inválido';
+    return '';
   }
 } 
