@@ -6,6 +6,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./form-molecule.component.scss']
 })
 export class FormMoleculeComponent {
+  /**
+   * fields: Array de objetos con la configuración de cada campo.
+   * type puede ser 'input', 'textarea' o 'select'.
+   */
   @Input() fields: any[] = [];
   @Input() model: any = {};
   @Input() submitLabel: string = 'Enviar';

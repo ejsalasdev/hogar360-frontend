@@ -1,9 +1,9 @@
 <form (ngSubmit)="onSubmit()">
   <ng-container *ngFor="let field of fields">
     <atm-input
-      *ngIf="field.type !== 'textarea'"
+      *ngIf="field.type === 'input'"
       [label]="field.label"
-      [type]="field.type"
+      [type]="field.inputType || 'text'"
       [placeholder]="field.placeholder"
       [maxlength]="field.maxlength"
       [required]="field.required"
@@ -19,6 +19,16 @@
       [(ngModel)]="model[field.name]"
       name="{{field.name}}"
     ></atm-textarea>
+    <atm-select
+      *ngIf="field.type === 'select'"
+      [label]="field.label"
+      [options]="field.options"
+      [required]="field.required"
+      [isDisabled]="field.isDisabled"
+      [(ngModel)]="model[field.name]"
+      name="{{field.name}}"
+      [placeholder]="field.placeholder"
+    ></atm-select>
   </ng-container>
   <div class="form-molecule__button-container">
     <atm-button type="submit" variant="primary" [label]="submitLabel"></atm-button>
