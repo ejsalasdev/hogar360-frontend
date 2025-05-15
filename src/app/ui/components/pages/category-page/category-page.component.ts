@@ -46,7 +46,7 @@ export class CategoryPageComponent implements OnInit {
       required: true,
       minlength: 5,
       maxlength: 50,
-      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$',
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
       placeholder: 'Escribe el nombre de la categoría (máximo 50 caracteres)',
     },
     {
@@ -56,7 +56,7 @@ export class CategoryPageComponent implements OnInit {
       required: true,
       minlength: 10,
       maxlength: 90,
-      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$',
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
       placeholder:
         'Escribe la descripción de la categoría (máximo 90 caracteres)',
     },
@@ -81,7 +81,7 @@ export class CategoryPageComponent implements OnInit {
           Validators.required,
           Validators.minLength(5),
           Validators.maxLength(50),
-          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs]+$'),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs ]+$'),
         ],
       ],
       description: [
@@ -90,7 +90,7 @@ export class CategoryPageComponent implements OnInit {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(90),
-          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs]+$'),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs ]+$'),
         ],
       ],
     });
@@ -253,6 +253,11 @@ export class CategoryPageComponent implements OnInit {
     this.showConfirmDialog = false;
     this.categoryToDelete = null;
     this.changeDetectorRef.markForCheck();
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 0);
   }
 
   deleteCategory(id: number): void {

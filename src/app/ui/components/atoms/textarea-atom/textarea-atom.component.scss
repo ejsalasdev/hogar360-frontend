@@ -16,11 +16,12 @@
   margin-top: 0.5rem;
   border: 1px solid $color-border;
   border-radius: 8px;
+  font-family: "Manrope", sans-serif;
   font-size: 1rem;
   color: $color-text;
   background: $color-white;
   transition: border-color 0.2s;
-  resize: vertical;
+  resize: none;
   min-height: 100px;
   &:focus {
     border-color: $color-primary;

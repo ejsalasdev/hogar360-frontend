@@ -10,6 +10,22 @@
     ></mol-form>
   </div>
 
+  <h2 class="category__title">Categorías existentes</h2>
+  <div class="category__card">
+    <org-table
+      [columns]="categoryTableColumns"
+      [data]="categories"
+      [actions]="tableActions"
+      [pagination]="pageInfo"
+      [loading]="isLoading"
+      (action)="onTableAction($event)"
+      (pageChange)="onPageChange($event)"
+      [orderAsc]="orderAsc"
+      (sortByName)="toggleOrder()"
+      class="category__table"
+    ></org-table>
+  </div>
+
   <atm-toast
     [config]="{
       message: toastMessage,

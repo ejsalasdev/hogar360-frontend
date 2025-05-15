@@ -2,14 +2,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Input,
   Output,
   ViewChild,
-  ElementRef
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, AbstractControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
 
 @Component({
   selector: 'atm-textarea',
@@ -33,7 +37,8 @@ export class TextareaAtomComponent implements ControlValueAccessor {
   @Input() isDisabled: boolean = false;
   @Output() valueChange = new EventEmitter<string>();
 
-  @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('textareaElement')
+  textareaElement?: ElementRef<HTMLTextAreaElement>;
 
   private _value: string = '';
   private _onChange: (value: string) => void = () => {};
@@ -86,10 +91,19 @@ export class TextareaAtomComponent implements ControlValueAccessor {
 
   getErrorMessage(): string {
     if (!this.formControl) return '';
-    if (this.formControl.hasError('required')) return 'Este campo es obligatorio';
-    if (this.formControl.hasError('minlength')) return 'Muy corto';
-    if (this.formControl.hasError('maxlength')) return 'Muy largo';
-    if (this.formControl.hasError('pattern')) return 'Formato inválido';
+    if (this.formControl.hasError('required')) return 'Este campo es requerido';
+    if (this.formControl.hasError('minlength')) {
+      return `El campo debe tener al menos ${
+        this.formControl.getError('minlength').requiredLength
+      } caracteres`;
+    }
+    if (this.formControl.hasError('maxlength')) {
+      return `El campo debe tener máximo ${
+        this.formControl.getError('maxlength').requiredLength
+      } caracteres`;
+    }
+    if (this.formControl.hasError('pattern'))
+      return 'Solo se permiten letras y espacios';
     return '';
   }
-} 
+}

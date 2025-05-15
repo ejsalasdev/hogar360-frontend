@@ -6,6 +6,7 @@ import { AtomsModule } from '../atoms/atoms.module';
 import { CategoryPageComponent } from './category-page/category-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
 import { MoleculesModule } from '../molecules/molecules.module';
+import { OrganismsModule } from '../organisms/organisms.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { MoleculesModule } from '../molecules/molecules.module';
     AtomsModule,
     HttpClientModule,
     MoleculesModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    OrganismsModule
   ],
   exports: [
     CategoryPageComponent,

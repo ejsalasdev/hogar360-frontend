@@ -5,9 +5,13 @@ import {
   Input,
   ViewChild,
   ElementRef,
-  forwardRef
+  forwardRef,
 } from '@angular/core';
-import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  FormControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 @Component({
   selector: 'atm-input',
@@ -82,10 +86,19 @@ export class InputAtomComponent implements ControlValueAccessor {
 
   getErrorMessage(): string {
     if (!this.formControl) return '';
-    if (this.formControl.hasError('required')) return 'Este campo es obligatorio';
-    if (this.formControl.hasError('minlength')) return 'Muy corto';
-    if (this.formControl.hasError('maxlength')) return 'Muy largo';
-    if (this.formControl.hasError('pattern')) return 'Formato inválido';
+    if (this.formControl.hasError('required'))
+      return 'Este campo es obligatorio';
+    if (this.formControl.hasError('minlength')) {
+      return `El nombre debe tener al menos ${
+        this.formControl.getError('minlength').requiredLength
+      } caracteres`;
+    }
+    if (this.formControl.hasError('maxlength'))
+      return `El nombre debe tener máximo ${
+        this.formControl.getError('maxlength').requiredLength
+      } caracteres`;
+    if (this.formControl.hasError('pattern'))
+      return 'Solo se permiten letras y espacios';
     return '';
   }
-} 
+}
