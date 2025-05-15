@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 import {
   SelectAtomComponent,
   SelectOption,
@@ -14,6 +13,10 @@ import {
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { DepartmentService } from '../../../../core/services/department.service';
 import { CityService } from '../../../../core/services/city.service';
+import {
+  UbicationService,
+  SaveUbicationRequest,
+} from '../../../../core/services/ubication.service';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -35,28 +38,53 @@ interface CityOption extends SelectOption {
 export class LocationPageComponent implements OnInit {
   departments: DepartmentOption[] = [];
   cities: CityOption[] = [];
-  selectedDepartmentId: string | null = null;
-  selectedCityId: string | null = null;
-  sector: string = '';
+  locationFormFields: any[] = [];
+  locationModel: any = { department: null, city: null, sector: '' };
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
 
   readonly maxLengthSector: number = 50;
 
-  @ViewChild('createLocationForm') createLocationForm!: NgForm;
-  @ViewChild('sectorInputRef') sectorInput!: FormInputAtomComponent;
-  @ViewChild('departmentSelectRef') departmentSelect!: SelectAtomComponent;
-  @ViewChild('citySelectRef') citySelect!: SelectAtomComponent;
-
   constructor(
     private departmentService: DepartmentService,
     private cityService: CityService,
+    private ubicationService: UbicationService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadDepartments();
+    this.locationFormFields = [
+      {
+        name: 'department',
+        type: 'select',
+        label: 'Departamento',
+        options: this.departments,
+        required: true,
+        placeholder: 'Seleccione un departamento',
+        isDisabled: false
+      },
+      {
+        name: 'city',
+        type: 'select',
+        label: 'Ciudad',
+        options: this.cities,
+        required: true,
+        placeholder: 'Seleccione una ciudad',
+        isDisabled: !this.locationModel.department
+      },
+      {
+        name: 'sector',
+        type: 'input',
+        label: 'Sector',
+        placeholder: 'Escribe el sector (máximo 50 caracteres)',
+        required: true,
+        minlength: 5,
+        maxlength: this.maxLengthSector,
+        pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'
+      }
+    ];
   }
 
   loadDepartments(): void {
@@ -68,6 +96,8 @@ export class LocationPageComponent implements OnInit {
           value: dept.id.toString(),
           label: dept.name,
         }));
+        const departmentField = this.locationFormFields.find(f => f.name === 'department');
+        if (departmentField) departmentField.options = this.departments;
         this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
@@ -78,31 +108,37 @@ export class LocationPageComponent implements OnInit {
   }
 
   onDepartmentChange(departmentId: string | number | null): void {
-    this.selectedDepartmentId = departmentId ? String(departmentId) : null;
-    this.selectedCityId = null;
+    this.locationModel.department = departmentId ? String(departmentId) : null;
+    this.locationModel.city = null;
     this.cities = [];
-    if (
-      this.selectedDepartmentId &&
-      !isNaN(Number(this.selectedDepartmentId))
-    ) {
+    const cityField = this.locationFormFields.find(f => f.name === 'city');
+    if (cityField) {
+      cityField.options = [];
+      cityField.isDisabled = !this.locationModel.department;
+    }
+    if (this.locationModel.department && !isNaN(Number(this.locationModel.department))) {
       this.loadCities();
     }
   }
 
   loadCities(): void {
-    if (!this.selectedDepartmentId || isNaN(Number(this.selectedDepartmentId)))
-      return;
+    if (!this.locationModel.department || isNaN(Number(this.locationModel.department))) return;
     this.cityService
-      .getCitiesByDepartment(Number(this.selectedDepartmentId))
+      .getCitiesByDepartment(Number(this.locationModel.department))
       .subscribe({
         next: (cities) => {
           this.cities = cities.map((city) => ({
             id: city.id,
             name: city.name,
-            departmentId: Number(this.selectedDepartmentId!),
+            departmentId: Number(this.locationModel.department!),
             value: city.id.toString(),
             label: city.name,
           }));
+          const cityField = this.locationFormFields.find(f => f.name === 'city');
+          if (cityField) {
+            cityField.options = this.cities;
+            cityField.isDisabled = false;
+          }
           this.changeDetectorRef.markForCheck();
         },
         error: (error) => {
@@ -113,30 +149,53 @@ export class LocationPageComponent implements OnInit {
   }
 
   onCityChange(cityId: string | number | null): void {
-    this.selectedCityId = cityId ? String(cityId) : null;
+    this.locationModel.city = cityId ? String(cityId) : null;
   }
 
-  onSubmit(): void {
-    if (!this.selectedDepartmentId || !this.selectedCityId || !this.sector) {
+  onFormSubmit(model: any): void {
+    if (!model.department || !model.city || !model.sector) {
       return;
     }
-    // TODO: Implementar la creación de ubicación cuando esté el endpoint
-    console.log('Form submitted:', {
-      departmentId: Number(this.selectedDepartmentId),
-      cityId: Number(this.selectedCityId),
-      sector: this.sector,
+    const selectedCity = this.cities.find((city) => String(city.id) === String(model.city));
+    const selectedDepartment = this.departments.find((dept) => dept.id === Number(model.department));
+    if (!selectedCity) {
+      this.showToast('Ciudad no encontrada', 'error');
+      return;
+    }
+    const request: SaveUbicationRequest = {
+      sector: model.sector,
+      cityName: selectedCity.name,
+      departmentName: selectedDepartment ? selectedDepartment.name : undefined,
+    };
+    this.isLoading = true;
+    this.ubicationService.createUbication(request).subscribe({
+      next: (response) => {
+        this.showToast('Ubicación creada exitosamente', 'success');
+        this.resetForm();
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          this.showToast('La ubicación ya existe en la ciudad seleccionada.', 'error');
+        } else {
+          this.showToast('Error al crear la ubicación', 'error');
+        }
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+      },
     });
-    this.showToast('Ubicación creada exitosamente', 'success');
-    this.resetForm();
   }
 
   resetForm(): void {
-    this.selectedDepartmentId = null;
-    this.selectedCityId = null;
-    this.sector = '';
+    this.locationModel = { department: null, city: null, sector: '' };
     this.cities = [];
-    if (this.createLocationForm) {
-      this.createLocationForm.resetForm();
+    const departmentField = this.locationFormFields.find(f => f.name === 'department');
+    if (departmentField) departmentField.options = this.departments;
+    const cityField = this.locationFormFields.find(f => f.name === 'city');
+    if (cityField) {
+      cityField.options = [];
+      cityField.isDisabled = true;
     }
     this.changeDetectorRef.markForCheck();
   }

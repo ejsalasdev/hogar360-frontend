@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { MenuItem } from '../../components/molecules/side-menu-molecule/side-menu-molecule.component';
+import { MenuItem } from '../../components/organisms/side-menu-organism/side-menu-organism.component';
 
 interface UserInfo {
   name: string;

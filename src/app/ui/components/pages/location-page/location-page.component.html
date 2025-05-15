@@ -1,85 +1,14 @@
 <div class="location">
   <h1 class="location__title">Crear Ubicación</h1>
 
-  <form
-    #createLocationForm="ngForm"
-    (ngSubmit)="onSubmit()"
-    class="location__form"
-  >
-    <div class="location__form-group">
-      <atm-select
-        #departmentSelectRef
-        label="Departamento"
-        [options]="departments"
-        [required]="true"
-        [(ngModel)]="selectedDepartmentId"
-        name="department"
-        placeholder="Seleccione un departamento"
-        (valueChange)="onDepartmentChange($any($event))"
-      >
-      </atm-select>
-    </div>
-
-    <div class="location__form-group">
-      <atm-select
-        #citySelectRef
-        label="Ciudad"
-        [options]="cities"
-        [required]="true"
-        [(ngModel)]="selectedCityId"
-        name="city"
-        placeholder="Seleccione una ciudad"
-        [isDisabled]="!selectedDepartmentId"
-        (valueChange)="onCityChange($any($event))"
-      >
-      </atm-select>
-    </div>
-
-    <div class="location__form-group">
-      <atm-form-input
-        #sectorInputRef
-        label="Sector"
-        placeholder="Escribe el sector (máximo 50 caracteres)"
-        type="text"
-        [(ngModel)]="sector"
-        name="sector"
-        [required]="true"
-        minlength="5"
-        [maxlength]="maxLengthSector"
-        [ngModelOptions]="{ updateOn: 'blur' }"
-        #sectorInput="ngModel"
-        [pattern]="'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'"
-      >
-      </atm-form-input>
-      <div class="location__error-container">
-        <ng-container *ngIf="sectorInput.invalid && (sectorInput.dirty || sectorInput.touched)">
-          <span *ngIf="sectorInput.errors?.['required']" class="location__error-text">
-            El sector es requerido.
-          </span>
-          <span *ngIf="!sectorInput.errors?.['required'] && sectorInput.errors?.['minlength']" class="location__error-text">
-            El sector debe tener al menos {{ sectorInput.errors?.['minlength']?.requiredLength }} caracteres.
-          </span>
-          <span *ngIf="!sectorInput.errors?.['required'] && !sectorInput.errors?.['minlength'] && sectorInput.errors?.['maxlength']" class="location__error-text">
-            El sector no puede tener más de {{ sectorInput.errors?.['maxlength']?.requiredLength }} caracteres.
-          </span>
-          <span *ngIf="!sectorInput.errors?.['required'] && !sectorInput.errors?.['minlength'] && !sectorInput.errors?.['maxlength'] && shouldShowPatternError(sectorInput)" class="location__error-text">
-            Solo se permiten caracteres alfabéticos, espacios y acentos.
-          </span>
-        </ng-container>
-        <span *ngIf="!(sectorInput.invalid && (sectorInput.dirty || sectorInput.touched))" class="location__error-text" style="visibility: hidden;">.</span>
-      </div>
-    </div>
-
-    <div class="location__button-container">
-      <button
-        type="submit"
-        class="location__button"
-        [disabled]="!createLocationForm.valid || !selectedDepartmentId || !selectedCityId || !sector"
-      >
-        Crear
-      </button>
-    </div>
-  </form>
+  <div class="location__form">
+    <mol-form
+      [fields]="locationFormFields"
+      [model]="locationModel"
+      submitLabel="Crear"
+      (submit)="onFormSubmit($event)"
+    ></mol-form>
+  </div>
 
   <atm-toast
     *ngIf="toastMessage"

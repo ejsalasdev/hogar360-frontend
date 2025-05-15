@@ -1,4 +1,4 @@
-@import '../../../../../styles/colors';
+@import "../../../../../styles/colors";
 
 .side-menu {
   background: $color-white;
@@ -35,7 +35,8 @@
   font-weight: 600;
 
   .side-menu__icon {
-    filter: invert(32%) sepia(98%) saturate(1234%) hue-rotate(202deg) brightness(97%) contrast(101%);
+    filter: invert(32%) sepia(98%) saturate(1234%) hue-rotate(202deg)
+      brightness(97%) contrast(101%);
   }
 }
 

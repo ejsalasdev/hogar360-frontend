@@ -1,0 +1,59 @@
+<div class="org-table org-table__container">
+  <div class="org-table__body">
+    <table class="org-table__table">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columns">
+            <span>{{ col.label }}</span>
+            <ng-container *ngIf="col.key === 'name'">
+              <button type="button" class="org-table__sort-btn" (click)="onSortByName()">
+                <span *ngIf="orderAsc; else desc">▲</span>
+                <ng-template #desc>▼</ng-template>
+              </button>
+            </ng-container>
+          </th>
+          <th *ngIf="actions && actions.length > 0">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of data">
+          <td *ngFor="let col of columns">{{ row[col.key] }}</td>
+          <td *ngIf="actions && actions.length > 0">
+            <button *ngFor="let action of actions"
+                    [title]="action.tooltip"
+                    (click)="onAction(action.type, row)"
+                    class="org-table__delete-btn">
+              <img *ngIf="action.icon === 'delete'" src="/assets/icons/delete.png" alt="Eliminar" class="org-table__delete-icon" />
+              <!-- Puedes agregar más iconos según el tipo de acción -->
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="org-table__status">
+      <div *ngIf="!loading && (!data || data.length === 0)" class="org-table__empty">
+        No hay datos para mostrar.
+      </div>
+      <div *ngIf="loading" class="org-table__loading">
+        Cargando...
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="org-table__pagination" *ngIf="pagination && pagination.totalPages > 1">
+    <ng-container *ngFor="let btn of getSmartPagination(); let i = index">
+      <button
+        *ngIf="isNumber(btn); else ellipsis"
+        type="button"
+        [class.active]="btn === pagination.currentPage"
+        (click)="onPageChange(btn)"
+      >
+        {{ btn + 1 }}
+      </button>
+      <ng-template #ellipsis>
+        <span class="org-table__pagination-ellipsis">...</span>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

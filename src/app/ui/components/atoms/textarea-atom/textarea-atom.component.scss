@@ -1,0 +1,73 @@
+@import '../../../../../styles/colors';
+
+.textarea-atom__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.textarea-atom__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.textarea-atom__control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  color: $color-text;
+  background: $color-white;
+  transition: border-color 0.2s;
+  resize: none;
+  min-height: 100px;
+  &:focus {
+    border-color: $color-primary;
+    outline: none;
+  }
+  &:disabled {
+    background: $color-bg;
+    color: $color-text-light;
+    cursor: not-allowed;
+  }
+  &::placeholder {
+    color: $color-text-light;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+  }
+}
+.textarea-atom__required-asterisk {
+  color: $color-error;
+  margin-left: 0.25rem;
+}
+.textarea-atom__character-counter {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: $color-text-light;
+  &--over {
+    color: $color-error;
+  }
+}
+
+.atm-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.atm-textarea__error {
+  color: $color-error;
+  font-size: 0.85rem;
+  min-height: 20px;
+  margin-top: 2px;
+  margin-bottom: 1rem;
+}
+
+.atm-textarea--error {
+  border: 1px solid $color-error !important;
+  box-shadow: 0 0 0 2px rgba($color-error, 0.1);
+} 

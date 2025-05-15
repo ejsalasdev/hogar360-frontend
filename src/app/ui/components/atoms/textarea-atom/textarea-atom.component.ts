@@ -2,46 +2,47 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Input,
   Output,
   ViewChild,
-  ElementRef,
-  NgZone
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-type InputType = 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'textarea';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
 
 @Component({
-  selector: 'atm-form-input',
-  templateUrl: './form-input-atom.component.html',
-  styleUrls: ['./form-input-atom.component.scss'],
+  selector: 'atm-textarea',
+  templateUrl: './textarea-atom.component.html',
+  styleUrls: ['./textarea-atom.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormInputAtomComponent),
+      useExisting: forwardRef(() => TextareaAtomComponent),
       multi: true,
     },
   ],
 })
-export class FormInputAtomComponent implements ControlValueAccessor {
-  @Input() type: InputType = 'text';
+export class TextareaAtomComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() maxlength: number | null = null;
   @Input() required: boolean = false;
+  @Input() formControl!: FormControl;
+  @Input() isDisabled: boolean = false;
   @Output() valueChange = new EventEmitter<string>();
 
-  @ViewChild('textareaElement') textareaElement?: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
+  @ViewChild('textareaElement')
+  textareaElement?: ElementRef<HTMLTextAreaElement>;
 
   private _value: string = '';
   private _onChange: (value: string) => void = () => {};
   private _onTouched: () => void = () => {};
-  public isDisabled: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -79,13 +80,30 @@ export class FormInputAtomComponent implements ControlValueAccessor {
   }
 
   onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const target = event.target as HTMLTextAreaElement;
     this.value = target.value;
     this._onTouched();
   }
 
   focus(): void {
-    const element = this.type === 'textarea' ? this.textareaElement : this.inputElement;
-    element?.nativeElement?.focus();
+    this.textareaElement?.nativeElement?.focus();
+  }
+
+  getErrorMessage(): string {
+    if (!this.formControl) return '';
+    if (this.formControl.hasError('required')) return 'Este campo es requerido';
+    if (this.formControl.hasError('minlength')) {
+      return `El campo debe tener al menos ${
+        this.formControl.getError('minlength').requiredLength
+      } caracteres`;
+    }
+    if (this.formControl.hasError('maxlength')) {
+      return `El campo debe tener máximo ${
+        this.formControl.getError('maxlength').requiredLength
+      } caracteres`;
+    }
+    if (this.formControl.hasError('pattern'))
+      return 'Solo se permiten letras y espacios';
+    return '';
   }
 }

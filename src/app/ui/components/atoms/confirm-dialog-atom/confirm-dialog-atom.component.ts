@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, HostListener } from '@angular/core';
 
 @Component({
   selector: 'atm-confirm-dialog',
@@ -18,5 +18,12 @@ export class ConfirmDialogAtomComponent {
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscape(event: KeyboardEvent) {
+    if (this.show) {
+      this.onCancel();
+    }
   }
 } 

@@ -8,10 +8,10 @@ import {
 import { NgForm } from '@angular/forms';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
-import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { CategoryResponse } from '../../../../core/models/category-response.model';
 import { PageInfo } from '../../../../core/models/page-info.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pg-category',
@@ -20,8 +20,6 @@ import { PageInfo } from '../../../../core/models/page-info.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryPageComponent implements OnInit {
-  categoryName: string = '';
-  categoryDescription: string = '';
   toastMessage = '';
   toastType: ToastType = 'info';
 
@@ -35,16 +33,68 @@ export class CategoryPageComponent implements OnInit {
   orderAsc: boolean = true;
   isLoading: boolean = false;
 
-  @ViewChild('createCategoryForm') createCategoryForm!: NgForm;
-  @ViewChild('descriptionInputRef') descriptionInput!: FormInputAtomComponent;
-
   showConfirmDialog: boolean = false;
   categoryToDelete: CategoryResponse | null = null;
 
+  categoryForm: FormGroup;
+
+  categoryFormFields = [
+    {
+      name: 'name',
+      label: 'Nombre de la Categoría',
+      type: 'input',
+      required: true,
+      minlength: 5,
+      maxlength: 50,
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
+      placeholder: 'Escribe el nombre de la categoría (máximo 50 caracteres)',
+    },
+    {
+      name: 'description',
+      label: 'Descripción',
+      type: 'textarea',
+      required: true,
+      minlength: 10,
+      maxlength: 90,
+      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
+      placeholder:
+        'Escribe la descripción de la categoría (máximo 90 caracteres)',
+    },
+  ];
+
+  categoryTableColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Nombre' },
+    { key: 'description', label: 'Descripción' },
+  ];
+  tableActions = [{ type: 'delete', icon: 'delete', tooltip: 'Eliminar' }];
+
   constructor(
     private categoryService: CategoryService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+    private changeDetectorRef: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    this.categoryForm = this.fb.group({
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(50),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs ]+$'),
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(90),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑs ]+$'),
+        ],
+      ],
+    });
+  }
 
   ngOnInit(): void {
     this.getCategories();
@@ -80,13 +130,10 @@ export class CategoryPageComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (this.createCategoryForm.valid) {
-      const category: Category = {
-        name: this.categoryName,
-        description: this.categoryDescription,
-      };
-
+  onFormSubmit(): void {
+    console.log('Submit ejecutado');
+    if (this.categoryForm.valid) {
+      const category: Category = this.categoryForm.value;
       this.categoryService.createCategory(category).subscribe({
         next: () => {
           this.showSuccess('La categoría se ha creado exitosamente.');
@@ -103,16 +150,13 @@ export class CategoryPageComponent implements OnInit {
           }
         },
       });
+    } else {
+      this.categoryForm.markAllAsTouched();
     }
   }
 
   private resetForm(): void {
-    this.categoryName = '';
-    this.categoryDescription = '';
-    this.createCategoryForm.resetForm({
-      name: '',
-      description: '',
-    });
+    this.categoryForm.reset({ name: '', description: '' });
     this.changeDetectorRef.markForCheck();
   }
 
@@ -209,6 +253,11 @@ export class CategoryPageComponent implements OnInit {
     this.showConfirmDialog = false;
     this.categoryToDelete = null;
     this.changeDetectorRef.markForCheck();
+    setTimeout(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 0);
   }
 
   deleteCategory(id: number): void {
@@ -220,7 +269,13 @@ export class CategoryPageComponent implements OnInit {
       error: (error) => {
         console.error('Error deleting category:', error);
         this.showError(error.error.message || 'Error al eliminar la categoría');
-      }
+      },
     });
+  }
+
+  onTableAction(event: any): void {
+    if (event.type === 'delete') {
+      this.confirmDelete(event.row);
+    }
   }
 }

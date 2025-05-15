@@ -1,0 +1,29 @@
+<div class="atm-textarea">
+  <label *ngIf="label">{{ label }}</label>
+  <div class="textarea-atom__container">
+    <textarea
+      #textareaElement
+      [placeholder]="placeholder"
+      [attr.maxlength]="maxlength"
+      [required]="required"
+      [formControl]="formControl"
+      (input)="onInputChange($event)"
+      [ngClass]="{
+        'textarea-atom__control': true,
+        'atm-textarea--error': formControl.invalid && (formControl.dirty || formControl.touched)
+      }"
+    ></textarea>
+    <span
+      *ngIf="maxlength"
+      class="textarea-atom__character-counter"
+      [ngClass]="{'textarea-atom__character-counter--over': formControl.value?.length > maxlength}"
+    >
+      {{ formControl.value ? formControl.value.length : 0 }}/{{ maxlength }}
+    </span>
+  </div>
+  <div class="atm-textarea__error">
+    <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
+      {{ getErrorMessage() }}
+    </span>
+  </div>
+</div> 

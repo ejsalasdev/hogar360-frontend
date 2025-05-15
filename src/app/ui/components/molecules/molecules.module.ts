@@ -2,16 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AtomsModule } from '../atoms/atoms.module';
-import { HeaderMoleculeComponent } from './header-molecule/header-molecule.component';
-import { SideMenuMoleculeComponent } from './side-menu-molecule/side-menu-molecule.component';
+import { FormMoleculeComponent } from './form-molecule/form-molecule.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [HeaderMoleculeComponent, SideMenuMoleculeComponent],
-  imports: [
-    CommonModule,
-    RouterModule,
-    AtomsModule,
-  ],
-  exports: [HeaderMoleculeComponent, SideMenuMoleculeComponent],
+  declarations: [FormMoleculeComponent],
+  imports: [CommonModule, RouterModule, AtomsModule, ReactiveFormsModule],
+  exports: [FormMoleculeComponent, ReactiveFormsModule],
 })
 export class MoleculesModule {}

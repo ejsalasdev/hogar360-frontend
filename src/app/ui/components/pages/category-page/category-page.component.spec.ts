@@ -49,12 +49,13 @@ describe('CategoryPageComponent', () => {
   });
 
   it('should initialize with empty form values', () => {
-    expect(component.categoryName).toBe('');
-    expect(component.categoryDescription).toBe('');
+    const form = component.categoryForm;
+    expect(form.get('name')?.value).toBe('');
+    expect(form.get('description')?.value).toBe('');
   });
 
   it('should validate required fields', () => {
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     expect(form.valid).toBeFalsy();
 
     const nameInput = form.controls['name'];
@@ -68,7 +69,7 @@ describe('CategoryPageComponent', () => {
   });
 
   it('should validate name length constraints', () => {
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     const nameInput = form.controls['name'];
 
     nameInput.setValue('abc');
@@ -83,7 +84,7 @@ describe('CategoryPageComponent', () => {
   });
 
   it('should validate character pattern', () => {
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     const nameInput = form.controls['name'];
     const descriptionInput = form.controls['description'];
 
@@ -106,17 +107,15 @@ describe('CategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
-    component.onSubmit();
+    component.onFormSubmit();
     tick();
     fixture.detectChanges();
 
@@ -138,8 +137,8 @@ describe('CategoryPageComponent', () => {
     tick(3000);
     fixture.detectChanges();
 
-    expect(component.categoryName).toBe('');
-    expect(component.categoryDescription).toBe('');
+    expect(form.get('name')?.value).toBe('');
+    expect(form.get('description')?.value).toBe('');
     expect(component.toastMessage).toBe('');
 
     discardPeriodicTasks();
@@ -151,17 +150,15 @@ describe('CategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
-    component.onSubmit();
+    component.onFormSubmit();
     tick();
     fixture.detectChanges();
 
@@ -189,17 +186,15 @@ describe('CategoryPageComponent', () => {
       description: 'Test Description'
     };
 
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     form.controls['name'].setValue(testCategory.name);
     form.controls['description'].setValue(testCategory.description);
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
-    component.categoryName = testCategory.name;
-    component.categoryDescription = testCategory.description;
     fixture.detectChanges();
 
-    component.onSubmit();
+    component.onFormSubmit();
     tick();
     fixture.detectChanges();
 
@@ -226,14 +221,12 @@ describe('CategoryPageComponent', () => {
     const submitButton = fixture.debugElement.query(By.css('.category__button'));
     expect(submitButton.nativeElement.disabled).toBeTruthy();
 
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     form.controls['name'].setValue('Valid Name');
     form.controls['description'].setValue('Valid Description');
     form.controls['name'].setErrors(null);
     form.controls['description'].setErrors(null);
 
-    component.categoryName = 'Valid Name';
-    component.categoryDescription = 'Valid Description';
     fixture.detectChanges();
 
     expect(submitButton.nativeElement.disabled).toBeFalsy();
@@ -242,12 +235,12 @@ describe('CategoryPageComponent', () => {
   it('should not submit form when invalid', () => {
     const createCategorySpy = jest.spyOn(categoryService, 'createCategory');
 
-    const form = component.createCategoryForm;
+    const form = component.categoryForm;
     form.controls['name'].setValue('');
     form.controls['description'].setValue('');
     expect(form.invalid).toBeTruthy();
 
-    component.onSubmit();
+    component.onFormSubmit();
 
     expect(createCategorySpy).not.toHaveBeenCalled();
   });
