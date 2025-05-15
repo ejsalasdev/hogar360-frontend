@@ -4,9 +4,9 @@
   <div class="location__form">
     <mol-form
       [fields]="locationFormFields"
-      [model]="locationModel"
+      [formGroup]="locationForm"
       submitLabel="Crear"
-      (submit)="onFormSubmit($event)"
+      (formSubmit)="onFormSubmit(locationForm.value)"
     ></mol-form>
   </div>
 

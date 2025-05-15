@@ -3,8 +3,7 @@
   <select
     class="select__field"
     [formControl]="formControl"
-    [class.select__field--disabled]="isDisabled"
-    [disabled]="isDisabled"
+    [class.select__field--disabled]="formControl.disabled"
     [required]="required"
   >
     <option [ngValue]="null">{{ placeholder }}</option>

@@ -17,6 +17,7 @@ import {
   UbicationService,
   SaveUbicationRequest,
 } from '../../../../core/services/ubication.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -40,6 +41,7 @@ export class LocationPageComponent implements OnInit {
   cities: CityOption[] = [];
   locationFormFields: any[] = [];
   locationModel: any = { department: null, city: null, sector: '' };
+  locationForm!: FormGroup;
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
@@ -50,7 +52,8 @@ export class LocationPageComponent implements OnInit {
     private departmentService: DepartmentService,
     private cityService: CityService,
     private ubicationService: UbicationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -62,8 +65,7 @@ export class LocationPageComponent implements OnInit {
         label: 'Departamento',
         options: this.departments,
         required: true,
-        placeholder: 'Seleccione un departamento',
-        isDisabled: false
+        placeholder: 'Seleccione un departamento'
       },
       {
         name: 'city',
@@ -71,8 +73,7 @@ export class LocationPageComponent implements OnInit {
         label: 'Ciudad',
         options: this.cities,
         required: true,
-        placeholder: 'Seleccione una ciudad',
-        isDisabled: !this.locationModel.department
+        placeholder: 'Seleccione una ciudad'
       },
       {
         name: 'sector',
@@ -85,6 +86,14 @@ export class LocationPageComponent implements OnInit {
         pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'
       }
     ];
+    this.locationForm = this.fb.group({
+      department: [null, Validators.required],
+      city: [{ value: null, disabled: true }, Validators.required],
+      sector: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(this.maxLengthSector), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+')]]
+    });
+    this.locationForm.get('department')?.valueChanges.subscribe((departmentId) => {
+      this.onDepartmentChange(departmentId);
+    });
   }
 
   loadDepartments(): void {
@@ -114,7 +123,11 @@ export class LocationPageComponent implements OnInit {
     const cityField = this.locationFormFields.find(f => f.name === 'city');
     if (cityField) {
       cityField.options = [];
-      cityField.isDisabled = !this.locationModel.department;
+    }
+    if (!this.locationModel.department) {
+      this.locationForm.get('city')?.disable();
+    } else {
+      this.locationForm.get('city')?.enable();
     }
     if (this.locationModel.department && !isNaN(Number(this.locationModel.department))) {
       this.loadCities();
@@ -137,7 +150,6 @@ export class LocationPageComponent implements OnInit {
           const cityField = this.locationFormFields.find(f => f.name === 'city');
           if (cityField) {
             cityField.options = this.cities;
-            cityField.isDisabled = false;
           }
           this.changeDetectorRef.markForCheck();
         },
@@ -153,7 +165,7 @@ export class LocationPageComponent implements OnInit {
   }
 
   onFormSubmit(model: any): void {
-    if (!model.department || !model.city || !model.sector) {
+    if (this.locationForm.invalid) {
       return;
     }
     const selectedCity = this.cities.find((city) => String(city.id) === String(model.city));
@@ -190,12 +202,13 @@ export class LocationPageComponent implements OnInit {
   resetForm(): void {
     this.locationModel = { department: null, city: null, sector: '' };
     this.cities = [];
+    this.locationForm.reset({ department: null, city: null, sector: '' });
+    this.locationForm.get('city')?.disable();
     const departmentField = this.locationFormFields.find(f => f.name === 'department');
     if (departmentField) departmentField.options = this.departments;
     const cityField = this.locationFormFields.find(f => f.name === 'city');
     if (cityField) {
       cityField.options = [];
-      cityField.isDisabled = true;
     }
     this.changeDetectorRef.markForCheck();
   }
