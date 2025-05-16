@@ -34,15 +34,26 @@ export class SelectAtomComponent implements ControlValueAccessor {
   @Input() placeholder: string = 'Seleccione una opción';
   @Input() options: SelectOption[] = [];
   @Input() required: boolean = false;
-  @Input() isDisabled: boolean = false;
   @Input() formControl!: FormControl;
-  @Output() valueChange = new EventEmitter<string>();
+  @Output() valueChange = new EventEmitter<string | number | null>();
 
   private _value: string | number | null = null;
   private _onChange: (value: string | number | null) => void = () => {};
   private _onTouched: () => void = () => {};
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(public cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    if (this.formControl) {
+      this.formControl.valueChanges.subscribe((value) => {
+        if (this._value !== value) {
+          this._value = value;
+          this.valueChange.emit(value);
+          this.cdr.markForCheck();
+        }
+      });
+    }
+  }
 
   get value(): string | number | null {
     return this._value;
@@ -51,8 +62,11 @@ export class SelectAtomComponent implements ControlValueAccessor {
   set value(newValue: string | number | null) {
     if (this._value !== newValue) {
       this._value = newValue;
+      if (this.formControl && this.formControl.value !== newValue) {
+        this.formControl.setValue(newValue, { emitEvent: false });
+      }
       this._onChange(newValue);
-      this.valueChange.emit(newValue as string);
+      this.valueChange.emit(newValue);
       this.cdr.markForCheck();
     }
   }
@@ -60,6 +74,9 @@ export class SelectAtomComponent implements ControlValueAccessor {
   writeValue(value: string | number | null): void {
     if (this._value !== value) {
       this._value = value;
+      if (this.formControl && this.formControl.value !== value) {
+        this.formControl.setValue(value, { emitEvent: false });
+      }
       this.cdr.markForCheck();
     }
   }
@@ -73,7 +90,6 @@ export class SelectAtomComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
     this.cdr.markForCheck();
   }
 

@@ -3,20 +3,16 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild,
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import {
-  SelectAtomComponent,
-  SelectOption,
-} from '../../atoms/select-atom/select-atom.component';
-import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
-import { DepartmentService } from '../../../../core/services/department.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CityService } from '../../../../core/services/city.service';
+import { DepartmentService } from '../../../../core/services/department.service';
 import {
-  UbicationService,
   SaveUbicationRequest,
+  UbicationService,
 } from '../../../../core/services/ubication.service';
+import { SelectOption } from '../../atoms/select-atom/select-atom.component';
+import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -40,6 +36,7 @@ export class LocationPageComponent implements OnInit {
   cities: CityOption[] = [];
   locationFormFields: any[] = [];
   locationModel: any = { department: null, city: null, sector: '' };
+  locationForm!: FormGroup;
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
@@ -50,7 +47,8 @@ export class LocationPageComponent implements OnInit {
     private departmentService: DepartmentService,
     private cityService: CityService,
     private ubicationService: UbicationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +61,6 @@ export class LocationPageComponent implements OnInit {
         options: this.departments,
         required: true,
         placeholder: 'Seleccione un departamento',
-        isDisabled: false
       },
       {
         name: 'city',
@@ -72,7 +69,6 @@ export class LocationPageComponent implements OnInit {
         options: this.cities,
         required: true,
         placeholder: 'Seleccione una ciudad',
-        isDisabled: !this.locationModel.department
       },
       {
         name: 'sector',
@@ -82,9 +78,27 @@ export class LocationPageComponent implements OnInit {
         required: true,
         minlength: 5,
         maxlength: this.maxLengthSector,
-        pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'
-      }
+        pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+',
+      },
     ];
+    this.locationForm = this.fb.group({
+      department: [null, Validators.required],
+      city: [{ value: null, disabled: true }, Validators.required],
+      sector: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(this.maxLengthSector),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'),
+        ],
+      ],
+    });
+    this.locationForm
+      .get('department')
+      ?.valueChanges.subscribe((departmentId) => {
+        this.onDepartmentChange(departmentId);
+      });
   }
 
   loadDepartments(): void {
@@ -96,7 +110,9 @@ export class LocationPageComponent implements OnInit {
           value: dept.id.toString(),
           label: dept.name,
         }));
-        const departmentField = this.locationFormFields.find(f => f.name === 'department');
+        const departmentField = this.locationFormFields.find(
+          (f) => f.name === 'department'
+        );
         if (departmentField) departmentField.options = this.departments;
         this.changeDetectorRef.markForCheck();
       },
@@ -111,18 +127,29 @@ export class LocationPageComponent implements OnInit {
     this.locationModel.department = departmentId ? String(departmentId) : null;
     this.locationModel.city = null;
     this.cities = [];
-    const cityField = this.locationFormFields.find(f => f.name === 'city');
+    const cityField = this.locationFormFields.find((f) => f.name === 'city');
     if (cityField) {
       cityField.options = [];
-      cityField.isDisabled = !this.locationModel.department;
     }
-    if (this.locationModel.department && !isNaN(Number(this.locationModel.department))) {
+    if (!this.locationModel.department) {
+      this.locationForm.get('city')?.disable();
+    } else {
+      this.locationForm.get('city')?.enable();
+    }
+    if (
+      this.locationModel.department &&
+      !isNaN(Number(this.locationModel.department))
+    ) {
       this.loadCities();
     }
   }
 
   loadCities(): void {
-    if (!this.locationModel.department || isNaN(Number(this.locationModel.department))) return;
+    if (
+      !this.locationModel.department ||
+      isNaN(Number(this.locationModel.department))
+    )
+      return;
     this.cityService
       .getCitiesByDepartment(Number(this.locationModel.department))
       .subscribe({
@@ -134,10 +161,11 @@ export class LocationPageComponent implements OnInit {
             value: city.id.toString(),
             label: city.name,
           }));
-          const cityField = this.locationFormFields.find(f => f.name === 'city');
+          const cityField = this.locationFormFields.find(
+            (f) => f.name === 'city'
+          );
           if (cityField) {
             cityField.options = this.cities;
-            cityField.isDisabled = false;
           }
           this.changeDetectorRef.markForCheck();
         },
@@ -153,11 +181,15 @@ export class LocationPageComponent implements OnInit {
   }
 
   onFormSubmit(model: any): void {
-    if (!model.department || !model.city || !model.sector) {
+    if (this.locationForm.invalid) {
       return;
     }
-    const selectedCity = this.cities.find((city) => String(city.id) === String(model.city));
-    const selectedDepartment = this.departments.find((dept) => dept.id === Number(model.department));
+    const selectedCity = this.cities.find(
+      (city) => String(city.id) === String(model.city)
+    );
+    const selectedDepartment = this.departments.find(
+      (dept) => dept.id === Number(model.department)
+    );
     if (!selectedCity) {
       this.showToast('Ciudad no encontrada', 'error');
       return;
@@ -177,7 +209,10 @@ export class LocationPageComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 409) {
-          this.showToast('La ubicación ya existe en la ciudad seleccionada.', 'error');
+          this.showToast(
+            'La ubicación ya existe en la ciudad seleccionada.',
+            'error'
+          );
         } else {
           this.showToast('Error al crear la ubicación', 'error');
         }
@@ -190,12 +225,15 @@ export class LocationPageComponent implements OnInit {
   resetForm(): void {
     this.locationModel = { department: null, city: null, sector: '' };
     this.cities = [];
-    const departmentField = this.locationFormFields.find(f => f.name === 'department');
+    this.locationForm.reset({ department: null, city: null, sector: '' });
+    this.locationForm.get('city')?.disable();
+    const departmentField = this.locationFormFields.find(
+      (f) => f.name === 'department'
+    );
     if (departmentField) departmentField.options = this.departments;
-    const cityField = this.locationFormFields.find(f => f.name === 'city');
+    const cityField = this.locationFormFields.find((f) => f.name === 'city');
     if (cityField) {
       cityField.options = [];
-      cityField.isDisabled = true;
     }
     this.changeDetectorRef.markForCheck();
   }

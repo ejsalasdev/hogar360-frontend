@@ -9,14 +9,14 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-  }
+}
 
-  &__subtitle-container {
+&__subtitle-container {
     width: 90%;
     margin: 0 auto;
-  }
+}
 
-  &__subtitle {
+&__subtitle {
     display: block;
     width: 100%;
     color: $color-text;
@@ -26,53 +26,52 @@
     margin-left: 0;
     text-align: left !important;
     padding-left: 0;
-  }
+}
 
-  &__table {
+&__table {
     width: 100%;
     margin: 0;
     border-collapse: separate;
     border-spacing: 0 8px;
     background: transparent;
-
     thead tr th,
     tbody tr td {
-      padding: 0.85rem 1.2rem;
+        padding: 0.85rem 1.2rem;
     }
 
     thead tr th {
       background: transparent;
-      color: $color-text-light;
-      font-weight: 600;
-      font-size: 1rem;
-      border: none;
-      text-align: left;
+        color: $color-text-light;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        text-align: left;
     }
 
     thead tr th:last-child {
-      text-align: right;
+        text-align: right;
     }
 
     tbody tr {
-      background: $color-white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-      border-radius: 12px;
-      transition: box-shadow 0.2s;
-      border: none;
+        background: $color-white;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        border-radius: 12px;
+        transition: box-shadow 0.2s;
+        border: none;
     }
 
     td {
-      color: $color-text;
-      font-size: 1rem;
-      padding: 1rem 1.5rem;
-      border: none;
-      vertical-align: middle;
+        color: $color-text;
+        font-size: 1rem;
+        padding: 1rem 1.5rem;
+        border: none;
+        vertical-align: middle;
     }
 
     td:last-child {
-      text-align: right;
+        text-align: right;
     }
-  }
+}
 
   &__empty,
   &__loading {
@@ -80,9 +79,9 @@
     text-align: center;
     padding: 1.5rem 0;
     font-size: 1.05rem;
-  }
+}
 
-  &__pagination {
+&__pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,32 +89,32 @@
     margin-top: 1.5rem;
 
     button {
-      background: $color-white;
-      border: 1px solid $color-border;
-      color: $color-text;
-      border-radius: 8px;
-      padding: 0.45rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, border 0.2s;
+        background: $color-white;
+        border: 1px solid $color-border;
+        color: $color-text;
+        border-radius: 8px;
+        padding: 0.45rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, border 0.2s;
 
       &.active,
       &:hover:not(:disabled) {
-        background: $color-primary;
-        color: $color-white;
-        border-color: $color-primary;
-      }
+            background: $color-primary;
+            color: $color-white;
+            border-color: $color-primary;
+        }
 
-      &:disabled {
-        background: $color-bg;
-        color: $color-text-light;
-        border-color: $color-border-light;
-        cursor: not-allowed;
-      }
+        &:disabled {
+            background: $color-bg;
+            color: $color-text-light;
+            border-color: $color-border-light;
+            cursor: not-allowed;
+        }
     }
-  }
+}
 
-  &__delete-btn {
+&__delete-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -127,11 +126,11 @@
     vertical-align: middle;
 
     &:hover {
-      background: $color-error-bg;
+        background: $color-error-bg;
     }
-  }
+}
 
-  &__delete-icon {
+&__delete-icon {
     width: 20px;
     height: 20px;
     object-fit: contain;

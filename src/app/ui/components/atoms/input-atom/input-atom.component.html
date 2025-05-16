@@ -1,5 +1,7 @@
 <div class="atm-input">
-  <label *ngIf="label">{{ label }}</label>
+  <label *ngIf="label">
+    {{ label }}<span *ngIf="required" class="input-atom__required-asterisk">*</span>
+  </label>
   <div class="input-atom__container">
     <input
       #inputElement

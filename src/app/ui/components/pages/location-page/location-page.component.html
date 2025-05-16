@@ -1,12 +1,12 @@
 <div class="location">
-  <h1 class="location__title">Crear Ubicación</h1>
+  <h2 class="location__title">Crear Ubicación</h2>
 
-  <div class="location__form">
+  <div class="location__card">
     <mol-form
       [fields]="locationFormFields"
-      [model]="locationModel"
+      [formGroup]="locationForm"
       submitLabel="Crear"
-      (submit)="onFormSubmit($event)"
+      (formSubmit)="onFormSubmit(locationForm.value)"
     ></mol-form>
   </div>
 
