@@ -1,8 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  FormGroup,
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { FormMoleculeComponent } from './form-molecule.component';
-import { FormInputAtomComponent } from '../../atoms/form-input-atom/form-input-atom.component';
+import { InputAtomComponent } from '../../atoms/input-atom/input-atom.component';
+import { ButtonAtomComponent } from '../../atoms/button-atom/button-atom.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { AtomsModule } from '../../atoms/atoms.module';
+import { TextareaAtomComponent } from '../../atoms/textarea-atom/textarea-atom.component';
 
 describe('FormMoleculeComponent', () => {
   let component: FormMoleculeComponent;
@@ -10,19 +20,25 @@ describe('FormMoleculeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FormMoleculeComponent, FormInputAtomComponent],
-      imports: [FormsModule],
-      schemas: [NO_ERRORS_SCHEMA]
+      declarations: [
+        FormMoleculeComponent,
+        InputAtomComponent,
+        TextareaAtomComponent,
+        ButtonAtomComponent,
+      ],
+      imports: [FormsModule, ReactiveFormsModule, AtomsModule],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FormMoleculeComponent);
     component = fixture.componentInstance;
+    component.formGroup = new FormGroup({});
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-}); 
+});

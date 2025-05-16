@@ -5,6 +5,7 @@
     [formControl]="formControl"
     [class.select__field--disabled]="formControl.disabled"
     [required]="required"
+    (change)="onSelectChange($event)"
   >
     <option [ngValue]="null">{{ placeholder }}</option>
     <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
