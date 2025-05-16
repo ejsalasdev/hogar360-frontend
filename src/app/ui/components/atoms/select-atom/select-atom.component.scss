@@ -5,12 +5,10 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
-  margin-bottom: 1rem;
 
   &__label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: bold;
     font-size: 1rem;
     color: $color-text;
 
@@ -51,4 +49,12 @@
       font-size: 1rem;
     }
   }
+}
+
+.select-atom__error {
+  color: $color-error;
+  font-size: 0.85rem;
+  min-height: 20px;
+  margin-top: 2px;
+  margin-bottom: 1rem;
 }

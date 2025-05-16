@@ -10,7 +10,9 @@
     <option [ngValue]="null">{{ placeholder }}</option>
     <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
   </select>
-  <div *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)" class="select-atom__error">
-    <span *ngIf="formControl.errors?.['required']">Este campo es requerido.</span>
+  <div class="select-atom__error">
+    <span *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)">
+      <span *ngIf="formControl.errors?.['required']">Este campo es requerido.</span>
+    </span>
   </div>
 </div>

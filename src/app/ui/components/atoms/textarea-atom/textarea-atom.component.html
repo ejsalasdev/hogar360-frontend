@@ -1,5 +1,7 @@
 <div class="atm-textarea">
-  <label *ngIf="label">{{ label }}</label>
+  <label *ngIf="label">
+    {{ label }}<span *ngIf="required" class="textarea-atom__required-asterisk">*</span>
+  </label>
   <div class="textarea-atom__container">
     <textarea
       #textareaElement
