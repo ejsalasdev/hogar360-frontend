@@ -13,6 +13,8 @@ import {
 } from '../../../../core/services/ubication.service';
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
+import { UbicationResponse } from '../../../../core/models/ubication-response.model';
+import { PageInfo } from '../../../../core/models/page-info.model';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -40,8 +42,20 @@ export class LocationPageComponent implements OnInit {
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
+  locations: UbicationResponse[] = [];
+  pageInfo: PageInfo<UbicationResponse> | null = null;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  orderAsc: boolean = true;
 
   readonly maxLengthSector: number = 50;
+
+  locationTableColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'departmentName', label: 'Departamento' },
+    { key: 'cityName', label: 'Ciudad' },
+    { key: 'sector', label: 'Sector' }
+  ];
 
   constructor(
     private departmentService: DepartmentService,
@@ -99,6 +113,7 @@ export class LocationPageComponent implements OnInit {
       ?.valueChanges.subscribe((departmentId) => {
         this.onDepartmentChange(departmentId);
       });
+    this.getUbications();
   }
 
   loadDepartments(): void {
@@ -256,5 +271,40 @@ export class LocationPageComponent implements OnInit {
       (input.dirty || input.touched) &&
       input.errors?.['pattern']
     );
+  }
+
+  getUbications(page: number = this.currentPage): void {
+    this.isLoading = true;
+    this.ubicationService
+      .getUbications(page, this.pageSize, this.orderAsc)
+      .subscribe({
+        next: (data) => {
+          this.pageInfo = data;
+          this.locations = data.content;
+          this.currentPage = data.currentPage;
+          this.isLoading = false;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.showToast('Error al cargar las ubicaciones', 'error');
+        },
+      });
+  }
+
+  onPageChange(page: number): void {
+    if (
+      page !== this.currentPage &&
+      this.pageInfo &&
+      page >= 0 &&
+      page < this.pageInfo.totalPages
+    ) {
+      this.getUbications(page);
+    }
+  }
+
+  toggleOrder(): void {
+    this.orderAsc = !this.orderAsc;
+    this.getUbications(0);
   }
 }

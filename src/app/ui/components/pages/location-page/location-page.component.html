@@ -16,4 +16,18 @@
     (closed)="onToastClosed()"
   >
   </atm-toast>
+
+  <h2 class="location__title">Ubicaciones existentes</h2>
+  <div class="location__card">
+    <org-table
+      [columns]="locationTableColumns"
+      [data]="locations"
+      [pagination]="pageInfo"
+      [loading]="isLoading"
+      (pageChange)="onPageChange($event)"
+      [orderAsc]="orderAsc"
+      (sortByName)="toggleOrder()"
+      class="location__table"
+    ></org-table>
+  </div>
 </div>
