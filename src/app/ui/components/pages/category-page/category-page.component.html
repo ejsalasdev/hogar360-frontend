@@ -20,8 +20,8 @@
       [loading]="isLoading"
       (action)="onTableAction($event)"
       (pageChange)="onPageChange($event)"
-      [orderAsc]="orderAsc"
-      (sortByName)="toggleOrder()"
+      [sort]="sort"
+      (sortChange)="onSortChange($event)"
       class="category__table"
     ></org-table>
   </div>

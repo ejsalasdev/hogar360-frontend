@@ -12,9 +12,10 @@ export class TableOrganismComponent {
   @Input() pagination: any = null;
   @Input() loading: boolean = false;
   @Input() orderAsc: boolean = true;
+  @Input() sort: { key: string, direction: 'asc' | 'desc' } | null = null;
   @Output() action = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<number>();
-  @Output() sortByName = new EventEmitter<void>();
+  @Output() sortChange = new EventEmitter<{ key: string, direction: 'asc' | 'desc' }>();
 
   onAction(type: string, row: any) {
     this.action.emit({ type, row });
@@ -24,8 +25,10 @@ export class TableOrganismComponent {
     this.pageChange.emit(page);
   }
 
-  onSortByName() {
-    this.sortByName.emit();
+  onSort(col: any) {
+    if (!col.sortable) return;
+    const direction = (this.sort?.key === col.key && this.sort?.direction === 'asc') ? 'desc' : 'asc';
+    this.sortChange.emit({ key: col.key, direction });
   }
 
   getPagesArray(): number[] {

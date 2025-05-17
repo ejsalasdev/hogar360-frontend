@@ -3,14 +3,18 @@
     <table class="org-table__table">
       <thead>
         <tr>
-          <th *ngFor="let col of columns">
+          <th *ngFor="let col of columns" [class.sorted]="sort?.key === col.key">
             <span>{{ col.label }}</span>
-            <ng-container *ngIf="col.key === 'name'">
-              <button type="button" class="org-table__sort-btn" (click)="onSortByName()">
-                <span *ngIf="orderAsc; else desc">▲</span>
-                <ng-template #desc>▼</ng-template>
-              </button>
-            </ng-container>
+            <button *ngIf="col.sortable"
+                    type="button"
+                    class="org-table__sort-btn"
+                    (click)="onSort(col)">
+              <span *ngIf="sort?.key === col.key">
+                <ng-container *ngIf="sort?.direction === 'asc'">▲</ng-container>
+                <ng-container *ngIf="sort?.direction === 'desc'">▼</ng-container>
+              </span>
+              <span *ngIf="sort?.key !== col.key">⇅</span>
+            </button>
           </th>
           <th *ngIf="actions && actions.length > 0">Acciones</th>
         </tr>

@@ -25,8 +25,8 @@
       [pagination]="pageInfo"
       [loading]="isLoading"
       (pageChange)="onPageChange($event)"
-      [orderAsc]="orderAsc"
-      (sortByName)="toggleOrder()"
+      [sort]="sort"
+      (sortChange)="onSortChange($event)"
       class="location__table"
     ></org-table>
   </div>

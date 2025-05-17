@@ -47,13 +47,14 @@ export class LocationPageComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 5;
   orderAsc: boolean = true;
+  sort: { key: string, direction: 'asc' | 'desc' } = { key: 'departmentName', direction: 'asc' };
 
   readonly maxLengthSector: number = 50;
 
   locationTableColumns = [
     { key: 'id', label: 'ID' },
-    { key: 'departmentName', label: 'Departamento' },
-    { key: 'cityName', label: 'Ciudad' },
+    { key: 'departmentName', label: 'Departamento', sortable: true },
+    { key: 'cityName', label: 'Ciudad', sortable: true },
     { key: 'sector', label: 'Sector' }
   ];
 
@@ -276,7 +277,7 @@ export class LocationPageComponent implements OnInit {
   getUbications(page: number = this.currentPage): void {
     this.isLoading = true;
     this.ubicationService
-      .getUbications(page, this.pageSize, this.orderAsc)
+      .getUbications(page, this.pageSize, this.sort.direction === 'asc', this.sort.key)
       .subscribe({
         next: (data) => {
           this.pageInfo = data;
@@ -305,6 +306,11 @@ export class LocationPageComponent implements OnInit {
 
   toggleOrder(): void {
     this.orderAsc = !this.orderAsc;
+    this.getUbications(0);
+  }
+
+  onSortChange(sort: { key: string, direction: 'asc' | 'desc' }) {
+    this.sort = sort;
     this.getUbications(0);
   }
 }
