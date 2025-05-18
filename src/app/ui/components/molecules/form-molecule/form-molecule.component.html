@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <ng-container *ngFor="let field of fields">
-    
+
     <ng-container *ngIf="field.type === 'input'">
       <atm-input
         [label]="field.label"
@@ -9,6 +9,7 @@
         [placeholder]="field.placeholder"
         [maxlength]="field.maxlength"
         [required]="field.required"
+        [patternError]="field.patternError"
         [externalError]="field.name === 'confirmPassword' &&
         formGroup.errors?.['passwordMismatch'] &&
         formGroup.get('confirmPassword')?.touched &&
@@ -25,6 +26,7 @@
         [placeholder]="field.placeholder"
         [maxlength]="field.maxlength"
         [required]="field.required"
+        [patternError]="field.patternError"
       ></atm-textarea>
     </ng-container>
 

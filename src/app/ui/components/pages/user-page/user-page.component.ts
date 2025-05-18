@@ -50,8 +50,9 @@ export class UserPageComponent implements OnInit {
       inputType: 'text',
       placeholder: 'Ingrese su nombre',
       required: true,
-      minLength: 3,
-      maxLength: 50,
+      minlength: 3,
+      maxlength: 50,
+      patternError: 'El nombre solo puede contener letras y espacios',
     },
     {
       name: 'lastName',
@@ -60,18 +61,20 @@ export class UserPageComponent implements OnInit {
       inputType: 'text',
       placeholder: 'Ingrese su apellido',
       required: true,
-      minLength: 3,
-      maxLength: 50,
+      minlength: 3,
+      maxlength: 50,
+      patternError: 'El apellido solo puede contener letras y espacios',
     },
     {
       name: 'documentId',
       label: 'Cédula',
       type: 'input',
-      inputType: 'number',
+      inputType: 'text',
       placeholder: 'Ingrese su cédula',
       required: true,
-      minLength: 8,
-      maxLength: 10,
+      minlength: 8,
+      maxlength: 10,
+      patternError: 'La cédula solo puede contener números',
     },
     {
       name: 'phoneNumber',
@@ -80,8 +83,9 @@ export class UserPageComponent implements OnInit {
       inputType: 'text',
       placeholder: 'Ingrese su teléfono',
       required: true,
-      minLength: 10,
-      maxLength: 13,
+      minlength: 10,
+      maxlength: 13,
+      patternError: 'El teléfono solo puede contener números y el prefijo +',
     },
     {
       name: 'birthDate',
@@ -107,6 +111,8 @@ export class UserPageComponent implements OnInit {
       inputType: 'password',
       placeholder: 'Ingrese su contraseña',
       required: true,
+      minlength: 8,
+      maxlength: 20,
     },
     {
       name: 'confirmPassword',
@@ -115,6 +121,8 @@ export class UserPageComponent implements OnInit {
       inputType: 'password',
       placeholder: 'Ingrese su contraseña',
       required: true,
+      minlength: 8,
+      maxlength: 20,
     },
   ]
 
@@ -131,6 +139,7 @@ export class UserPageComponent implements OnInit {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(50),
+            Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')
           ],
         ],
         lastName: [
@@ -139,6 +148,7 @@ export class UserPageComponent implements OnInit {
             Validators.required,
             Validators.minLength(3),
             Validators.maxLength(50),
+            Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')
           ],
         ],
         documentId: [

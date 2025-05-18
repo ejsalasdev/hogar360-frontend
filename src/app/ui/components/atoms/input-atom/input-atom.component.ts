@@ -34,6 +34,7 @@ export class InputAtomComponent implements ControlValueAccessor {
   @Input() required: boolean = false;
   @Input() formControl!: FormControl;
   @Input() externalError: string | null = null;
+  @Input() patternError: string | null = null;
 
   @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
 
@@ -89,8 +90,11 @@ export class InputAtomComponent implements ControlValueAccessor {
     if (!this.formControl) return '';
     if (this.formControl.hasError('required'))
       return 'Este campo es obligatorio';
+    if (this.formControl.hasError('adult')) {
+      return 'Debes ser mayor de 18 años';
+    }
     if (this.formControl.hasError('email'))
-      return 'Correo electrónico inválido';
+      return 'El correo electrónico no es válido';
     if (this.formControl.hasError('minlength')) {
       return `${this.label || 'Este campo'} debe tener al menos ${
         this.formControl.getError('minlength').requiredLength
@@ -101,7 +105,7 @@ export class InputAtomComponent implements ControlValueAccessor {
         this.formControl.getError('maxlength').requiredLength
       } caracteres`;
     if (this.formControl.hasError('pattern'))
-      return 'Formato inválido';
+      return this.patternError || 'Formato inválido';
     return '';
   }
 }

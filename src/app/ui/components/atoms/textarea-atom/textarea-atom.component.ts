@@ -35,6 +35,7 @@ export class TextareaAtomComponent implements ControlValueAccessor {
   @Input() required: boolean = false;
   @Input() formControl!: FormControl;
   @Input() isDisabled: boolean = false;
+  @Input() patternError: string | null = null;
   @Output() valueChange = new EventEmitter<string>();
 
   @ViewChild('textareaElement')
@@ -103,7 +104,7 @@ export class TextareaAtomComponent implements ControlValueAccessor {
       } caracteres`;
     }
     if (this.formControl.hasError('pattern'))
-      return 'Solo se permiten letras y espacios';
+      return this.patternError || 'Formato inválido';
     return '';
   }
 }

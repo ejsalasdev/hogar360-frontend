@@ -3,6 +3,7 @@
 
   <div class="location__card">
     <mol-form
+      *ngIf="locationForm"
       [fields]="locationFormFields"
       [formGroup]="locationForm"
       submitLabel="Crear"

@@ -2,7 +2,8 @@
   <h2 class="user__title">Crear Usuario</h2>
 
   <div class="user__card">
-    <mol-form *ngIf="userForm"
+    <mol-form
+      *ngIf="userForm"
       [fields]="userFormFields"
       [formGroup]="userForm"
       submitLabel="Crear"
@@ -16,6 +17,4 @@
     (closed)="onToastClosed()"
   >
   </atm-toast>
-
-
 </div>

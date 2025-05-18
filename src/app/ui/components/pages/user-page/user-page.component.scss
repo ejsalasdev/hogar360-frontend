@@ -35,14 +35,4 @@ body,
     width: 90%;
     margin: 0 auto;
   }
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  &__form-group {
-    position: relative;
-  }
 }
