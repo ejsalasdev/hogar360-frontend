@@ -1,0 +1,20 @@
+<div class="user">
+  <h2 class="user__title">Crear Usuario</h2>
+
+  <div class="user__card">
+    <mol-form
+      *ngIf="userForm"
+      [fields]="userFormFields"
+      [formGroup]="userForm"
+      submitLabel="Crear"
+      (formSubmit)="onFormSubmit()"
+    ></mol-form>
+  </div>
+
+  <atm-toast
+    *ngIf="toastMessage"
+    [config]="{ message: toastMessage, type: toastType }"
+    (closed)="onToastClosed()"
+  >
+  </atm-toast>
+</div>

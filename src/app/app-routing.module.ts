@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CategoryPageComponent } from './ui/components/pages/category-page/category-page.component';
 import { LocationPageComponent } from './ui/components/pages/location-page/location-page.component';
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
+import { UserPageComponent } from './ui/components/pages/user-page/user-page.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,13 @@ const routes: Routes = [
         path: 'admin/locations',
         children: [
           { path: 'create', component: LocationPageComponent },
+          { path: '', redirectTo: 'create', pathMatch: 'full' }
+        ]
+      },
+      {
+        path: 'admin/users',
+        children: [
+          { path: 'create', component: UserPageComponent },
           { path: '', redirectTo: 'create', pathMatch: 'full' }
         ]
       },

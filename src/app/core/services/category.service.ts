@@ -4,17 +4,18 @@ import { Observable } from 'rxjs';
 import { Category } from '../models/category.model';
 import { CategoryResponse } from '../models/category-response.model';
 import { PageInfo } from '../models/page-info.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:8081/api/v1/category';
+  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/category`;
 
   constructor(private http: HttpClient) {}
 
   createCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(`${this.apiUrl}/create`, category);
+    return this.http.post<Category>(`${this.propertyApiUrl}/create`, category);
   }
 
   getCategories(page: number, size: number, orderAsc: boolean = true): Observable<PageInfo<CategoryResponse>> {
@@ -22,10 +23,10 @@ export class CategoryService {
       .set('page', page)
       .set('size', size)
       .set('orderAsc', orderAsc);
-    return this.http.get<PageInfo<CategoryResponse>>(`${this.apiUrl}/read`, { params });
+    return this.http.get<PageInfo<CategoryResponse>>(`${this.propertyApiUrl}/read`, { params });
   }
 
   deleteCategory(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+    return this.http.delete<{ message: string }>(`${this.propertyApiUrl}/${id}`);
   }
 }

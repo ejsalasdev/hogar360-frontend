@@ -31,7 +31,7 @@ describe('CategoryService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${service['apiUrl']}/${id}`);
+    const req = httpMock.expectOne(`${service['propertyApiUrl']}/${id}`);
     expect(req.request.method).toBe('DELETE');
     req.flush(mockResponse);
   });

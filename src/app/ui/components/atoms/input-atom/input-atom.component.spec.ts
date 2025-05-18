@@ -81,7 +81,7 @@ describe('InputAtomComponent', () => {
     // Act
     const errorMsg = component.getErrorMessage();
     // Assert
-    expect(errorMsg).toContain('letras y espacios');
+    expect(errorMsg).toContain('Formato inválido');
   });
 
   it('should call focus method', () => {

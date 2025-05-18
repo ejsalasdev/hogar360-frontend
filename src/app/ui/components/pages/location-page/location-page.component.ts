@@ -4,7 +4,12 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { CityService } from '../../../../core/services/city.service';
 import { DepartmentService } from '../../../../core/services/department.service';
 import {
@@ -37,7 +42,34 @@ interface CityOption extends SelectOption {
 export class LocationPageComponent implements OnInit {
   departments: DepartmentOption[] = [];
   cities: CityOption[] = [];
-  locationFormFields: any[] = [];
+  locationFormFields = [
+    {
+      name: 'department',
+      type: 'select',
+      label: 'Departamento',
+      options: this.departments,
+      required: true,
+      placeholder: 'Seleccione un departamento',
+    },
+    {
+      name: 'city',
+      type: 'select',
+      label: 'Ciudad',
+      options: this.cities,
+      required: true,
+      placeholder: 'Seleccione una ciudad',
+    },
+    {
+      name: 'sector',
+      type: 'input',
+      label: 'Sector',
+      placeholder: 'Escribe el sector (máximo 50 caracteres)',
+      required: true,
+      minlength: 5,
+      maxlength: 50,
+      patternError: 'El sector solo puede contener letras y espacios',
+    },
+  ];
   locationModel: any = { department: null, city: null, sector: '' };
   locationForm!: FormGroup;
   toastMessage: string | null = null;
@@ -48,17 +80,19 @@ export class LocationPageComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 5;
   orderAsc: boolean = true;
-  sort: { key: string, direction: 'asc' | 'desc' } = { key: 'departmentName', direction: 'asc' };
+  sort: { key: string; direction: 'asc' | 'desc' } = {
+    key: 'departmentName',
+    direction: 'asc',
+  };
   searchControl = new FormControl('');
   searchText: string = '';
 
-  readonly maxLengthSector: number = 50;
 
   locationTableColumns = [
     { key: 'id', label: 'ID' },
     { key: 'departmentName', label: 'Departamento', sortable: true },
     { key: 'cityName', label: 'Ciudad', sortable: true },
-    { key: 'sector', label: 'Sector' }
+    { key: 'sector', label: 'Sector' },
   ];
 
   constructor(
@@ -71,34 +105,6 @@ export class LocationPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDepartments();
-    this.locationFormFields = [
-      {
-        name: 'department',
-        type: 'select',
-        label: 'Departamento',
-        options: this.departments,
-        required: true,
-        placeholder: 'Seleccione un departamento',
-      },
-      {
-        name: 'city',
-        type: 'select',
-        label: 'Ciudad',
-        options: this.cities,
-        required: true,
-        placeholder: 'Seleccione una ciudad',
-      },
-      {
-        name: 'sector',
-        type: 'input',
-        label: 'Sector',
-        placeholder: 'Escribe el sector (máximo 50 caracteres)',
-        required: true,
-        minlength: 5,
-        maxlength: this.maxLengthSector,
-        pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+',
-      },
-    ];
     this.locationForm = this.fb.group({
       department: [null, Validators.required],
       city: [{ value: null, disabled: true }, Validators.required],
@@ -107,7 +113,7 @@ export class LocationPageComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(this.maxLengthSector),
+          Validators.maxLength(50),
           Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+'),
         ],
       ],
@@ -118,11 +124,8 @@ export class LocationPageComponent implements OnInit {
         this.onDepartmentChange(departmentId);
       });
     this.searchControl.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
-      .subscribe(value => {
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => {
         this.searchText = value || '';
         this.getUbications(0);
       });
@@ -208,7 +211,8 @@ export class LocationPageComponent implements OnInit {
     this.locationModel.city = cityId ? String(cityId) : null;
   }
 
-  onFormSubmit(model: any): void {
+  onFormSubmit() {
+    const model = this.locationForm.value;
     if (this.locationForm.invalid) {
       return;
     }
@@ -289,7 +293,13 @@ export class LocationPageComponent implements OnInit {
   getUbications(page: number = this.currentPage): void {
     this.isLoading = true;
     this.ubicationService
-      .getUbications(page, this.pageSize, this.sort.direction === 'asc', this.sort.key, this.searchText)
+      .getUbications(
+        page,
+        this.pageSize,
+        this.sort.direction === 'asc',
+        this.sort.key,
+        this.searchText
+      )
       .subscribe({
         next: (data) => {
           this.pageInfo = data;
@@ -321,7 +331,7 @@ export class LocationPageComponent implements OnInit {
     this.getUbications(0);
   }
 
-  onSortChange(sort: { key: string, direction: 'asc' | 'desc' }) {
+  onSortChange(sort: { key: string; direction: 'asc' | 'desc' }) {
     this.sort = sort;
     this.getUbications(0);
   }

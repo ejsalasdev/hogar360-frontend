@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryResponse } from '../../../../core/models/category-response.model';
@@ -20,16 +20,15 @@ import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 export class CategoryPageComponent implements OnInit {
   toastMessage = '';
   toastType: ToastType = 'info';
-
-  readonly maxLengthName: number = 50;
-  readonly maxLengthDescription: number = 90;
-
   categories: CategoryResponse[] = [];
   pageInfo: PageInfo<CategoryResponse> | null = null;
   currentPage: number = 0;
   pageSize: number = 5;
   orderAsc: boolean = true;
-  sort: { key: string, direction: 'asc' | 'desc' } = { key: 'name', direction: 'asc' };
+  sort: { key: string; direction: 'asc' | 'desc' } = {
+    key: 'name',
+    direction: 'asc',
+  };
   isLoading: boolean = false;
   showConfirmDialog: boolean = false;
   categoryToDelete: CategoryResponse | null = null;
@@ -44,8 +43,8 @@ export class CategoryPageComponent implements OnInit {
       required: true,
       minlength: 5,
       maxlength: 50,
-      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
       placeholder: 'Escribe el nombre de la categoría (máximo 50 caracteres)',
+      patternError: 'El nombre solo puede contener letras y espacios',
     },
     {
       name: 'description',
@@ -54,16 +53,15 @@ export class CategoryPageComponent implements OnInit {
       required: true,
       minlength: 10,
       maxlength: 90,
-      pattern: '^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$',
-      placeholder:
-        'Escribe la descripción de la categoría (máximo 90 caracteres)',
+      placeholder: 'Escribe la descripción de la categoría (máximo 90 caracteres)',
+      patternError: 'La descripción solo puede contener letras y espacios',
     },
   ];
 
   categoryTableColumns = [
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Nombre', sortable: true },
-    { key: 'description', label: 'Descripción' }
+    { key: 'description', label: 'Descripción' },
   ];
   tableActions = [{ type: 'delete', icon: 'delete', tooltip: 'Eliminar' }];
 
@@ -129,7 +127,6 @@ export class CategoryPageComponent implements OnInit {
   }
 
   onFormSubmit(): void {
-    console.log('Submit ejecutado');
     if (this.categoryForm.valid) {
       const category: Category = this.categoryForm.value;
       this.categoryService.createCategory(category).subscribe({
@@ -277,7 +274,7 @@ export class CategoryPageComponent implements OnInit {
     }
   }
 
-  onSortChange(sort: { key: string, direction: 'asc' | 'desc' }) {
+  onSortChange(sort: { key: string; direction: 'asc' | 'desc' }) {
     this.sort = sort;
     this.getCategories(0);
   }

@@ -15,12 +15,12 @@ export interface SaveUbicationRequest {
   providedIn: 'root'
 })
 export class UbicationService {
-  private apiUrl = `${environment.apiUrl}/api/v1/ubication`;
+  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/ubication`;
 
   constructor(private http: HttpClient) {}
 
   createUbication(request: SaveUbicationRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, request);
+    return this.http.post(`${this.propertyApiUrl}/create`, request);
   }
 
   getUbications(
@@ -36,6 +36,6 @@ export class UbicationService {
       .set('orderAsc', orderAsc)
       .set('sortBy', sortBy);
     if (searchText) params = params.set('searchText', searchText);
-    return this.http.get<PageInfo<UbicationResponse>>(`${this.apiUrl}/read`, { params });
+    return this.http.get<PageInfo<UbicationResponse>>(`${this.propertyApiUrl}/read`, { params });
   }
 }

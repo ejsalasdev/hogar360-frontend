@@ -12,11 +12,11 @@ export interface Department {
   providedIn: 'root'
 })
 export class DepartmentService {
-  private readonly API_URL = `${environment.apiUrl}/api/v1/departments`;
+  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/departments`;
 
   constructor(private http: HttpClient) {}
 
   getAllDepartments(orderAsc: boolean = true): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.API_URL}?orderAsc=${orderAsc}`);
+    return this.http.get<Department[]>(`${this.propertyApiUrl}?orderAsc=${orderAsc}`);
   }
 } 

@@ -12,15 +12,15 @@ export interface City {
   providedIn: 'root'
 })
 export class CityService {
-  private apiUrl = `${environment.apiUrl}/api/v1/cities`;
+  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/cities`;
 
   constructor(private http: HttpClient) {}
 
   getAllCities(orderAsc: boolean = true): Observable<City[]> {
-    return this.http.get<City[]>(`${this.apiUrl}?orderAsc=${orderAsc}`);
+    return this.http.get<City[]>(`${this.propertyApiUrl}?orderAsc=${orderAsc}`);
   }
 
   getCitiesByDepartment(departmentId: number, orderAsc: boolean = true): Observable<City[]> {
-    return this.http.get<City[]>(`${this.apiUrl}/departments/${departmentId}?orderAsc=${orderAsc}`);
+    return this.http.get<City[]>(`${this.propertyApiUrl}/departments/${departmentId}?orderAsc=${orderAsc}`);
   }
 } 

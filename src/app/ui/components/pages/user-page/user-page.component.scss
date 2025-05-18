@@ -1,13 +1,13 @@
-@import "../../../../../styles/colors";
+@import '../../../../../styles/colors';
 
 body,
 .main-layout,
 .app-root,
-.category {
+.user {
   background: $color-bg !important;
 }
 
-.category {
+.user {
   padding: 0;
   max-width: 100%;
   margin: 0;
