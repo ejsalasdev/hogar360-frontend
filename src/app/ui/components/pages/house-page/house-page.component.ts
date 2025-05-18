@@ -93,7 +93,7 @@ export class HousePageComponent implements OnInit {
       name: 'numberOfRooms',
       label: 'Número de habitaciones',
       type: 'input',
-      inputType: 'number',
+      inputType: 'text',
       required: true,
       min: 1,
       max: 10,
@@ -103,7 +103,7 @@ export class HousePageComponent implements OnInit {
       name: 'numberOfBathrooms',
       label: 'Número de baños',
       type: 'input',
-      inputType: 'number',
+      inputType: 'text',
       required: true,
       min: 1,
       max: 10,
@@ -113,7 +113,7 @@ export class HousePageComponent implements OnInit {
       name: 'price',
       label: 'Precio',
       type: 'input',
-      inputType: 'number',
+      inputType: 'text',
       required: true,
       min: 1,
       max: 1000000,
@@ -195,29 +195,37 @@ export class HousePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categoryService.getCategories(0, 100, true).subscribe((res) => {
-      this.categories = res.content.map((cat) => ({
-        label: cat.name,
-        value: cat.id,
-        id: cat.id,
-        name: cat.name,
-      }));
-      this.houseFormFields.find((f) => f.name === 'categoryId')!.options =
-        this.categories;
-      this.changeDetectorRef.markForCheck();
+    this.categoryService.getCategories(0, 50, true).subscribe({
+      next: (res) => {
+        this.categories = res.content.map((cat) => ({
+          label: cat.name,
+          value: cat.id,
+          id: cat.id,
+          name: cat.name,
+        }));
+        this.houseFormFields.find((f) => f.name === 'categoryId')!.options = this.categories;
+        this.changeDetectorRef.markForCheck();
+      },
+      error: () => {
+        this.showToast('Error al cargar las categorías', 'error');
+      }
     });
 
-    this.ubicationService.getUbications(0, 100, true).subscribe((res) => {
-      this.ubications = res.content.map((ubi) => ({
-        label: `${ubi.cityName}, ${ubi.departmentName}`,
-        value: ubi.id,
-        id: ubi.id,
-        cityName: ubi.cityName,
-        departmentName: ubi.departmentName,
-      }));
-      this.houseFormFields.find((f) => f.name === 'ubicationId')!.options =
-        this.ubications;
-      this.changeDetectorRef.markForCheck();
+    this.ubicationService.getUbications(0, 50, true).subscribe({
+      next: (res) => {
+        this.ubications = res.content.map((ubi) => ({
+          label: `${ubi.cityName}, ${ubi.departmentName}`,
+          value: ubi.id,
+          id: ubi.id,
+          cityName: ubi.cityName,
+          departmentName: ubi.departmentName,
+        }));
+        this.houseFormFields.find((f) => f.name === 'ubicationId')!.options = this.ubications;
+        this.changeDetectorRef.markForCheck();
+      },
+      error: () => {
+        this.showToast('Error al cargar las ubicaciones', 'error');
+      }
     });
   }
 
