@@ -208,7 +208,8 @@ export class LocationPageComponent implements OnInit {
     this.locationModel.city = cityId ? String(cityId) : null;
   }
 
-  onFormSubmit(model: any): void {
+  onFormSubmit() {
+    const model = this.locationForm.value;
     if (this.locationForm.invalid) {
       return;
     }

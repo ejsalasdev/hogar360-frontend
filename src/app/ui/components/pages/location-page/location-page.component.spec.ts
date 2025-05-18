@@ -146,7 +146,7 @@ describe('LocationPageComponent', () => {
     component.locationForm.get('city')?.setValue('2');
     component.locationForm.get('sector')?.setValue('Sector Prueba');
     fixture.detectChanges();
-    component.onFormSubmit(component.locationForm.value);
+    component.onFormSubmit();
     tick();
     expect(component.toastMessage).toContain('Ubicación creada exitosamente');
     expect(component.locationForm.get('department')?.value).toBeNull();
@@ -164,7 +164,7 @@ describe('LocationPageComponent', () => {
     component.locationForm.get('city')?.setValue('2');
     component.locationForm.get('sector')?.setValue('Sector Prueba');
     fixture.detectChanges();
-    component.onFormSubmit(component.locationForm.value);
+    component.onFormSubmit();
     expect(component.toastMessage).toContain('Ciudad no encontrada');
   });
 
@@ -185,7 +185,7 @@ describe('LocationPageComponent', () => {
     component.locationForm.get('city')?.setValue('2');
     component.locationForm.get('sector')?.setValue('Sector Prueba');
     fixture.detectChanges();
-    component.onFormSubmit(component.locationForm.value);
+    component.onFormSubmit();
     tick();
     expect(component.toastMessage).toContain('ya existe');
   }));
@@ -205,7 +205,7 @@ describe('LocationPageComponent', () => {
     component.searchControl.setValue('Medellín');
     tick(500);
     expect(ubicationService.getUbications).toHaveBeenCalledWith(
-      0, // page
+      0,
       component.pageSize,
       component.sort.direction === 'asc',
       component.sort.key,

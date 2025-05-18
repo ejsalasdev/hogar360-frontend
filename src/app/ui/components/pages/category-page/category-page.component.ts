@@ -129,7 +129,6 @@ export class CategoryPageComponent implements OnInit {
   }
 
   onFormSubmit(): void {
-    console.log('Submit ejecutado');
     if (this.categoryForm.valid) {
       const category: Category = this.categoryForm.value;
       this.categoryService.createCategory(category).subscribe({

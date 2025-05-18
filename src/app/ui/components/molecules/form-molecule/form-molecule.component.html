@@ -1,5 +1,6 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <ng-container *ngFor="let field of fields">
+    
     <ng-container *ngIf="field.type === 'input'">
       <atm-input
         [label]="field.label"
@@ -8,8 +9,15 @@
         [placeholder]="field.placeholder"
         [maxlength]="field.maxlength"
         [required]="field.required"
+        [externalError]="field.name === 'confirmPassword' &&
+        formGroup.errors?.['passwordMismatch'] &&
+        formGroup.get('confirmPassword')?.touched &&
+        formGroup.get('confirmPassword')?.value
+          ? 'Las contraseñas no coinciden.'
+          : null"
       ></atm-input>
     </ng-container>
+
     <ng-container *ngIf="field.type === 'textarea'">
       <atm-textarea
         [label]="field.label"
@@ -19,6 +27,7 @@
         [required]="field.required"
       ></atm-textarea>
     </ng-container>
+
     <ng-container *ngIf="field.type === 'select'">
       <atm-select
         [label]="field.label"
@@ -29,7 +38,13 @@
       ></atm-select>
     </ng-container>
   </ng-container>
+
   <div class="form-molecule__button-container">
-    <atm-button type="submit" variant="primary" [label]="submitLabel" [disabled]="formGroup.invalid || areFieldsEmpty()"></atm-button>
+    <atm-button
+      type="submit"
+      variant="primary"
+      [label]="submitLabel"
+      [disabled]="formGroup.invalid"
+    ></atm-button>
   </div>
-</form> 
+</form>

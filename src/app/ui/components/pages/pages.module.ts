@@ -7,11 +7,13 @@ import { CategoryPageComponent } from './category-page/category-page.component';
 import { LocationPageComponent } from './location-page/location-page.component';
 import { MoleculesModule } from '../molecules/molecules.module';
 import { OrganismsModule } from '../organisms/organisms.module';
+import { UserPageComponent } from './user-page/user-page.component';
 
 @NgModule({
   declarations: [
     CategoryPageComponent,
-    LocationPageComponent
+    LocationPageComponent,
+    UserPageComponent
   ],
   imports: [
     CommonModule,

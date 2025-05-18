@@ -25,8 +25,11 @@
     </span>
   </div>
   <div class="atm-input__error">
-    <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
-      {{ getErrorMessage() }}
-    </span>
+    <span *ngIf="externalError; else internalError">{{ externalError }}</span>
+    <ng-template #internalError>
+      <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
+        {{ getErrorMessage() }}
+      </span>
+    </ng-template>
   </div>
 </div> 

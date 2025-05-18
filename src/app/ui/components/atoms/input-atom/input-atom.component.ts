@@ -33,6 +33,7 @@ export class InputAtomComponent implements ControlValueAccessor {
   @Input() maxlength: number | null = null;
   @Input() required: boolean = false;
   @Input() formControl!: FormControl;
+  @Input() externalError: string | null = null;
 
   @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
 
@@ -88,17 +89,19 @@ export class InputAtomComponent implements ControlValueAccessor {
     if (!this.formControl) return '';
     if (this.formControl.hasError('required'))
       return 'Este campo es obligatorio';
+    if (this.formControl.hasError('email'))
+      return 'Correo electrónico inválido';
     if (this.formControl.hasError('minlength')) {
-      return `El nombre debe tener al menos ${
+      return `${this.label || 'Este campo'} debe tener al menos ${
         this.formControl.getError('minlength').requiredLength
       } caracteres`;
     }
     if (this.formControl.hasError('maxlength'))
-      return `El nombre debe tener máximo ${
+      return `${this.label || 'Este campo'} debe tener máximo ${
         this.formControl.getError('maxlength').requiredLength
       } caracteres`;
     if (this.formControl.hasError('pattern'))
-      return 'Solo se permiten letras y espacios';
+      return 'Formato inválido';
     return '';
   }
 }

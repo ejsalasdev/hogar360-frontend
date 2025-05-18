@@ -20,15 +20,4 @@ export class FormMoleculeComponent {
   asFormControl(control: AbstractControl | null): FormControl {
     return control as FormControl;
   }
-
-  areFieldsEmpty(): boolean {
-    if (!this.formGroup) return true;
-    const values = this.formGroup.value;
-    return (
-      !values.sector ||
-      !values.sector.trim() ||
-      !values.department ||
-      !values.city
-    );
-  }
 }

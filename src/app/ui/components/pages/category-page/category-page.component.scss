@@ -42,45 +42,7 @@ body,
     gap: 1.5rem;
   }
 
-  &__field {
+  /* &__field {
     position: relative;
-  }
-
-  &__error-container {
-    min-height: 20px;
-    margin-top: 0.25rem;
-  }
-
-  &__error-text {
-    color: $color-error;
-    font-size: 0.875rem;
-    display: block;
-  }
-
-  &__button-container {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  &__button {
-    padding: 0.75rem 2rem;
-    background-color: $color-primary;
-    color: $color-white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover:not(:disabled) {
-      background-color: $color-primary-hover;
-      transform: translateY(-1px);
-    }
-
-    &:disabled {
-      background-color: lighten($color-primary, 35%);
-      cursor: not-allowed;
-    }
-  }
+  } */
 }
