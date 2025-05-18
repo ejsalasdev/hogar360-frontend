@@ -97,7 +97,7 @@ describe('LocationPageComponent', () => {
     departmentService.getAllDepartments.mockReturnValue(of(mockDepartments));
     fixture.detectChanges();
     expect(component.departments.length).toBe(2);
-    expect(component.locationFormFields[0].options.length).toBe(2);
+    expect(component.locationFormFields?.[0]?.options?.length).toBe(2);
   });
 
   it('should load cities when department is selected', fakeAsync(() => {
@@ -112,7 +112,7 @@ describe('LocationPageComponent', () => {
     tick();
     component.loadCities();
     expect(component.cities.length).toBe(2);
-    expect(component.locationFormFields[1].options.length).toBe(2);
+    expect(component.locationFormFields?.[1]?.options?.length).toBe(2);
   }));
 
   it('should reset the form after creating a location', () => {
