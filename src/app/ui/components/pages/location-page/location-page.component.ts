@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CityService } from '../../../../core/services/city.service';
 import { DepartmentService } from '../../../../core/services/department.service';
 import {
@@ -13,6 +13,9 @@ import {
 } from '../../../../core/services/ubication.service';
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
+import { UbicationResponse } from '../../../../core/models/ubication-response.model';
+import { PageInfo } from '../../../../core/models/page-info.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -40,8 +43,23 @@ export class LocationPageComponent implements OnInit {
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
   isLoading: boolean = false;
+  locations: UbicationResponse[] = [];
+  pageInfo: PageInfo<UbicationResponse> | null = null;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  orderAsc: boolean = true;
+  sort: { key: string, direction: 'asc' | 'desc' } = { key: 'departmentName', direction: 'asc' };
+  searchControl = new FormControl('');
+  searchText: string = '';
 
   readonly maxLengthSector: number = 50;
+
+  locationTableColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'departmentName', label: 'Departamento', sortable: true },
+    { key: 'cityName', label: 'Ciudad', sortable: true },
+    { key: 'sector', label: 'Sector' }
+  ];
 
   constructor(
     private departmentService: DepartmentService,
@@ -99,6 +117,16 @@ export class LocationPageComponent implements OnInit {
       ?.valueChanges.subscribe((departmentId) => {
         this.onDepartmentChange(departmentId);
       });
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(value => {
+        this.searchText = value || '';
+        this.getUbications(0);
+      });
+    this.getUbications();
   }
 
   loadDepartments(): void {
@@ -256,5 +284,45 @@ export class LocationPageComponent implements OnInit {
       (input.dirty || input.touched) &&
       input.errors?.['pattern']
     );
+  }
+
+  getUbications(page: number = this.currentPage): void {
+    this.isLoading = true;
+    this.ubicationService
+      .getUbications(page, this.pageSize, this.sort.direction === 'asc', this.sort.key, this.searchText)
+      .subscribe({
+        next: (data) => {
+          this.pageInfo = data;
+          this.locations = data.content;
+          this.currentPage = data.currentPage;
+          this.isLoading = false;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.showToast('Error al cargar las ubicaciones', 'error');
+        },
+      });
+  }
+
+  onPageChange(page: number): void {
+    if (
+      page !== this.currentPage &&
+      this.pageInfo &&
+      page >= 0 &&
+      page < this.pageInfo.totalPages
+    ) {
+      this.getUbications(page);
+    }
+  }
+
+  toggleOrder(): void {
+    this.orderAsc = !this.orderAsc;
+    this.getUbications(0);
+  }
+
+  onSortChange(sort: { key: string, direction: 'asc' | 'desc' }) {
+    this.sort = sort;
+    this.getUbications(0);
   }
 }

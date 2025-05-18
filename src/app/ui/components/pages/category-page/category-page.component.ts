@@ -2,16 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit,
-  ViewChild,
+  OnInit
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CategoryResponse } from '../../../../core/models/category-response.model';
 import { Category } from '../../../../core/models/category.model';
+import { PageInfo } from '../../../../core/models/page-info.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
-import { CategoryResponse } from '../../../../core/models/category-response.model';
-import { PageInfo } from '../../../../core/models/page-info.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'pg-category',
@@ -31,8 +29,8 @@ export class CategoryPageComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 5;
   orderAsc: boolean = true;
+  sort: { key: string, direction: 'asc' | 'desc' } = { key: 'name', direction: 'asc' };
   isLoading: boolean = false;
-
   showConfirmDialog: boolean = false;
   categoryToDelete: CategoryResponse | null = null;
 
@@ -64,8 +62,8 @@ export class CategoryPageComponent implements OnInit {
 
   categoryTableColumns = [
     { key: 'id', label: 'ID' },
-    { key: 'name', label: 'Nombre' },
-    { key: 'description', label: 'Descripción' },
+    { key: 'name', label: 'Nombre', sortable: true },
+    { key: 'description', label: 'Descripción' }
   ];
   tableActions = [{ type: 'delete', icon: 'delete', tooltip: 'Eliminar' }];
 
@@ -103,7 +101,7 @@ export class CategoryPageComponent implements OnInit {
   getCategories(page: number = this.currentPage): void {
     this.isLoading = true;
     this.categoryService
-      .getCategories(page, this.pageSize, this.orderAsc)
+      .getCategories(page, this.pageSize, this.sort.direction === 'asc')
       .subscribe({
         next: (data) => {
           this.pageInfo = data;
@@ -277,5 +275,10 @@ export class CategoryPageComponent implements OnInit {
     if (event.type === 'delete') {
       this.confirmDelete(event.row);
     }
+  }
+
+  onSortChange(sort: { key: string, direction: 'asc' | 'desc' }) {
+    this.sort = sort;
+    this.getCategories(0);
   }
 }

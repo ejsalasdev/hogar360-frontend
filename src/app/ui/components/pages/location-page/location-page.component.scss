@@ -83,4 +83,15 @@ body,
         font-size: 0.875rem;
         display: block;
     }
+
+    &__search-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__search {
+        width: 100%;
+        max-width: 400px;
+    }
 }

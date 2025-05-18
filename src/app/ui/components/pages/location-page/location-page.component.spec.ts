@@ -6,7 +6,14 @@ import { CityService } from '../../../../core/services/city.service';
 import { UbicationService } from '../../../../core/services/ubication.service';
 import { LocationPageComponent } from './location-page.component';
 import { of, throwError } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
+import { AtomsModule } from '../../atoms/atoms.module';
+
+@Component({
+  selector: 'atm-input',
+  template: '<input />'
+})
+class MockAtmInput {}
 
 describe('LocationPageComponent', () => {
   let component: LocationPageComponent;
@@ -23,12 +30,21 @@ describe('LocationPageComponent', () => {
       getCitiesByDepartment: jest.fn()
     } as any;
     ubicationService = {
-      createUbication: jest.fn()
+      createUbication: jest.fn(),
+      getUbications: jest.fn().mockReturnValue(of({
+        content: [],
+        currentPage: 0,
+        totalPages: 1,
+        totalElements: 0,
+        pageSize: 5,
+        hasNext: false,
+        hasPrevious: false
+      }))
     } as any;
 
     TestBed.configureTestingModule({
       declarations: [LocationPageComponent],
-      imports: [HttpClientTestingModule, ReactiveFormsModule],
+      imports: [HttpClientTestingModule, ReactiveFormsModule, AtomsModule],
       providers: [
         { provide: DepartmentService, useValue: departmentService },
         { provide: CityService, useValue: cityService },
@@ -172,5 +188,51 @@ describe('LocationPageComponent', () => {
     component.onFormSubmit(component.locationForm.value);
     tick();
     expect(component.toastMessage).toContain('ya existe');
+  }));
+
+  it('should call getUbications with correct params on search', fakeAsync(() => {
+    const mockResponse = {
+      content: [],
+      currentPage: 0,
+      totalPages: 1,
+      totalElements: 0,
+      pageSize: 5,
+      hasNext: false,
+      hasPrevious: false
+    };
+    ubicationService.getUbications.mockReturnValue(of(mockResponse));
+    fixture.detectChanges();
+    component.searchControl.setValue('Medellín');
+    tick(500);
+    expect(ubicationService.getUbications).toHaveBeenCalledWith(
+      0, // page
+      component.pageSize,
+      component.sort.direction === 'asc',
+      component.sort.key,
+      'Medellín'
+    );
+  }));
+
+  it('should call getUbications with correct sort params when sorting', fakeAsync(() => {
+    const mockResponse = {
+      content: [],
+      currentPage: 0,
+      totalPages: 1,
+      totalElements: 0,
+      pageSize: 5,
+      hasNext: false,
+      hasPrevious: false
+    };
+    ubicationService.getUbications.mockReturnValue(of(mockResponse));
+    fixture.detectChanges();
+    component.onSortChange({ key: 'cityName', direction: 'desc' });
+    tick();
+    expect(ubicationService.getUbications).toHaveBeenCalledWith(
+      0,
+      component.pageSize,
+      false,
+      'cityName',
+      ''
+    );
   }));
 });

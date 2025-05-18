@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from '../../../environments/environment';
+import { PageInfo } from '../models/page-info.model';
+import { UbicationResponse } from '../models/ubication-response.model';
 
 export interface SaveUbicationRequest {
   sector: string;
@@ -19,5 +21,21 @@ export class UbicationService {
 
   createUbication(request: SaveUbicationRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, request);
+  }
+
+  getUbications(
+    page: number,
+    size: number,
+    orderAsc: boolean,
+    sortBy: string = 'cityName',
+    searchText: string = ''
+  ): Observable<PageInfo<UbicationResponse>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('orderAsc', orderAsc)
+      .set('sortBy', sortBy);
+    if (searchText) params = params.set('searchText', searchText);
+    return this.http.get<PageInfo<UbicationResponse>>(`${this.apiUrl}/read`, { params });
   }
 }

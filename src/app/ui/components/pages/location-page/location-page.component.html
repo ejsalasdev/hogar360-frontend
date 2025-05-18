@@ -16,4 +16,26 @@
     (closed)="onToastClosed()"
   >
   </atm-toast>
+
+  <h2 class="location__title">Ubicaciones existentes</h2>
+  <div class="location__search-container">
+    <atm-input
+      [formControl]="searchControl"
+      placeholder="Buscar por ciudad o departamento..."
+      type="text"
+      class="location__search"
+    ></atm-input>
+  </div>
+  <div class="location__card">
+    <org-table
+      [columns]="locationTableColumns"
+      [data]="locations"
+      [pagination]="pageInfo"
+      [loading]="isLoading"
+      (pageChange)="onPageChange($event)"
+      [sort]="sort"
+      (sortChange)="onSortChange($event)"
+      class="location__table"
+    ></org-table>
+  </div>
 </div>
