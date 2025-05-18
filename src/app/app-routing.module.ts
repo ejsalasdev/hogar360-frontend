@@ -4,6 +4,7 @@ import { CategoryPageComponent } from './ui/components/pages/category-page/categ
 import { LocationPageComponent } from './ui/components/pages/location-page/location-page.component';
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
 import { UserPageComponent } from './ui/components/pages/user-page/user-page.component';
+import { HousePageComponent } from './ui/components/pages/house-page/house-page.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,13 @@ const routes: Routes = [
         path: 'admin/users',
         children: [
           { path: 'create', component: UserPageComponent },
+          { path: '', redirectTo: 'create', pathMatch: 'full' }
+        ]
+      },
+      {
+        path: 'admin/houses',
+        children: [
+          { path: 'create', component: HousePageComponent },
           { path: '', redirectTo: 'create', pathMatch: 'full' }
         ]
       },
