@@ -104,6 +104,12 @@ export class InputAtomComponent implements ControlValueAccessor {
       return `${this.label || 'Este campo'} debe tener máximo ${
         this.formControl.getError('maxlength').requiredLength
       } caracteres`;
+    if (this.formControl.hasError('beforeToday')) {
+      return 'La fecha debe ser igual o posterior a hoy';
+    }
+    if (this.formControl.hasError('maxOneMonth')) {
+      return 'La fecha no puede ser mayor a 1 mes desde hoy';
+    }
     if (this.formControl.hasError('pattern'))
       return this.patternError || 'Formato inválido';
     return '';

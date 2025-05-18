@@ -78,46 +78,50 @@ export class HousePageComponent implements OnInit {
       placeholder: 'Ingrese la descripción de la propiedad',
       required: true,
       minlength: 10,
-      maxlength: 200,
-      patternError: 'La descripción solo puede contener letras y espacios',
+      maxlength: 300,
+      patternError:
+        'La descripción solo puede contener letras, números y espacios',
     },
     {
       name: 'categoryId',
       label: 'Categoría',
       type: 'select',
+      placeholder: 'Seleccione una categoría',
       options: this.categories,
       required: true,
-      placeholder: 'Seleccione una categoría',
     },
     {
       name: 'numberOfRooms',
       label: 'Número de habitaciones',
       type: 'input',
       inputType: 'text',
+      placeholder: 'Ingrese el número de habitaciones',
       required: true,
-      min: 1,
-      max: 10,
-      patternError: 'El número de habitaciones debe ser un número entero',
+      minlength: 1,
+      maxlength: 10,
+      patternError: 'El número de habitaciones debe ser un número entero mayor a 0',
     },
     {
       name: 'numberOfBathrooms',
       label: 'Número de baños',
       type: 'input',
       inputType: 'text',
+      placeholder: 'Ingrese el número de baños',
       required: true,
-      min: 1,
-      max: 10,
-      patternError: 'El número de baños debe ser un número entero',
+      minlength: 1,
+      maxlength: 10,
+      patternError: 'El número de baños debe ser un número entero mayor a 0',
     },
     {
       name: 'price',
       label: 'Precio',
       type: 'input',
       inputType: 'text',
+      placeholder: 'Ingrese el precio',
       required: true,
-      min: 1,
-      max: 1000000,
-      patternError: 'El precio debe ser un número entero',
+      minlength: 1,
+      maxlength: 13,
+      patternError: 'El precio debe ser un número entero mayor a 0',
     },
     {
       name: 'ubicationId',
@@ -132,10 +136,11 @@ export class HousePageComponent implements OnInit {
       label: 'Dirección',
       type: 'input',
       inputType: 'text',
+      placeholder: 'Ejemplo: Calle 123 # 45 67 Villa Antigua',
       required: true,
       minlength: 10,
       maxlength: 200,
-      patternError: 'La dirección solo puede contener letras y espacios',
+      patternError: 'La dirección solo puede contener letras, números, un caracter # y espacios',
     },
     {
       name: 'activePublicationDate',
@@ -143,7 +148,6 @@ export class HousePageComponent implements OnInit {
       type: 'input',
       inputType: 'date',
       required: true,
-      patternError: 'La fecha de publicación activa debe ser una fecha válida',
     },
   ];
 
@@ -161,6 +165,7 @@ export class HousePageComponent implements OnInit {
           Validators.required,
           Validators.minLength(5),
           Validators.maxLength(50),
+          Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$'),
         ],
       ],
       description: [
@@ -168,19 +173,38 @@ export class HousePageComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(10),
-          Validators.maxLength(200),
+          Validators.maxLength(300),
+          Validators.pattern('^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]+$'),
         ],
       ],
       categoryId: [null, Validators.required],
       numberOfRooms: [
-        1,
-        [Validators.required, Validators.min(1), Validators.max(10)],
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(10),
+          Validators.pattern('^[1-9]\d*$'),
+        ],
       ],
       numberOfBathrooms: [
-        1,
-        [Validators.required, Validators.min(1), Validators.max(10)],
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(10),
+          Validators.pattern('^[1-9]\d*$'),
+        ],
       ],
-      price: [null, [Validators.required, Validators.min(1)]],
+      price: [
+        null,
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(13),
+          Validators.pattern('^[1-9]\d*$'),
+        ],
+      ],
       ubicationId: [null, Validators.required],
       address: [
         '',
@@ -188,6 +212,7 @@ export class HousePageComponent implements OnInit {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(200),
+          Validators.pattern('^(?!0)[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*#?[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*$'),
         ],
       ],
       activePublicationDate: ['', [Validators.required, maxOneMonthValidator]],
@@ -203,12 +228,13 @@ export class HousePageComponent implements OnInit {
           id: cat.id,
           name: cat.name,
         }));
-        this.houseFormFields.find((f) => f.name === 'categoryId')!.options = this.categories;
+        this.houseFormFields.find((f) => f.name === 'categoryId')!.options =
+          this.categories;
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
         this.showToast('Error al cargar las categorías', 'error');
-      }
+      },
     });
 
     this.ubicationService.getUbications(0, 50, true).subscribe({
@@ -219,14 +245,15 @@ export class HousePageComponent implements OnInit {
           id: ubi.id,
           cityName: ubi.cityName,
           departmentName: ubi.departmentName,
-          sector: ubi.sector
+          sector: ubi.sector,
         }));
-        this.houseFormFields.find((f) => f.name === 'ubicationId')!.options = this.ubications;
+        this.houseFormFields.find((f) => f.name === 'ubicationId')!.options =
+          this.ubications;
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
         this.showToast('Error al cargar las ubicaciones', 'error');
-      }
+      },
     });
   }
 
