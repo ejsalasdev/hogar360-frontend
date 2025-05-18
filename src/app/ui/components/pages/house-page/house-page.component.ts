@@ -214,11 +214,12 @@ export class HousePageComponent implements OnInit {
     this.ubicationService.getUbications(0, 50, true).subscribe({
       next: (res) => {
         this.ubications = res.content.map((ubi) => ({
-          label: `${ubi.cityName}, ${ubi.departmentName}`,
+          label: `${ubi.sector}, ${ubi.cityName}, ${ubi.departmentName}`,
           value: ubi.id,
           id: ubi.id,
           cityName: ubi.cityName,
           departmentName: ubi.departmentName,
+          sector: ubi.sector
         }));
         this.houseFormFields.find((f) => f.name === 'ubicationId')!.options = this.ubications;
         this.changeDetectorRef.markForCheck();
