@@ -13,7 +13,7 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard.png', route: '/dashboard' },
   { id: 'categories', label: 'Categorías', icon: 'category.png', route: '/admin/categories' },
   { id: 'locations', label: 'Ubicaciones', icon: 'ubication.png', route: '/admin/locations' },
-  { id: 'properties', label: 'Propiedades', icon: 'property.png', route: '/admin/properties' },
+  { id: 'houses', label: 'Propiedades', icon: 'property.png', route: '/admin/houses' },
   { id: 'users', label: 'Usuarios', icon: 'user.png', route: '/admin/users' },
   { id: 'settings', label: 'Configuración', icon: 'config.png', route: '/admin/settings' },
 ];

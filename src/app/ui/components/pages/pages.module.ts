@@ -8,12 +8,14 @@ import { LocationPageComponent } from './location-page/location-page.component';
 import { MoleculesModule } from '../molecules/molecules.module';
 import { OrganismsModule } from '../organisms/organisms.module';
 import { UserPageComponent } from './user-page/user-page.component';
+import { HousePageComponent } from './house-page/house-page.component';
 
 @NgModule({
   declarations: [
     CategoryPageComponent,
     LocationPageComponent,
-    UserPageComponent
+    UserPageComponent,
+    HousePageComponent
   ],
   imports: [
     CommonModule,

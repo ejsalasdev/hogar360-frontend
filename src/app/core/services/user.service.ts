@@ -12,7 +12,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/create`, user);
+  createUser(user: User): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create`, user);
   }
 }
