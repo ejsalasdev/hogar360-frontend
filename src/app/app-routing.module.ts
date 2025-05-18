@@ -5,6 +5,7 @@ import { LocationPageComponent } from './ui/components/pages/location-page/locat
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
 import { UserPageComponent } from './ui/components/pages/user-page/user-page.component';
 import { HousePageComponent } from './ui/components/pages/house-page/house-page.component';
+import { LoginPageComponent } from './ui/components/pages/login-page/login-page.component';
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
       },
       { path: '', redirectTo: 'admin/categories', pathMatch: 'full' }
     ],
-  }
+  },
+  { path: 'login', component: LoginPageComponent },
 ];
 
 @NgModule({

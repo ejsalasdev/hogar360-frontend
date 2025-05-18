@@ -9,13 +9,15 @@ import { MoleculesModule } from '../molecules/molecules.module';
 import { OrganismsModule } from '../organisms/organisms.module';
 import { UserPageComponent } from './user-page/user-page.component';
 import { HousePageComponent } from './house-page/house-page.component';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 @NgModule({
   declarations: [
     CategoryPageComponent,
     LocationPageComponent,
     UserPageComponent,
-    HousePageComponent
+    HousePageComponent,
+    LoginPageComponent
   ],
   imports: [
     CommonModule,
