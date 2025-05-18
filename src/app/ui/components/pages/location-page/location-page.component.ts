@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CityService } from '../../../../core/services/city.service';
 import { DepartmentService } from '../../../../core/services/department.service';
 import {
@@ -15,6 +15,7 @@ import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { UbicationResponse } from '../../../../core/models/ubication-response.model';
 import { PageInfo } from '../../../../core/models/page-info.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface DepartmentOption extends SelectOption {
   id: number;
@@ -48,6 +49,8 @@ export class LocationPageComponent implements OnInit {
   pageSize: number = 5;
   orderAsc: boolean = true;
   sort: { key: string, direction: 'asc' | 'desc' } = { key: 'departmentName', direction: 'asc' };
+  searchControl = new FormControl('');
+  searchText: string = '';
 
   readonly maxLengthSector: number = 50;
 
@@ -113,6 +116,15 @@ export class LocationPageComponent implements OnInit {
       .get('department')
       ?.valueChanges.subscribe((departmentId) => {
         this.onDepartmentChange(departmentId);
+      });
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(value => {
+        this.searchText = value || '';
+        this.getUbications(0);
       });
     this.getUbications();
   }
@@ -277,7 +289,7 @@ export class LocationPageComponent implements OnInit {
   getUbications(page: number = this.currentPage): void {
     this.isLoading = true;
     this.ubicationService
-      .getUbications(page, this.pageSize, this.sort.direction === 'asc', this.sort.key)
+      .getUbications(page, this.pageSize, this.sort.direction === 'asc', this.sort.key, this.searchText)
       .subscribe({
         next: (data) => {
           this.pageInfo = data;
