@@ -1,0 +1,47 @@
+@import '../../../../../styles/colors';
+
+.home {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__hero {
+    background: $color-body-bg;
+    padding: 3rem 0 2rem 0;
+    text-align: center;
+
+    .home__title {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: $color-text;
+      margin-bottom: 0.5rem;
+    }
+    .home__filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__list {
+    flex: 1;
+    padding: 2rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__properties {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  &__pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+}
