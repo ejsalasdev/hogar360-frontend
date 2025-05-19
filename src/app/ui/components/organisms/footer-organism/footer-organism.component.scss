@@ -1,0 +1,117 @@
+@import '../../../../../styles/colors';
+
+.footer {
+  background: $color-white;
+  border-top: 1px solid $color-border-light;
+  padding: 2.5rem 0 1.5rem 0;
+  font-family: "Manrope", sans-serif;
+  color: $color-text;
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto 1.5rem auto;
+    gap: 2rem;
+  }
+
+  &__block {
+    flex: 1 1 200px;
+    min-width: 200px;
+
+    &--brand {
+      .footer__logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $color-primary;
+        margin-bottom: 0.5rem;
+      }
+      .footer__slogan {
+        font-size: 1rem;
+        color: $color-text-light;
+        margin-top: 0.5rem;
+      }
+    }
+
+    &--links, &--contact, &--social {
+      .footer__title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1.1rem;
+      }
+      .footer__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+          margin-bottom: 0.5rem;
+          a {
+            color: $color-text;
+            text-decoration: none;
+            &:hover {
+              color: $color-primary;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
+    &--contact {
+      .fa {
+        margin-right: 0.5rem;
+      }
+    }
+
+    &--social {
+      .footer__social-icons {
+        display: flex;
+        gap: 1rem;
+        a {
+          color: $color-text-light;
+          font-size: 1.3rem;
+          transition: color 0.2s;
+          &:hover {
+            color: $color-primary;
+          }
+        }
+      }
+    }
+  }
+
+  &__copyright {
+    text-align: center;
+    color: $color-text-light;
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid $color-border-light;
+    padding-top: 1rem;
+  }
+}
+
+.footer__icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  transition: filter 0.2s;
+  filter: grayscale(40%);
+}
+
+.footer__social-icons a:hover .footer__icon {
+  filter: none;
+}
+
+// Responsive
+@media (max-width: 900px) {
+  .footer__container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .footer__block {
+    min-width: 0;
+  }
+}

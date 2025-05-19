@@ -8,14 +8,13 @@
 .main-layout__container {
   display: flex;
   align-items: flex-start;
-  height: 100vh;
+  /* height: 100vh; */
   margin-top: 0.5rem;
 }
 
 .main-layout__sidebar {
   flex: 0 0 220px;
   background: $color-white;
-  height: 100vh;
   position: sticky;
   top: 0;
   align-self: flex-start;
