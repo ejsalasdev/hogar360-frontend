@@ -7,20 +7,20 @@
 ></atm-toast>
 
 <main class="home">
-  <!-- Hero principal -->
+  
   <section class="home__hero">
     <h1 class="home__title">Encuentra tu casa perfecta</h1>
     
-    <!-- Barra de filtros/búsqueda -->
+    
     <div class="home__filters-card">
       <form [formGroup]="homeForm" (ngSubmit)="loadHouses()" class="home__filters-form">
         <atm-select
           [options]="categories"
-          [placeholder]="'Seleccione una categoría'"
+          [placeholder]="'Categoría'"
           [formControl]="categoryFormControl"
         ></atm-select>
         <atm-input
-          [placeholder]="'Buscar ciudad o departamento'"
+          [placeholder]="'Buscar por ubicación'"
           [formControl]="searchTextFormControl"
         ></atm-input>
         <button type="submit" class="home__filters-btn">
@@ -30,7 +30,7 @@
     </div>
   </section>
 
-  <!-- Listado de propiedades -->
+  
   <section class="home__list">
     <div class="home__properties">
       <ng-container *ngIf="!isLoadingHouses; else loadingHousesTpl">
