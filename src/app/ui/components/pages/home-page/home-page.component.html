@@ -15,13 +15,11 @@
     <div class="home__filters-card">
       <form [formGroup]="homeForm" (ngSubmit)="loadHouses()" class="home__filters-form">
         <atm-select
-          [label]="'Categoría'"
           [options]="categories"
           [placeholder]="'Seleccione una categoría'"
           [formControl]="categoryFormControl"
         ></atm-select>
         <atm-input
-          [label]="'Ubicación'"
           [placeholder]="'Buscar ciudad o departamento'"
           [formControl]="ubicationFormControl"
         ></atm-input>
