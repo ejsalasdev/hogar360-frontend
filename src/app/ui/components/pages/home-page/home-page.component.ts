@@ -63,8 +63,8 @@ export class HomePageComponent implements OnInit {
 
   // Propiedades para los controles del formulario y opciones de ubicación
   categoryFormControl = new FormControl(null);
-  ubicationFormControl = new FormControl(null);
-  ubicationOptions: { label: string; value: number }[] = [];
+  searchTextFormControl = new FormControl('');
+  // Eliminamos ubicationFormControl y ubicationOptions
 
   constructor(
     private fb: FormBuilder,
@@ -78,16 +78,11 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     this.homeForm = this.fb.group({
       categoryId: this.categoryFormControl,
-      // searchText: campo opcional, pero si se llena debe contener solo letras y espacios (sin caracteres especiales ni números)
-      searchText: ['', Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*$')],
-      ubicationId: this.ubicationFormControl,
+      searchText: this.searchTextFormControl,
     });
     this.loadCategories();
     this.loadUbications();
     this.loadHouses();
-    this.homeForm.valueChanges.subscribe(() => {
-      this.loadHouses();
-    });
   }
 
   // Método para cargar las categorías desde el servicio
@@ -120,16 +115,11 @@ export class HomePageComponent implements OnInit {
     this.ubicationService.getUbications(0, 50, true).subscribe({
       next: (res: any) => {
         this.ubications = res.content;
-        this.ubicationOptions = this.ubications.map((u: UbicationResponse) => ({
-          label: u.cityName + ' - ' + u.departmentName,
-          value: u.id,
-        }));
         this.isLoadingUbications = false;
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
         this.ubications = [];
-        this.ubicationOptions = [];
         this.isLoadingUbications = false;
         this.showToast('Error al cargar ubicaciones', 'error');
         this.changeDetectorRef.markForCheck();
@@ -140,15 +130,14 @@ export class HomePageComponent implements OnInit {
   // Método para cargar las casas desde el servicio
   loadHouses(): void {
     this.isLoadingHouses = true;
-    const { categoryId, ubicationId, searchText } = this.homeForm.value;
+    const { categoryId, searchText } = this.homeForm.value;
     this.houseService
       .getHouses({
         page: 0,
         size: 20,
         sortBy: 'price',
-        // Solo enviar categoryId si es válido
         categoryId: categoryId !== null && categoryId !== '' ? categoryId : undefined,
-        ubicationId: ubicationId || undefined,
+        ubicationSearchText: searchText && searchText.trim() !== '' ? searchText.trim() : undefined,
         orderAsc: true,
       })
       .subscribe({
@@ -169,11 +158,8 @@ export class HomePageComponent implements OnInit {
 
   // Método que se ejecuta al enviar el formulario
   onFormSubmit(): void {
-    // Obtenemos los valores del formulario (ambos pueden ser nulos o vacíos)
-    const { categoryId, searchText } = this.homeForm.value;
-    // Aquí puedes implementar la lógica de filtrado de propiedades
+    // Solo buscar cuando el usuario da click en Buscar
     this.loadHouses();
-    // Por ahora solo mostramos un mensaje de éxito
     this.showToast('Filtro aplicado', 'success');
   }
 
