@@ -135,6 +135,49 @@
       }
     }
   }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__link {
+    color: #444;
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Manrope", sans-serif;
+    transition: color 0.2s;
+    padding: 0 0.5rem;
+
+    &:hover,
+    &:focus {
+      color: #007bff;
+    }
+  }
+
+  &__login-btn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1.1rem;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 2rem;
+    transition: background 0.2s;
+
+    &:hover,
+    &:focus {
+      background: #1d4ed8;
+    }
+  }
 }
 
 @keyframes slideDown {
