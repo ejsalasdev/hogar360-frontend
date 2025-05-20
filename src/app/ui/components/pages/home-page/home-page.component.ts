@@ -146,8 +146,8 @@ export class HomePageComponent implements OnInit {
         page: 0,
         size: 20,
         sortBy: 'price',
-        categoryId: categoryId || undefined,
-        // Si el usuario escribe texto, buscar por nombre de ciudad/departamento
+        // Solo enviar categoryId si es válido
+        categoryId: categoryId !== null && categoryId !== '' ? categoryId : undefined,
         ubicationId: ubicationId || undefined,
         orderAsc: true,
       })

@@ -95,7 +95,13 @@ export class SelectAtomComponent implements ControlValueAccessor {
 
   onSelectChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const value = target.value === '' ? null : target.value;
+    let value: string | number | null = target.value;
+    // Si el valor es string vacío, null, 'null' o '0: null', lo convertimos a null
+    if (value === '' || value === 'null' || value === '0: null') {
+      value = null;
+    } else if (!isNaN(Number(value)) && value !== null) {
+      value = Number(value);
+    }
     this.value = value;
     this._onTouched();
   }
