@@ -65,7 +65,6 @@ export class HousePageComponent implements OnInit {
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
 
-  // Properties for the table
   houses: HouseResponse[] = [];
   houseTableColumns = [
     { key: 'id', label: 'ID', sortable: true },
@@ -92,7 +91,6 @@ export class HousePageComponent implements OnInit {
     direction: 'asc',
   };
 
-  // Nuevas propiedades para la búsqueda
   searchControl = new FormControl('');
   searchText: string = '';
 
@@ -301,14 +299,14 @@ export class HousePageComponent implements OnInit {
     });
 
     this.searchControl.valueChanges.pipe(
-      debounceTime(400), // Espera 400ms después de la última pulsación
-      distinctUntilChanged() // Solo emite si el valor actual es diferente del anterior
+      debounceTime(400),
+      distinctUntilChanged()
     ).subscribe(value => {
       this.searchText = value || '';
-      this.getHouses(0); // Llama a getHouses, reseteando a la primera página
+      this.getHouses(0);
     });
 
-    this.getHouses(); // Load houses on init
+    this.getHouses();
   }
 
   getHouses(page: number = this.currentPage): void {
@@ -353,7 +351,7 @@ export class HousePageComponent implements OnInit {
 
   onSortChange(sort: { key: string; direction: 'asc' | 'desc' }) {
     this.sort = sort;
-    this.getHouses(0); // Reset to first page
+    this.getHouses(0);
   }
 
   private showToast(message: string, type: ToastType): void {

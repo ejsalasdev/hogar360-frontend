@@ -105,7 +105,7 @@ describe('SelectAtomComponent', () => {
     const error = fixture.debugElement.query(By.css('.select-atom__error'));
     // Assert
     expect(error).not.toBeNull();
-    expect(error.nativeElement.textContent).toContain('Este campo es requerido.');
+    expect(error.nativeElement.textContent).toContain('Este campo es obligatorio.');
   });
 
   it('should apply disabled class when formControl is disabled', () => {
