@@ -36,6 +36,17 @@ body,
     margin: 0 auto;
   }
 
+  &__search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__search {
+    width: 100%;
+    max-width: 400px;
+  }
+
   &__table-wrapper {
     width: 100%;
     overflow-x: auto;

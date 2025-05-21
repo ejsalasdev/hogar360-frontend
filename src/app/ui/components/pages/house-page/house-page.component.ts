@@ -15,6 +15,7 @@ import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { PageInfo } from 'src/app/core/models/page-info.model';
 import { HouseResponse } from 'src/app/core/models/house-response.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface CategoryOption extends SelectOption {
   id: number;
@@ -90,7 +91,10 @@ export class HousePageComponent implements OnInit {
     key: 'id',
     direction: 'asc',
   };
-  // End of properties for the table
+
+  // Nuevas propiedades para la búsqueda
+  searchControl = new FormControl('');
+  searchText: string = '';
 
   houseFormFields = [
     {
@@ -188,8 +192,6 @@ export class HousePageComponent implements OnInit {
   ];
 
   pageInfo: PageInfo<HouseResponse> | null = null;
-  searchControl = new FormControl('');
-  searchText: string = '';
 
   constructor(
     private houseService: HouseService,
@@ -298,17 +300,30 @@ export class HousePageComponent implements OnInit {
       },
     });
 
+    this.searchControl.valueChanges.pipe(
+      debounceTime(400), // Espera 400ms después de la última pulsación
+      distinctUntilChanged() // Solo emite si el valor actual es diferente del anterior
+    ).subscribe(value => {
+      this.searchText = value || '';
+      this.getHouses(0); // Llama a getHouses, reseteando a la primera página
+    });
+
     this.getHouses(); // Load houses on init
   }
 
   getHouses(page: number = this.currentPage): void {
     this.isLoading = true;
-    const params = {
+    const params: any = {
       page: page,
       size: this.pageSize,
       sortBy: this.sort.key,
       orderAsc: this.sort.direction === 'asc',
     };
+
+    if (this.searchText && this.searchText.trim() !== '') {
+      params.ubicationSearchText = this.searchText.trim();
+    }
+
     this.houseService.getHouses(params).subscribe({
       next: (data) => {
         this.pageInfo = data;
