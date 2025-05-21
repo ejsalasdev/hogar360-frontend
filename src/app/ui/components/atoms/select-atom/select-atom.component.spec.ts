@@ -48,8 +48,8 @@ describe('SelectAtomComponent', () => {
     select.dispatchEvent(new Event('change'));
     fixture.detectChanges();
     // Assert
-    expect(component.value).toBe('2');
-    expect(valueChangeSpy).toHaveBeenCalledWith('2');
+    expect(component.value).toBe(2);
+    expect(valueChangeSpy).toHaveBeenCalledWith(2);
   });
 
   it('should set and get value via ControlValueAccessor', () => {
