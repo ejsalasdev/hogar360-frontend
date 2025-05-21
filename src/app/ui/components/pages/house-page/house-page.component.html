@@ -17,4 +17,18 @@
       (closed)="onToastClosed()"
     >
     </atm-toast>
+
+    <h2 class="house__title">Propiedades Existentes</h2>
+    <div class="house__card">
+      <org-table
+        [columns]="houseTableColumns"
+        [data]="houses"
+        [pagination]="pageInfo"
+        [loading]="isLoading"
+        (pageChange)="onPageChange($event)"
+        [sort]="sort"
+        (sortChange)="onSortChange($event)"
+        class="house__table"
+      ></org-table>
+    </div>
   </div>

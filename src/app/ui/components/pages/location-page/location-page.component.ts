@@ -87,7 +87,6 @@ export class LocationPageComponent implements OnInit {
   searchControl = new FormControl('');
   searchText: string = '';
 
-
   locationTableColumns = [
     { key: 'id', label: 'ID' },
     { key: 'departmentName', label: 'Departamento', sortable: true },

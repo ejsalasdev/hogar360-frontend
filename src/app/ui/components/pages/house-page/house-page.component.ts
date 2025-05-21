@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ValidationErrors,
   Validators,
@@ -12,6 +13,8 @@ import { HouseService } from 'src/app/core/services/house.service';
 import { UbicationService } from 'src/app/core/services/ubication.service';
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
+import { PageInfo } from 'src/app/core/models/page-info.model';
+import { HouseResponse } from 'src/app/core/models/house-response.model';
 
 interface CategoryOption extends SelectOption {
   id: number;
@@ -29,14 +32,16 @@ function maxOneMonthValidator(
 ): ValidationErrors | null {
   const value = control.value;
   if (!value) return null;
-  const selectedDate = new Date(value);
-  const today = new Date();
-  const maxDate = new Date();
-  maxDate.setMonth(today.getMonth() + 1);
 
-  selectedDate.setHours(0, 0, 0, 0);
+  const [year, month, day] = value.split('-').map(Number);
+  if (!year || !month || !day) return { invalidDate: true };
+
+  const selectedDate = new Date(year, month - 1, day);
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
-  maxDate.setHours(0, 0, 0, 0);
+
+  const maxDate = new Date(today);
+  maxDate.setMonth(today.getMonth() + 1);
 
   if (selectedDate < today) {
     return { beforeToday: true };
@@ -58,6 +63,35 @@ export class HousePageComponent implements OnInit {
   houseForm: FormGroup;
   toastMessage: string | null = null;
   toastType: ToastType = 'info';
+
+  // Properties for the table
+  houses: HouseResponse[] = [];
+  houseTableColumns = [
+    { key: 'id', label: 'ID', sortable: true },
+    { key: 'name', label: 'Nombre' },
+    { key: 'description', label: 'Descripción' },
+    { key: 'category', label: 'Categoría', sortable: true },
+    { key: 'numberOfRooms', label: 'Habitaciones', sortable: true },
+    { key: 'numberOfBathrooms', label: 'Baños', sortable: true },
+    { key: 'price', label: 'Precio', sortable: true },
+    { key: 'address', label: 'Dirección' },
+    { key: 'ubication', label: 'Ubicación' },
+    { key: 'city', label: 'Ciudad' },
+    { key: 'department', label: 'Departamento' },
+    { key: 'activePublicationDate', label: 'Fecha Pub. Activa' },
+    { key: 'publicationStatus', label: 'Estado Pub.' },
+    { key: 'publicationDate', label: 'Fecha Pub.' },
+    { key: 'sellerId', label: 'ID Vendedor' },
+  ];
+  isLoading: boolean = false;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  sort: { key: string; direction: 'asc' | 'desc' } = {
+    key: 'id',
+    direction: 'asc',
+  };
+  // End of properties for the table
+
   houseFormFields = [
     {
       name: 'name',
@@ -97,9 +131,10 @@ export class HousePageComponent implements OnInit {
       inputType: 'text',
       placeholder: 'Ingrese el número de habitaciones',
       required: true,
-      minlength: 1,
+      minlength: 0,
       maxlength: 10,
-      patternError: 'El número de habitaciones debe ser un número entero mayor a 0',
+      patternError:
+        'El número de habitaciones debe ser un número entero',
     },
     {
       name: 'numberOfBathrooms',
@@ -108,9 +143,9 @@ export class HousePageComponent implements OnInit {
       inputType: 'text',
       placeholder: 'Ingrese el número de baños',
       required: true,
-      minlength: 1,
+      minlength: 0,
       maxlength: 10,
-      patternError: 'El número de baños debe ser un número entero mayor a 0',
+      patternError: 'El número de baños debe ser un número entero',
     },
     {
       name: 'price',
@@ -140,7 +175,8 @@ export class HousePageComponent implements OnInit {
       required: true,
       minlength: 10,
       maxlength: 200,
-      patternError: 'La dirección solo puede contener letras, números, un caracter # y espacios',
+      patternError:
+        'La dirección solo puede contener letras, números, un caracter # y espacios',
     },
     {
       name: 'activePublicationDate',
@@ -150,6 +186,10 @@ export class HousePageComponent implements OnInit {
       required: true,
     },
   ];
+
+  pageInfo: PageInfo<HouseResponse> | null = null;
+  searchControl = new FormControl('');
+  searchText: string = '';
 
   constructor(
     private houseService: HouseService,
@@ -182,27 +222,27 @@ export class HousePageComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(0),
           Validators.maxLength(10),
-          Validators.pattern('^[1-9]\d*$'),
+          Validators.pattern('^[0-9]d*$'),
         ],
       ],
       numberOfBathrooms: [
         '',
         [
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(0),
           Validators.maxLength(10),
-          Validators.pattern('^[1-9]\d*$'),
+          Validators.pattern('^[0-9]d*$'),
         ],
       ],
       price: [
-        null,
+        '',
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(13),
-          Validators.pattern('^[1-9]\d*$'),
+          Validators.pattern('^[1-9]\\d*$'),
         ],
       ],
       ubicationId: [null, Validators.required],
@@ -212,7 +252,9 @@ export class HousePageComponent implements OnInit {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(200),
-          Validators.pattern('^(?!0)[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*#?[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*$'),
+          Validators.pattern(
+            '^(?!0)[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*#?[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s]*$'
+          ),
         ],
       ],
       activePublicationDate: ['', [Validators.required, maxOneMonthValidator]],
@@ -255,6 +297,48 @@ export class HousePageComponent implements OnInit {
         this.showToast('Error al cargar las ubicaciones', 'error');
       },
     });
+
+    this.getHouses(); // Load houses on init
+  }
+
+  getHouses(page: number = this.currentPage): void {
+    this.isLoading = true;
+    const params = {
+      page: page,
+      size: this.pageSize,
+      sortBy: this.sort.key,
+      orderAsc: this.sort.direction === 'asc',
+    };
+    this.houseService.getHouses(params).subscribe({
+      next: (data) => {
+        this.pageInfo = data;
+        this.houses = data.content;
+        this.currentPage = data.currentPage;
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.showToast('Error al cargar las propiedades.', 'error');
+        this.changeDetectorRef.markForCheck();
+      },
+    });
+  }
+
+  onPageChange(page: number): void {
+    if (
+      page !== this.currentPage &&
+      this.pageInfo &&
+      page >= 0 &&
+      page < this.pageInfo.totalPages
+    ) {
+      this.getHouses(page);
+    }
+  }
+
+  onSortChange(sort: { key: string; direction: 'asc' | 'desc' }) {
+    this.sort = sort;
+    this.getHouses(0); // Reset to first page
   }
 
   private showToast(message: string, type: ToastType): void {
