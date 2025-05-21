@@ -35,4 +35,10 @@ body,
     width: 90%;
     margin: 0 auto;
   }
+
+  &__table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
 }

@@ -20,7 +20,8 @@
 
     <h2 class="house__title">Propiedades Existentes</h2>
     <div class="house__card">
-      <org-table
+      <div class="house__table-wrapper">
+        <org-table
         [columns]="houseTableColumns"
         [data]="houses"
         [pagination]="pageInfo"
@@ -30,5 +31,6 @@
         (sortChange)="onSortChange($event)"
         class="house__table"
       ></org-table>
+      </div>
     </div>
   </div>
