@@ -1,5 +1,11 @@
 @import '../../../../../styles/colors';
 
+.input-atom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .input-atom__group {
   display: flex;
   flex-direction: column;
@@ -53,13 +59,7 @@
   }
 }
 
-.atm-input {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.atm-input__error {
+.input-atom__error {
   color: $color-error;
   font-size: 0.85rem;
   min-height: 20px;
@@ -67,7 +67,7 @@
   margin-bottom: 1rem;
 }
 
-.atm-input--error {
+.input-atom--error {
   border: 1px solid $color-error !important;
   box-shadow: 0 0 0 2px rgba($color-error, 0.1);
 }

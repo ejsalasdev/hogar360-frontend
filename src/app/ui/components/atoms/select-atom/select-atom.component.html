@@ -4,7 +4,7 @@
     <select
       [ngClass]="{
         'select__field': true,
-        'atm-input--error': formControl.invalid && (formControl.dirty || formControl.touched)
+        'select-atom--error': formControl.invalid && (formControl.dirty || formControl.touched)
       }"
       [formControl]="formControl"
       [class.select__field--disabled]="formControl.disabled"
@@ -17,7 +17,7 @@
   </div>
   <div class="select-atom__error">
     <span *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)">
-      <span *ngIf="formControl.errors?.['required']">Este campo es requerido.</span>
+      <span *ngIf="formControl.errors?.['required']">Este campo es obligatorio.</span>
     </span>
   </div>
 </div>

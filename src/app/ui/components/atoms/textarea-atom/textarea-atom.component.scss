@@ -53,13 +53,13 @@
   }
 }
 
-.atm-textarea {
+.textarea-atom {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.atm-textarea__error {
+.textarea-atom__error {
   color: $color-error;
   font-size: 0.85rem;
   min-height: 20px;
@@ -67,7 +67,7 @@
   margin-bottom: 1rem;
 }
 
-.atm-textarea--error {
+.textarea-atom--error {
   border: 1px solid $color-error !important;
   box-shadow: 0 0 0 2px rgba($color-error, 0.1);
 } 
