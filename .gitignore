@@ -41,6 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
+.figma
 .cursor-rules.md
 .cursor-init.md
 .cursorrules

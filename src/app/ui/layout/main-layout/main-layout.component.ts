@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { MenuItem } from '../../components/organisms/side-menu-organism/side-menu-organism.component';
 
 interface UserInfo {
@@ -32,31 +31,13 @@ export class MainLayoutComponent implements OnInit {
   };
 
   menuItems: MenuItem[] = DEFAULT_MENU_ITEMS;
-  activeItemId: string | null = null;
 
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.setupRouteListener();
-  }
-
-  private setupRouteListener(): void {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      const currentRoute = event.urlAfterRedirects;
-      this.updateActiveMenuItem(currentRoute);
-    });
-  }
-
-  private updateActiveMenuItem(route: string): void {
-    const activeItem = this.menuItems.find(item => route.startsWith(item.route));
-    this.activeItemId = activeItem?.id || null;
-    this.cdr.markForCheck();
-  }
+  ngOnInit(): void {}
 
   onMenuItemClick(item: MenuItem): void {
     if (!item.disabled) {

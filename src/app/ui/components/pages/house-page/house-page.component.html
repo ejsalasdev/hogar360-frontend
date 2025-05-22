@@ -17,4 +17,30 @@
       (closed)="onToastClosed()"
     >
     </atm-toast>
+
+    <h2 class="house__title">Propiedades Existentes</h2>
+    
+    <div class="house__search-container">
+      <atm-input
+        placeholder="Buscar por ciudad o departamento o ubicación"
+        [formControl]="searchControl"
+        type="text"
+        class="house__search"
+      ></atm-input>
+    </div>
+
+    <div class="house__card house__table-card">
+      <div class="house__table-wrapper">
+        <org-table
+          [columns]="houseTableColumns"
+          [data]="houses"
+          [pagination]="pageInfo"
+          [loading]="isLoading"
+          (pageChange)="onPageChange($event)"
+          [sort]="sort"
+          (sortChange)="onSortChange($event)"
+          class="house__table"
+        ></org-table>
+      </div>
+    </div>
   </div>

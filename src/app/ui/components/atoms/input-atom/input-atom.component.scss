@@ -1,5 +1,11 @@
 @import '../../../../../styles/colors';
 
+.input-atom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .input-atom__group {
   display: flex;
   flex-direction: column;
@@ -14,6 +20,7 @@
   width: 100%;
   padding: 0.75rem 1rem;
   margin-top: 0.5rem;
+  min-height: 48px;
   border: 1px solid $color-border;
   border-radius: 8px;
   font-family: "Manrope", sans-serif;
@@ -21,6 +28,7 @@
   color: $color-text;
   background: $color-white;
   transition: border-color 0.2s;
+  box-sizing: border-box;
   &:focus {
     border-color: $color-primary;
     outline: none;
@@ -51,13 +59,7 @@
   }
 }
 
-.atm-input {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.atm-input__error {
+.input-atom__error {
   color: $color-error;
   font-size: 0.85rem;
   min-height: 20px;
@@ -65,7 +67,7 @@
   margin-bottom: 1rem;
 }
 
-.atm-input--error {
+.input-atom--error {
   border: 1px solid $color-error !important;
   box-shadow: 0 0 0 2px rgba($color-error, 0.1);
-} 
+}

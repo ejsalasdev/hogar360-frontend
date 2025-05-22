@@ -1,0 +1,80 @@
+<org-header [config]="headerConfig"></org-header>
+
+<atm-toast
+  *ngIf="toastMessage"
+  [config]="{ message: toastMessage, type: toastType }"
+  (closed)="onToastClosed()"
+></atm-toast>
+
+<main class="home">
+  
+  <section class="home__hero">
+    <h1 class="home__title">Encuentra tu casa perfecta</h1>
+    
+    
+    <div class="home__filters-card">
+      <form [formGroup]="homeForm" (ngSubmit)="loadHouses()" class="home__filters-form">
+        <atm-select
+          [options]="categories"
+          [placeholder]="'Categoría'"
+          [formControl]="categoryFormControl"
+        ></atm-select>
+        <atm-input
+          [placeholder]="'Buscar por ubicación'"
+          [formControl]="searchTextFormControl"
+        ></atm-input>
+        <button type="submit" class="home__filters-btn">
+          <span>Buscar</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  
+  <section class="home__list">
+    <div class="home__properties">
+      <ng-container *ngIf="!isLoadingHouses; else loadingHousesTpl">
+        <div *ngIf="houses.length === 0">No hay casas para mostrar.</div>
+        <div *ngFor="let house of houses" class="property-card">
+          <div class="property-card__image-wrapper">
+            <img class="property-card__image" src="assets/images/house_1.png" alt="Imagen de la casa" />
+            <span class="property-card__status">Venta</span>
+            <button class="property-card__favorite" title="Agregar a favoritos">
+              <img src="assets/icons/favorite.png" alt="Favorito" />
+            </button>
+          </div>
+          <div class="property-card__body">
+            <h3 class="property-card__title">{{ house.name }}</h3>
+            <div class="property-card__ubication">
+              <img src="assets/icons/ubication.png" alt="Ubicación" />
+              <span>{{ house.address }}</span>
+            </div>
+            <div class="property-card__price">{{ house.price | currency:'COP':'symbol' }}</div>
+            <div class="property-card__details">
+              <div class="property-card__detail">
+                <img src="assets/icons/bed.png" alt="Habitaciones" />
+                <span>{{ house.numberOfRooms }}</span>
+              </div>
+              <div class="property-card__detail">
+                <img src="assets/icons/bath.png" alt="Baños" />
+                <span>{{ house.numberOfBathrooms }}</span>
+              </div>
+              <div class="property-card__detail">
+                <img src="assets/icons/sq.png" alt="Área" />
+                <span>-- m²</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loadingHousesTpl>
+        <div>Cargando casas...</div>
+      </ng-template>
+    </div>
+    <div class="home__pagination">
+      <!-- Aquí luego insertaremos la paginación si es necesario -->
+    </div>
+  </section>
+</main>
+
+<org-footer></org-footer>

@@ -22,7 +22,6 @@ export interface MenuItem {
 })
 export class SideMenuOrganismComponent {
   @Input() menuItems: MenuItem[] = [];
-  @Input() activeItemId: string | null = null;
   @Output() itemClick = new EventEmitter<MenuItem>();
 
   trackByFn(index: number, item: MenuItem): string {
@@ -33,9 +32,5 @@ export class SideMenuOrganismComponent {
     if (!item.disabled) {
       this.itemClick.emit(item);
     }
-  }
-
-  isItemActive(item: MenuItem): boolean {
-    return item.id === this.activeItemId;
   }
 }

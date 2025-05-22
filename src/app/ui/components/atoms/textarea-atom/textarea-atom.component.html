@@ -1,4 +1,4 @@
-<div class="atm-textarea">
+<div class="textarea-atom">
   <label *ngIf="label">
     {{ label }}<span *ngIf="required" class="textarea-atom__required-asterisk">*</span>
   </label>
@@ -12,7 +12,7 @@
       (input)="onInputChange($event)"
       [ngClass]="{
         'textarea-atom__control': true,
-        'atm-textarea--error': formControl.invalid && (formControl.dirty || formControl.touched)
+        'textarea-atom--error': formControl.invalid && (formControl.dirty || formControl.touched)
       }"
     ></textarea>
     <span
@@ -23,7 +23,7 @@
       {{ formControl.value ? formControl.value.length : 0 }}/{{ maxlength }}
     </span>
   </div>
-  <div class="atm-textarea__error">
+  <div class="textarea-atom__error">
     <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
       {{ getErrorMessage() }}
     </span>

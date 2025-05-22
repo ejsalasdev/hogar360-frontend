@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface HeaderConfig {
   logoText: string;
@@ -35,6 +36,16 @@ export class HeaderOrganismComponent {
 
   private _config: HeaderConfig = DEFAULT_CONFIG;
   isUserMenuOpen = false;
+  isAdminView = false;
+
+  constructor(private router: Router) {
+    this.isAdminView = this.checkIfAdminView();
+  }
+
+  private checkIfAdminView(): boolean {
+    // Considera rutas que contienen '/admin' o '/user' como vistas administrables
+    return this.router.url.includes('/admin') || this.router.url.includes('/user');
+  }
 
   get logoText(): string {
     return this._config.logoText;
@@ -68,4 +79,9 @@ export class HeaderOrganismComponent {
   onUserMenuOutsideClick(): void {
     this.isUserMenuOpen = false;
   }
-} 
+
+  onLoginClick(): void {
+    // Redirige al login usando el router
+    window.location.href = '/login';
+  }
+}

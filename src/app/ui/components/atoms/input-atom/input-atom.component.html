@@ -1,4 +1,4 @@
-<div class="atm-input">
+<div class="input-atom">
   <label *ngIf="label">
     {{ label }}<span *ngIf="required" class="input-atom__required-asterisk">*</span>
   </label>
@@ -13,7 +13,7 @@
       (input)="onInputChange($event)"
       [ngClass]="{
         'input-atom__control': true,
-        'atm-input--error': formControl.invalid && (formControl.dirty || formControl.touched)
+        'input-atom--error': formControl.invalid && (formControl.dirty || formControl.touched)
       }"
     />
     <span
@@ -24,7 +24,7 @@
       {{ formControl.value ? formControl.value.length : 0 }}/{{ maxlength }}
     </span>
   </div>
-  <div class="atm-input__error">
+  <div class="input-atom__error">
     <span *ngIf="externalError; else internalError">{{ externalError }}</span>
     <ng-template #internalError>
       <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">

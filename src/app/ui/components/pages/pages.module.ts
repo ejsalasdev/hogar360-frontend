@@ -10,6 +10,7 @@ import { OrganismsModule } from '../organisms/organisms.module';
 import { UserPageComponent } from './user-page/user-page.component';
 import { HousePageComponent } from './house-page/house-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
     LocationPageComponent,
     UserPageComponent,
     HousePageComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    HomePageComponent
   ],
   imports: [
     CommonModule,

@@ -48,8 +48,8 @@ describe('SelectAtomComponent', () => {
     select.dispatchEvent(new Event('change'));
     fixture.detectChanges();
     // Assert
-    expect(component.value).toBe('2');
-    expect(valueChangeSpy).toHaveBeenCalledWith('2');
+    expect(component.value).toBe(2);
+    expect(valueChangeSpy).toHaveBeenCalledWith(2);
   });
 
   it('should set and get value via ControlValueAccessor', () => {
@@ -105,7 +105,7 @@ describe('SelectAtomComponent', () => {
     const error = fixture.debugElement.query(By.css('.select-atom__error'));
     // Assert
     expect(error).not.toBeNull();
-    expect(error.nativeElement.textContent).toContain('Este campo es requerido.');
+    expect(error.nativeElement.textContent).toContain('Este campo es obligatorio.');
   });
 
   it('should apply disabled class when formControl is disabled', () => {

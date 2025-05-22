@@ -1,18 +1,23 @@
 <div class="select">
   <label *ngIf="label" class="select__label" [class.select__label--required]="required">{{ label }}</label>
-  <select
-    class="select__field"
-    [formControl]="formControl"
-    [class.select__field--disabled]="formControl.disabled"
-    [required]="required"
-    (change)="onSelectChange($event)"
-  >
-    <option [ngValue]="null">{{ placeholder }}</option>
-    <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
-  </select>
+  <div class="select-atom__container">
+    <select
+      [ngClass]="{
+        'select__field': true,
+        'select-atom--error': formControl.invalid && (formControl.dirty || formControl.touched)
+      }"
+      [formControl]="formControl"
+      [class.select__field--disabled]="formControl.disabled"
+      [required]="required"
+      (change)="onSelectChange($event)"
+    >
+      <option [ngValue]="null">{{ placeholder }}</option>
+      <option *ngFor="let option of options" [value]="option.value">{{ option.label }}</option>
+    </select>
+  </div>
   <div class="select-atom__error">
     <span *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)">
-      <span *ngIf="formControl.errors?.['required']">Este campo es requerido.</span>
+      <span *ngIf="formControl.errors?.['required']">Este campo es obligatorio.</span>
     </span>
   </div>
 </div>

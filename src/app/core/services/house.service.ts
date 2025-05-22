@@ -15,4 +15,23 @@ export class HouseService {
   createHouse(house: House): Observable<any> {
     return this.http.post(`${this.propertyUrl}/create`, house);
   }
+
+  getHouses(params: {
+    page?: number;
+    size?: number;
+    sortBy?: string;
+    categoryId?: number;
+    ubicationId?: number;
+    ubicationSearchText?: string;
+    orderAsc?: boolean;
+  } = {}): Observable<any> {
+    const queryParams = [];
+    if (params.page !== undefined) queryParams.push(`page=${params.page}`);
+    if (params.size !== undefined) queryParams.push(`size=${params.size}`);
+    if (params.sortBy) queryParams.push(`sortBy=${params.sortBy}`);
+    if (params.ubicationSearchText) queryParams.push(`ubicationSearchText=${encodeURIComponent(params.ubicationSearchText)}`);
+    if (params.orderAsc !== undefined) queryParams.push(`orderAsc=${params.orderAsc}`);
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+    return this.http.get(`${this.propertyUrl}/read${queryString}`);
+  }
 }

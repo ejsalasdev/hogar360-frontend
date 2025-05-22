@@ -2,11 +2,12 @@
   <a
     *ngFor="let item of menuItems; trackBy: trackByFn"
     [routerLink]="item.disabled ? null : item.route"
-    [class.side-menu__item--active]="isItemActive(item)"
+    routerLinkActive="side-menu__item--active"
+    #rla="routerLinkActive"
     [class.side-menu__item--disabled]="item.disabled"
     class="side-menu__item"
     (click)="onItemClick(item)"
-    [attr.aria-current]="isItemActive(item) ? 'page' : null"
+    [attr.aria-current]="rla.isActive ? 'page' : null"
     [attr.aria-disabled]="item.disabled"
   >
     <img
