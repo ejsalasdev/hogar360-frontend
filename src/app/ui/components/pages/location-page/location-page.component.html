@@ -1,15 +1,16 @@
 <div class="location">
-  <h2 class="location__title">Crear Ubicación</h2>
-
-  <div class="location__card">
-    <mol-form
-      *ngIf="locationForm"
-      [fields]="locationFormFields"
-      [formGroup]="locationForm"
-      submitLabel="Crear"
-      (formSubmit)="onFormSubmit()"
-    ></mol-form>
-  </div>
+  <ng-container *ngIf="isAdmin">
+    <h2 class="location__title">Crear Ubicación</h2>
+    <div class="location__card">
+      <mol-form
+        *ngIf="locationForm"
+        [fields]="locationFormFields"
+        [formGroup]="locationForm"
+        submitLabel="Crear"
+        (formSubmit)="onFormSubmit()"
+      ></mol-form>
+    </div>
+  </ng-container>
 
   <atm-toast
     *ngIf="toastMessage"

@@ -37,7 +37,7 @@ const routes: Routes = [
       {
         path: 'admin/locations',
         canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] },
+        data: { roles: ['ADMIN', 'SELLER'] },
         children: [
           { path: 'create', component: LocationPageComponent },
           { path: '', redirectTo: 'create', pathMatch: 'full' },

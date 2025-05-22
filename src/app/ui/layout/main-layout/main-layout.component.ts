@@ -114,8 +114,13 @@ export class MainLayoutComponent implements OnInit {
         return true;
       }
       
-      // Ubicaciones y usuarios solo para administradores
-      if ((item.id === 'locations' || item.id === 'users') && !roles.isAdmin) {
+      // Ubicaciones para administradores
+      if (item.id === 'locations' && !roles.isAdmin && !roles.isSeller) {
+        return false;
+      }
+
+      // Usuarios solo para administradores
+      if (item.id === 'users' && !roles.isAdmin) {
         return false;
       }
       
