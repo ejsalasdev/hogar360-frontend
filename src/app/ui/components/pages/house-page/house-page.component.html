@@ -1,15 +1,16 @@
 <div class="house">
-    <h2 class="house__title">Crear Propiedad</h2>
-  
-    <div class="house__card">
-      <mol-form
-        *ngIf="houseForm"
-        [fields]="houseFormFields"
-        [formGroup]="houseForm"
-        submitLabel="Crear"
-        (formSubmit)="onFormSubmit()"
-      ></mol-form>
-    </div>
+    <ng-container *ngIf="isSeller">
+      <h2 class="house__title">Crear Propiedad</h2>
+      <div class="house__card">
+        <mol-form
+          *ngIf="houseForm"
+          [fields]="houseFormFields"
+          [formGroup]="houseForm"
+          submitLabel="Crear"
+          (formSubmit)="onFormSubmit()"
+        ></mol-form>
+      </div>
+    </ng-container>
   
     <atm-toast
       *ngIf="toastMessage"
