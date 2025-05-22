@@ -1,11 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from '../../components/organisms/side-menu-organism/side-menu-organism.component';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { RoleService, UserRoles } from 'src/app/core/services/role.service';
 
 interface UserInfo {
   name: string;
   welcomeMessage: string;
   avatarUrl: string;
+  role: string;
 }
 
 const DEFAULT_MENU_ITEMS: MenuItem[] = [
@@ -28,20 +31,125 @@ export class MainLayoutComponent implements OnInit {
     name: 'Admin',
     welcomeMessage: 'Bienvenido',
     avatarUrl: '/assets/images/avatar.jpg',
+    role: 'ADMIN'
   };
 
   menuItems: MenuItem[] = DEFAULT_MENU_ITEMS;
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private roleService: RoleService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.filterMenuItemsByRole();
+    
+    // Para depuración, obtener los roles directamente
+    const userRoles = this.roleService.getUserRoles();
+    console.log('Direct user roles:', userRoles);
+    
+    // Determinar el rol principal para mostrar en el encabezado
+    const displayRole = this.getRoleForDisplay(userRoles);
+    console.log('Display role:', displayRole);
+    
+    this.user = {
+      ...this.user,
+      role: displayRole
+    };
+    this.cdr.markForCheck();
+    
+    this.authService.user$.subscribe(userInfo => {
+      if (userInfo) {
+        
+        this.user = {
+          name: userInfo.name || 'Usuario',
+          welcomeMessage: 'Bienvenido',
+          avatarUrl: '/assets/images/avatar.jpg',
+          role: this.determineUserRole(userInfo.roles)
+        };
+        
+        this.filterMenuItemsByRole();
+        this.cdr.markForCheck();
+      }
+    });
+  }
+  
+  private getRoleForDisplay(roles: UserRoles): string {
+    if (roles.isAdmin) {
+      return 'ADMIN';
+    } else if (roles.isSeller) {
+      return 'SELLER';
+    } else if (roles.isBuyer) {
+      return 'BUYER';
+    }
+    return 'USUARIO';
+  }
+  
+  private determineUserRole(roles: string[]): string {
+    console.log('Determining role from:', roles);
+    
+    if (!roles || !Array.isArray(roles)) {
+      console.log('Invalid roles array, returning default');
+      return 'USUARIO';
+    }
+    
+    if (roles.includes('ADMIN')) {
+      return 'ADMIN';
+    } else if (roles.includes('SELLER')) {
+      return 'SELLER';
+    } else if (roles.includes('BUYER')) {
+      return 'BUYER';
+    }
+    return 'USUARIO';
+  }
+  
+  private filterMenuItemsByRole(): void {
+    const roles = this.roleService.getUserRoles();
+    
+    this.menuItems = DEFAULT_MENU_ITEMS.filter(item => {
+      // Siempre mostrar el dashboard para todos los usuarios autenticados
+      if (item.id === 'dashboard') {
+        return true;
+      }
+      
+      // Ubicaciones para administradores
+      if (item.id === 'locations' && !roles.isAdmin && !roles.isSeller) {
+        return false;
+      }
+
+      // Usuarios solo para administradores
+      if (item.id === 'users' && !roles.isAdmin) {
+        return false;
+      }
+      
+      // Categorías para administradores y vendedores
+      if (item.id === 'categories' && !roles.isAdmin && !roles.isSeller) {
+        return false;
+      }
+      
+      // Propiedades para administradores y vendedores
+      if (item.id === 'houses' && !roles.isAdmin && !roles.isSeller) {
+        return false;
+      }
+      
+      // Configuración para todos los usuarios autenticados
+      return true;
+    });
+  }
 
   onMenuItemClick(item: MenuItem): void {
-    if (!item.disabled) {
+    if (item.disabled) {
+      return;
+    }
+
+    if (item.route) {
       this.router.navigate([item.route]);
     }
+  }
+  
+  onLogout(): void {
+    this.authService.logout();
   }
 }

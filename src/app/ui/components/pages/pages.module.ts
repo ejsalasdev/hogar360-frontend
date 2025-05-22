@@ -11,6 +11,8 @@ import { UserPageComponent } from './user-page/user-page.component';
 import { HousePageComponent } from './house-page/house-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
+import { AccessDeniedPageComponent } from './access-denied-page/access-denied-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { HomePageComponent } from './home-page/home-page.component';
     UserPageComponent,
     HousePageComponent,
     LoginPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    DashboardPageComponent,
+    AccessDeniedPageComponent
   ],
   imports: [
     CommonModule,

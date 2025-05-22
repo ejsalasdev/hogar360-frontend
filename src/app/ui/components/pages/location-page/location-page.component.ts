@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { CityService } from '../../../../core/services/city.service';
 import { DepartmentService } from '../../../../core/services/department.service';
+import { RoleService } from '../../../../core/services/role.service';
 import {
   SaveUbicationRequest,
   UbicationService,
@@ -86,6 +87,7 @@ export class LocationPageComponent implements OnInit {
   };
   searchControl = new FormControl('');
   searchText: string = '';
+  isAdmin: boolean = false;
 
   locationTableColumns = [
     { key: 'id', label: 'ID' },
@@ -98,11 +100,14 @@ export class LocationPageComponent implements OnInit {
     private departmentService: DepartmentService,
     private cityService: CityService,
     private ubicationService: UbicationService,
+    private roleService: RoleService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.roleService.hasRole('ADMIN');
+
     this.loadDepartments();
     this.locationForm = this.fb.group({
       department: [null, Validators.required],

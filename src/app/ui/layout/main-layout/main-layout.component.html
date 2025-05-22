@@ -4,8 +4,10 @@
       logoText: 'Hogar 360',
       welcomeMessage: user.welcomeMessage,
       userName: user.name,
-      userAvatarUrl: user.avatarUrl
+      userAvatarUrl: user.avatarUrl,
+      userRole: user.role
     }"
+    (logoutClick)="onLogout()"
   ></org-header>
   <div class="main-layout__container">
     <div class="main-layout__sidebar">

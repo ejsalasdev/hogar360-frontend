@@ -1,0 +1,19 @@
+.dashboard {
+  padding: 20px;
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  &__content {
+    margin-top: 20px;
+    
+    p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+  }
+}

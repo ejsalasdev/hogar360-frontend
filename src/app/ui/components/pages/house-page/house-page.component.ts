@@ -11,6 +11,7 @@ import { House } from 'src/app/core/models/house.model';
 import { CategoryService } from 'src/app/core/services/category.service';
 import { HouseService } from 'src/app/core/services/house.service';
 import { UbicationService } from 'src/app/core/services/ubication.service';
+import { RoleService } from "src/app/core/services/role.service";
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { PageInfo } from 'src/app/core/models/page-info.model';
@@ -90,7 +91,7 @@ export class HousePageComponent implements OnInit {
     key: 'id',
     direction: 'asc',
   };
-
+  isSeller: boolean = false;
   searchControl = new FormControl('');
   searchText: string = '';
 
@@ -195,6 +196,7 @@ export class HousePageComponent implements OnInit {
     private houseService: HouseService,
     private categoryService: CategoryService,
     private ubicationService: UbicationService,
+    private roleService: RoleService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -262,6 +264,8 @@ export class HousePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isSeller = this.roleService.hasRole("SELLER");
+
     this.categoryService.getCategories(0, 50, true).subscribe({
       next: (res) => {
         this.categories = res.content.map((cat) => ({
