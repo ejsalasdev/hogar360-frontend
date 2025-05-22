@@ -28,14 +28,14 @@ export interface UserInfo {
 export class AuthService {
   private apiUrl = `${environment.userApiUrl}/api/v1/auth`;
   private userSubject = new BehaviorSubject<UserInfo | null>(null);
-  private jwtHelper = new JwtHelperService();
   
   user$ = this.userSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private jwtHelper: JwtHelperService
   ) {
     this.loadUserInfo();
   }
