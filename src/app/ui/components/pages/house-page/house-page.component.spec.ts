@@ -7,6 +7,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { HouseService } from '../../../../core/services/house.service';
 import { UbicationService } from '../../../../core/services/ubication.service';
 import { HousePageComponent } from './house-page.component';
+import { RoleService } from 'src/app/core/services/role.service';
 
 interface TestUbicationOption {
   id: number;
@@ -45,6 +46,7 @@ describe('HousePageComponent', () => {
   let houseService: any;
   let categoryService: any;
   let ubicationService: any;
+  let roleService: any;
   let formBuilder: FormBuilder;
 
   const mockHouseService = {
@@ -103,6 +105,7 @@ describe('HousePageComponent', () => {
     houseService = TestBed.inject(HouseService);
     categoryService = TestBed.inject(CategoryService);
     ubicationService = TestBed.inject(UbicationService);
+    roleService = TestBed.inject(RoleService);
     formBuilder = TestBed.inject(FormBuilder);
 
     const mockCategories = [{ id: 1, name: 'Apartamento' }];
@@ -116,6 +119,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
@@ -237,6 +241,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
@@ -274,6 +279,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
@@ -292,6 +298,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
@@ -316,6 +323,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
@@ -335,6 +343,7 @@ describe('HousePageComponent', () => {
       houseService,
       categoryService,
       ubicationService,
+      roleService,
       { markForCheck: jest.fn() } as any,
       formBuilder
     );
