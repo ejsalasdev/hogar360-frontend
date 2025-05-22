@@ -12,7 +12,7 @@
   </ng-container>
   <ng-template #adminHeader>
     <div class="user-info">
-      <span class="welcome">{{ welcomeMessage }}, {{ userName }}</span>
+      <span class="welcome">{{ welcomeMessage }}, {{ userRole || 'Sin Rol' }}</span>
       <div class="avatar-container" *ngIf="showUserMenu">
         <button
           class="avatar-button"
@@ -23,7 +23,7 @@
           <div class="avatar" *ngIf="userAvatarUrl">
             <img [src]="userAvatarUrl" [alt]="userName" />
           </div>
-          <div class="avatar" *ngIf="!userAvatarUrl">
+          <div class="avatar avatar--placeholder" *ngIf="!userAvatarUrl">
             <i class="fa fa-user-circle" [attr.aria-label]="userName"></i>
           </div>
         </button>
@@ -33,8 +33,8 @@
           (clickOutside)="onUserMenuOutsideClick()"
           role="menu"
         >
-          <button class="menu-item" role="menuitem">
-            <i class="fa fa-sign-out"></i>
+          <button class="menu-item" role="menuitem" (click)="onLogoutClick()">
+            <img src="../../../../../assets/icons/logout.png" alt="Cerrar sesión" />
             Cerrar Sesión
           </button>
         </div>

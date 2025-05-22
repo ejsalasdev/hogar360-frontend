@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtModule } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +12,8 @@ import { MoleculesModule } from './ui/components/molecules/molecules.module';
 import { PagesModule } from './ui/components/pages/pages.module';
 import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
 import { OrganismsModule } from './ui/components/organisms/organisms.module';
-import { AuthInterceptor } from './core/services/auth.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { RoleInterceptor } from './core/interceptors/role.interceptor';
 
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent],
@@ -18,6 +21,12 @@ import { AuthInterceptor } from './core/services/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem('token'),
+        allowedDomains: [environment.userApiUrl.replace(/^https?:\/\//, '')]
+      }
+    }),
     AtomsModule,
     MoleculesModule,
     PagesModule,
@@ -27,6 +36,11 @@ import { AuthInterceptor } from './core/services/auth.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RoleInterceptor,
       multi: true
     }
   ],

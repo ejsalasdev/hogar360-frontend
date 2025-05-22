@@ -63,7 +63,7 @@ export class LoginPageComponent {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
         this.loading = false;
         this.cdr.markForCheck();
       },
