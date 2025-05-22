@@ -29,37 +29,25 @@ const routes: Routes = [
         path: 'admin/categories',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'SELLER'] },
-        children: [
-          { path: 'create', component: CategoryPageComponent },
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-        ],
+        component: CategoryPageComponent,
       },
       {
         path: 'admin/locations',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'SELLER'] },
-        children: [
-          { path: 'create', component: LocationPageComponent },
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-        ],
+        component: LocationPageComponent
       },
       {
         path: 'admin/users',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] },
-        children: [
-          { path: 'create', component: UserPageComponent },
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-        ],
+        component: UserPageComponent
       },
       {
         path: 'admin/houses',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'SELLER'] },
-        children: [
-          { path: 'create', component: HousePageComponent },
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-        ],
+        component: HousePageComponent
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
