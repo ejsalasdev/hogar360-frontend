@@ -109,18 +109,27 @@ export class MainLayoutComponent implements OnInit {
     const roles = this.roleService.getUserRoles();
     
     this.menuItems = DEFAULT_MENU_ITEMS.filter(item => {
+      // Siempre mostrar el dashboard para todos los usuarios autenticados
       if (item.id === 'dashboard') {
         return true;
       }
       
-      if ((item.id === 'categories' || item.id === 'locations' || item.id === 'users') && !roles.isAdmin) {
+      // Ubicaciones y usuarios solo para administradores
+      if ((item.id === 'locations' || item.id === 'users') && !roles.isAdmin) {
         return false;
       }
       
+      // Categorías para administradores y vendedores
+      if (item.id === 'categories' && !roles.isAdmin && !roles.isSeller) {
+        return false;
+      }
+      
+      // Propiedades para administradores y vendedores
       if (item.id === 'houses' && !roles.isAdmin && !roles.isSeller) {
         return false;
       }
       
+      // Configuración para todos los usuarios autenticados
       return true;
     });
   }

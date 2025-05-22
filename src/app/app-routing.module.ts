@@ -28,7 +28,7 @@ const routes: Routes = [
       {
         path: 'admin/categories',
         canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] },
+        data: { roles: ['ADMIN', 'SELLER'] },
         children: [
           { path: 'create', component: CategoryPageComponent },
           { path: '', redirectTo: 'create', pathMatch: 'full' },

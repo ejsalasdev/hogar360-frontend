@@ -1,14 +1,17 @@
 <div class="category">
-  <h2 class="category__title">Crear Categoría</h2>
-  <div class="category__card">
-    <mol-form
-      *ngIf="categoryForm"
-      [fields]="categoryFormFields"
-      [formGroup]="categoryForm"
-      submitLabel="Crear"
-      (formSubmit)="onFormSubmit()"
-    ></mol-form>
-  </div>
+  <!-- Sección de creación solo visible para administradores -->
+  <ng-container *ngIf="isAdmin">
+    <h2 class="category__title">Crear Categoría</h2>
+    <div class="category__card">
+      <mol-form
+        *ngIf="categoryForm"
+        [fields]="categoryFormFields"
+        [formGroup]="categoryForm"
+        submitLabel="Crear"
+        (formSubmit)="onFormSubmit()"
+      ></mol-form>
+    </div>
+  </ng-container>
 
   <h2 class="category__title">Categorías existentes</h2>
   <div class="category__card">

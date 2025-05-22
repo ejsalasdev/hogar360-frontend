@@ -9,6 +9,7 @@ import { CategoryResponse } from '../../../../core/models/category-response.mode
 import { Category } from '../../../../core/models/category.model';
 import { PageInfo } from '../../../../core/models/page-info.model';
 import { CategoryService } from '../../../../core/services/category.service';
+import { RoleService } from '../../../../core/services/role.service';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 
 @Component({
@@ -32,6 +33,7 @@ export class CategoryPageComponent implements OnInit {
   isLoading: boolean = false;
   showConfirmDialog: boolean = false;
   categoryToDelete: CategoryResponse | null = null;
+  isAdmin: boolean = false;
 
   categoryForm: FormGroup;
 
@@ -63,12 +65,17 @@ export class CategoryPageComponent implements OnInit {
     { key: 'name', label: 'Nombre', sortable: true },
     { key: 'description', label: 'Descripción' },
   ];
-  tableActions = [{ type: 'delete', icon: 'delete', tooltip: 'Eliminar' }];
+  
+  get tableActions() {
+    // Solo mostrar acciones de eliminación para administradores
+    return this.isAdmin ? [{ type: 'delete', icon: 'delete', tooltip: 'Eliminar' }] : [];
+  }
 
   constructor(
     private categoryService: CategoryService,
     private changeDetectorRef: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private roleService: RoleService
   ) {
     this.categoryForm = this.fb.group({
       name: [
@@ -93,6 +100,10 @@ export class CategoryPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Verificar si el usuario es administrador
+    this.isAdmin = this.roleService.hasRole('ADMIN');
+    
+    // Cargar la lista de categorías
     this.getCategories();
   }
 
