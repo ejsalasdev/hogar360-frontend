@@ -1,0 +1,22 @@
+<div *ngIf="isVisible" class="modal-organism__overlay" (click)="onOverlayClick()">
+  <div class="modal-organism__dialog" (click)="onDialogClick($event)">
+    <button
+      *ngIf="showCloseButton"
+      type="button"
+      class="modal-organism__close-button"
+      (click)="closeModal()"
+      aria-label="Cerrar modal"
+    >
+      &times;
+    </button>
+    <div class="modal-organism__header">
+      <ng-content select="[modal-header]"></ng-content>
+    </div>
+    <div class="modal-organism__body">
+      <ng-content select="[modal-body]"></ng-content>
+    </div>
+    <div class="modal-organism__footer">
+      <ng-content select="[modal-footer]"></ng-content>
+    </div>
+  </div>
+</div>

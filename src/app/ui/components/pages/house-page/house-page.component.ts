@@ -68,7 +68,6 @@ export class HousePageComponent implements OnInit {
 
   houses: HouseResponse[] = [];
   houseTableColumns = [
-    { key: 'id', label: 'ID', sortable: true },
     { key: 'name', label: 'Nombre' },
     { key: 'description', label: 'Descripción' },
     { key: 'category', label: 'Categoría', sortable: true },
@@ -79,10 +78,7 @@ export class HousePageComponent implements OnInit {
     { key: 'ubication', label: 'Ubicación' },
     { key: 'city', label: 'Ciudad' },
     { key: 'department', label: 'Departamento' },
-    { key: 'activePublicationDate', label: 'Fecha Pub. Activa' },
-    { key: 'publicationStatus', label: 'Estado Pub.' },
-    { key: 'publicationDate', label: 'Fecha Pub.' },
-    { key: 'sellerId', label: 'ID Vendedor' },
+    { key: 'activePublicationDate', label: 'Fecha Publicación' },
   ];
   isLoading: boolean = false;
   currentPage: number = 0;
