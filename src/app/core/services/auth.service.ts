@@ -79,7 +79,6 @@ export class AuthService {
     try {
       return this.jwtHelper.decodeToken(token);
     } catch (error) {
-      console.error('Error decoding token:', error);
       return null;
     }
   }
@@ -121,10 +120,8 @@ export class AuthService {
         roles: roles,
       };
 
-      console.log('User info loaded:', userInfo);
       this.userSubject.next(userInfo);
     } catch (error) {
-      console.error('Error decoding token', error);
       // Clear invalid token and redirect to login
       localStorage.removeItem('token');
       this.userSubject.next(null);

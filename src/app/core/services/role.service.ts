@@ -34,7 +34,6 @@ export class RoleService {
         isBuyer: hasBuyer
       };
     } catch (error) {
-      console.error('Error decoding token:', error);
       return { isAdmin: false, isSeller: false, isBuyer: false };
     }
   }
@@ -80,7 +79,6 @@ export class RoleService {
     try {
       return this.jwtHelper.isTokenExpired(token);
     } catch (error) {
-      console.error('Error checking token expiration:', error);
       return true;
     }
   }
