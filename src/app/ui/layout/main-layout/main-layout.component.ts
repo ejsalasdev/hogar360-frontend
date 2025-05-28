@@ -83,7 +83,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.authService.user$.pipe(
       takeUntil(this.destroy$)
     ).subscribe((userInfo) => {
-      console.log('User info received:', userInfo);
       if (userInfo) {
         this.user = {
           name: userInfo.name || 'Usuario',
@@ -107,10 +106,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   private initializeUserState(): void {
     const userRoles = this.roleService.getUserRoles();
-    console.log('Direct user roles:', userRoles);
 
     const displayRole = this.getRoleForDisplay(userRoles);
-    console.log('Display role:', displayRole);
 
     const decodedToken = this.authService.getDecodedToken();
     if (decodedToken) {
@@ -145,10 +142,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   private determineUserRole(roles: string[]): string {
-    console.log('Determining role from:', roles);
-
     if (!roles || !Array.isArray(roles)) {
-      console.log('Invalid roles array, returning default');
       return 'USUARIO';
     }
 
