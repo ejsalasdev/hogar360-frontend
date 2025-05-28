@@ -84,6 +84,11 @@ export class AuthService {
     }
   }
 
+  // Force reload user information - useful for ensuring state consistency
+  reloadUserInfo(): void {
+    this.loadUserInfo();
+  }
+
   private loadUserInfo(): void {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -116,11 +121,14 @@ export class AuthService {
         roles: roles,
       };
 
-      console.log('User info created:', userInfo);
+      console.log('User info loaded:', userInfo);
       this.userSubject.next(userInfo);
     } catch (error) {
       console.error('Error decoding token', error);
+      // Clear invalid token and redirect to login
+      localStorage.removeItem('token');
       this.userSubject.next(null);
+      this.router.navigate(['/login']);
     }
   }
 }

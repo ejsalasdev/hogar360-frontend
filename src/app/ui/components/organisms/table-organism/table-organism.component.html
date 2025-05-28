@@ -26,9 +26,8 @@
             <button *ngFor="let action of actions"
                     [title]="action.tooltip"
                     (click)="onAction(action.type, row)"
-                    class="org-table__delete-btn">
-              <img *ngIf="action.icon === 'delete'" src="/assets/icons/delete.png" alt="Eliminar" class="org-table__delete-icon" />
-              <!-- Puedes agregar más iconos según el tipo de acción -->
+                    class="org-table__action-btn">
+              <img [src]="'/assets/icons/' + action.icon + '.png'" [alt]="action.tooltip" class="org-table__action-icon" />
             </button>
           </td>
         </tr>

@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
 import { MenuItem } from '../../components/organisms/side-menu-organism/side-menu-organism.component';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { RoleService, UserRoles } from 'src/app/core/services/role.service';
+import { Subject, takeUntil } from 'rxjs';
 
 interface UserInfo {
   name: string;
@@ -56,7 +58,9 @@ const DEFAULT_MENU_ITEMS: MenuItem[] = [
   styleUrls: ['./main-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  
   user: UserInfo = {
     name: 'Admin',
     welcomeMessage: 'Bienvenido',
@@ -74,23 +78,12 @@ export class MainLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.filterMenuItemsByRole();
+    this.initializeUserState();
 
-    // Para depuración, obtener los roles directamente
-    const userRoles = this.roleService.getUserRoles();
-    console.log('Direct user roles:', userRoles);
-
-    // Determinar el rol principal para mostrar en el encabezado
-    const displayRole = this.getRoleForDisplay(userRoles);
-    console.log('Display role:', displayRole);
-
-    this.user = {
-      ...this.user,
-      role: displayRole,
-    };
-    this.cdr.markForCheck();
-
-    this.authService.user$.subscribe((userInfo) => {
+    this.authService.user$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((userInfo) => {
+      console.log('User info received:', userInfo);
       if (userInfo) {
         this.user = {
           name: userInfo.name || 'Usuario',
@@ -101,8 +94,43 @@ export class MainLayoutComponent implements OnInit {
 
         this.filterMenuItemsByRole();
         this.cdr.markForCheck();
+      } else {
+        this.initializeUserState();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private initializeUserState(): void {
+    const userRoles = this.roleService.getUserRoles();
+    console.log('Direct user roles:', userRoles);
+
+    const displayRole = this.getRoleForDisplay(userRoles);
+    console.log('Display role:', displayRole);
+
+    const decodedToken = this.authService.getDecodedToken();
+    if (decodedToken) {
+      this.user = {
+        name: decodedToken.name || 'Usuario',
+        welcomeMessage: 'Bienvenido',
+        avatarUrl: '/assets/images/avatar.jpg',
+        role: displayRole,
+      };
+    } else {
+      this.user = {
+        name: 'Admin',
+        welcomeMessage: 'Bienvenido',
+        avatarUrl: '/assets/images/avatar.jpg',
+        role: displayRole,
+      };
+    }
+
+    this.filterMenuItemsByRole();
+    this.cdr.markForCheck();
   }
 
   private getRoleForDisplay(roles: UserRoles): string {
@@ -137,35 +165,29 @@ export class MainLayoutComponent implements OnInit {
   private filterMenuItemsByRole(): void {
     const roles = this.roleService.getUserRoles();
 
-    this.menuItems = DEFAULT_MENU_ITEMS.filter((item) => {
-      // Siempre mostrar el dashboard para todos los usuarios autenticados
+    this.menuItems = [...DEFAULT_MENU_ITEMS.filter((item) => {
       if (item.id === 'dashboard') {
         return true;
       }
 
-      // Ubicaciones para administradores
       if (item.id === 'locations' && !roles.isAdmin && !roles.isSeller) {
         return false;
       }
 
-      // Usuarios solo para administradores
       if (item.id === 'users' && !roles.isAdmin) {
         return false;
       }
 
-      // Categorías para administradores y vendedores
       if (item.id === 'categories' && !roles.isAdmin && !roles.isSeller) {
         return false;
       }
 
-      // Propiedades para administradores y vendedores
       if (item.id === 'houses' && !roles.isAdmin && !roles.isSeller) {
         return false;
       }
 
-      // Configuración para todos los usuarios autenticados
       return true;
-    });
+    })];
   }
 
   onMenuItemClick(item: MenuItem): void {

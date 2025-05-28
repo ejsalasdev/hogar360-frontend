@@ -12,6 +12,7 @@ import { CategoryService } from 'src/app/core/services/category.service';
 import { HouseService } from 'src/app/core/services/house.service';
 import { UbicationService } from 'src/app/core/services/ubication.service';
 import { RoleService } from "src/app/core/services/role.service";
+import { AppointmentSlotService } from 'src/app/core/services/appointment-slot.service';
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
 import { PageInfo } from 'src/app/core/models/page-info.model';
@@ -54,6 +55,32 @@ function maxOneMonthValidator(
   return null;
 }
 
+function timeFormatValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null; // Don't validate empty values, let 'required' handle it
+  }
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  return timeRegex.test(control.value) ? null : { invalidTimeFormat: true };
+}
+
+function endTimeAfterStartTimeValidator(group: AbstractControl): ValidationErrors | null {
+  const startTime = group.get('horaInicio')?.value;
+  const endTime = group.get('horaFin')?.value;
+
+  if (!startTime || !endTime) {
+    return null; // Don't validate if one of the controls is empty
+  }
+
+  const [startHours, startMinutes] = startTime.split(':').map(Number);
+  const [endHours, endMinutes] = endTime.split(':').map(Number);
+
+  if (endHours < startHours || (endHours === startHours && endMinutes <= startMinutes)) {
+    return { endTimeBeforeStartTime: true };
+  }
+
+  return null;
+}
+
 @Component({
   selector: 'app-house-page',
   templateUrl: './house-page.component.html',
@@ -90,6 +117,19 @@ export class HousePageComponent implements OnInit {
   isSeller: boolean = false;
   searchControl = new FormControl('');
   searchText: string = '';
+
+  isCreateSlotModalVisible: boolean = false;
+  selectedHouseForSlot: HouseResponse | null = null;
+  appointmentSlotForm!: FormGroup;
+
+  get houseTableActions(): any[] {
+    if (this.isSeller) {
+      return [
+        { type: 'createSlot', icon: 'schedule', tooltip: 'Crear Horario de Visita' }
+      ];
+    }
+    return []; // No actions if not a seller
+  }
 
   houseFormFields = [
     {
@@ -194,7 +234,8 @@ export class HousePageComponent implements OnInit {
     private ubicationService: UbicationService,
     private roleService: RoleService,
     private changeDetectorRef: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appointmentSlotService: AppointmentSlotService
   ) {
     this.houseForm = this.fb.group({
       name: [
@@ -257,6 +298,7 @@ export class HousePageComponent implements OnInit {
       ],
       activePublicationDate: ['', [Validators.required, maxOneMonthValidator]],
     });
+    this.initAppointmentSlotForm();
   }
 
   ngOnInit(): void {
@@ -307,6 +349,46 @@ export class HousePageComponent implements OnInit {
     });
 
     this.getHouses();
+  }
+
+  private initAppointmentSlotForm(): void {
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 21); // 3 weeks from today
+
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+    this.appointmentSlotForm = this.fb.group({
+      fechaVisita: ['', [Validators.required, this.dateRangeValidator(formatDate(today), formatDate(maxDate))]],
+      horaInicio: ['', [Validators.required, timeFormatValidator]],
+      horaFin: ['', [Validators.required, timeFormatValidator]],
+    }, { validators: endTimeAfterStartTimeValidator });
+  }
+
+  private dateRangeValidator(minDateStr: string, maxDateStr: string) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null; // Don't validate empty values, let 'required' handle it
+      }
+      const selectedDate = new Date(control.value);
+      selectedDate.setHours(0,0,0,0); // Normalize selected date
+
+      const minDate = new Date(minDateStr);
+      minDate.setHours(0,0,0,0); // Normalize min date
+      const maxDate = new Date(maxDateStr);
+      maxDate.setHours(0,0,0,0); // Normalize max date
+
+      if (selectedDate < minDate || selectedDate > maxDate) {
+        return {
+          dateRange: {
+            minDate: minDateStr,
+            maxDate: maxDateStr,
+            actual: control.value
+          }
+        };
+      }
+      return null;
+    };
   }
 
   getHouses(page: number = this.currentPage): void {
@@ -380,5 +462,65 @@ export class HousePageComponent implements OnInit {
         this.showToast('Error al crear la propiedad', 'error');
       },
     });
+  }
+
+  openCreateSlotModal(house: HouseResponse): void {
+    if (!this.isSeller) return; // Or handle as per your role logic for this action
+    this.selectedHouseForSlot = house;
+    this.appointmentSlotForm.reset(); // Reset form when opening
+    this.isCreateSlotModalVisible = true;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  closeCreateSlotModal(): void {
+    this.isCreateSlotModalVisible = false;
+    this.selectedHouseForSlot = null;
+    this.appointmentSlotForm.reset();
+    this.changeDetectorRef.markForCheck();
+  }
+
+  onSaveAppointmentSlot(): void {
+    if (!this.appointmentSlotForm.valid || !this.selectedHouseForSlot) {
+      this.appointmentSlotForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.appointmentSlotForm.value;
+    const houseId = this.selectedHouseForSlot.id;
+
+    const startTimeStr = `${formValues.fechaVisita}T${formValues.horaInicio}:00.000Z`;
+    const endTimeStr = `${formValues.fechaVisita}T${formValues.horaFin}:00.000Z`;
+
+    try {
+      new Date(startTimeStr).toISOString();
+      new Date(endTimeStr).toISOString();
+    } catch (e) {
+      this.showToast('Fecha u hora inválida.', 'error');
+      return;
+    }
+    
+    const payload = {
+      startTime: startTimeStr,
+      endTime: endTimeStr,
+      houseId: houseId
+    };
+
+    this.appointmentSlotService.createAppointmentSlot(payload).subscribe({
+      next: (response) => {
+        const message = typeof response === 'string' ? response : (response as any)?.message || 'Horario creado exitosamente';
+        this.showToast(message, 'success');
+        this.closeCreateSlotModal();
+      },
+      error: (error) => {
+        const errorMessage = error?.error?.message || error?.message || 'Error al crear el horario';
+        this.showToast(errorMessage, 'error');
+      }
+    });
+  }
+
+  onTableAction(event: { type: string, row: HouseResponse }): void {
+    if (event.type === 'createSlot') {
+      this.openCreateSlotModal(event.row);
+    }
   }
 }
