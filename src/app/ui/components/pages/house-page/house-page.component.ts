@@ -125,7 +125,7 @@ export class HousePageComponent implements OnInit {
   get houseTableActions(): any[] {
     if (this.isSeller) {
       return [
-        { type: 'createSlot', icon: 'schedule', tooltip: 'Crear Horario de Visita' }
+        { type: 'createSlot', icon: 'schedule_green', tooltip: 'Crear Horario de Visita' }
       ];
     }
     return []; // No actions if not a seller

@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputAtomComponent } from './input-atom.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormControl, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { InputAtomComponent } from './input-atom.component';
 
 describe('InputAtomComponent', () => {
   let component: InputAtomComponent;
