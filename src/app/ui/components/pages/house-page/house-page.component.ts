@@ -456,6 +456,7 @@ export class HousePageComponent implements OnInit {
       next: () => {
         this.showToast('Propiedad creada exitosamente', 'success');
         this.houseForm.reset();
+        this.getHouses(0);
         this.changeDetectorRef.markForCheck();
       },
       error: (error) => {
