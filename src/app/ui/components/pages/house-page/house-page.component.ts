@@ -11,7 +11,7 @@ import { House } from 'src/app/core/models/house.model';
 import { CategoryService } from 'src/app/core/services/category.service';
 import { HouseService } from 'src/app/core/services/house.service';
 import { UbicationService } from 'src/app/core/services/ubication.service';
-import { RoleService } from "src/app/core/services/role.service";
+import { RoleService } from 'src/app/core/services/role.service';
 import { AppointmentSlotService } from 'src/app/core/services/appointment-slot.service';
 import { SelectOption } from '../../atoms/select-atom/select-atom.component';
 import { ToastType } from '../../atoms/toast-atom/toast-atom.component';
@@ -55,7 +55,9 @@ function maxOneMonthValidator(
   return null;
 }
 
-function timeFormatValidator(control: AbstractControl): ValidationErrors | null {
+function timeFormatValidator(
+  control: AbstractControl
+): ValidationErrors | null {
   if (!control.value) {
     return null; // Don't validate empty values, let 'required' handle it
   }
@@ -63,7 +65,9 @@ function timeFormatValidator(control: AbstractControl): ValidationErrors | null 
   return timeRegex.test(control.value) ? null : { invalidTimeFormat: true };
 }
 
-function endTimeAfterStartTimeValidator(group: AbstractControl): ValidationErrors | null {
+function endTimeAfterStartTimeValidator(
+  group: AbstractControl
+): ValidationErrors | null {
   const startTime = group.get('horaInicio')?.value;
   const endTime = group.get('horaFin')?.value;
 
@@ -74,7 +78,10 @@ function endTimeAfterStartTimeValidator(group: AbstractControl): ValidationError
   const [startHours, startMinutes] = startTime.split(':').map(Number);
   const [endHours, endMinutes] = endTime.split(':').map(Number);
 
-  if (endHours < startHours || (endHours === startHours && endMinutes <= startMinutes)) {
+  if (
+    endHours < startHours ||
+    (endHours === startHours && endMinutes <= startMinutes)
+  ) {
     return { endTimeBeforeStartTime: true };
   }
 
@@ -125,7 +132,11 @@ export class HousePageComponent implements OnInit {
   get houseTableActions(): any[] {
     if (this.isSeller) {
       return [
-        { type: 'createSlot', icon: 'schedule_green', tooltip: 'Crear Horario de Visita' }
+        {
+          type: 'createSlot',
+          icon: 'schedule_green',
+          tooltip: 'Crear Horario de Visita',
+        },
       ];
     }
     return []; // No actions if not a seller
@@ -172,8 +183,7 @@ export class HousePageComponent implements OnInit {
       required: true,
       minlength: 0,
       maxlength: 10,
-      patternError:
-        'El número de habitaciones debe ser un número entero',
+      patternError: 'El número de habitaciones debe ser un número entero',
     },
     {
       name: 'numberOfBathrooms',
@@ -302,7 +312,7 @@ export class HousePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isSeller = this.roleService.hasRole("SELLER");
+    this.isSeller = this.roleService.hasRole('SELLER');
 
     this.categoryService.getCategories(0, 50, true).subscribe({
       next: (res) => {
@@ -340,13 +350,12 @@ export class HousePageComponent implements OnInit {
       },
     });
 
-    this.searchControl.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe(value => {
-      this.searchText = value || '';
-      this.getHouses(0);
-    });
+    this.searchControl.valueChanges
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => {
+        this.searchText = value || '';
+        this.getHouses(0);
+      });
 
     this.getHouses();
   }
@@ -358,11 +367,20 @@ export class HousePageComponent implements OnInit {
 
     const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-    this.appointmentSlotForm = this.fb.group({
-      fechaVisita: ['', [Validators.required, this.dateRangeValidator(formatDate(today), formatDate(maxDate))]],
-      horaInicio: ['', [Validators.required, timeFormatValidator]],
-      horaFin: ['', [Validators.required, timeFormatValidator]],
-    }, { validators: endTimeAfterStartTimeValidator });
+    this.appointmentSlotForm = this.fb.group(
+      {
+        fechaVisita: [
+          '',
+          [
+            Validators.required,
+            this.dateRangeValidator(formatDate(today), formatDate(maxDate)),
+          ],
+        ],
+        horaInicio: ['', [Validators.required, timeFormatValidator]],
+        horaFin: ['', [Validators.required, timeFormatValidator]],
+      },
+      { validators: endTimeAfterStartTimeValidator }
+    );
   }
 
   private dateRangeValidator(minDateStr: string, maxDateStr: string) {
@@ -371,20 +389,20 @@ export class HousePageComponent implements OnInit {
         return null; // Don't validate empty values, let 'required' handle it
       }
       const selectedDate = new Date(control.value);
-      selectedDate.setHours(0,0,0,0); // Normalize selected date
+      selectedDate.setHours(0, 0, 0, 0); // Normalize selected date
 
       const minDate = new Date(minDateStr);
-      minDate.setHours(0,0,0,0); // Normalize min date
+      minDate.setHours(0, 0, 0, 0); // Normalize min date
       const maxDate = new Date(maxDateStr);
-      maxDate.setHours(0,0,0,0); // Normalize max date
+      maxDate.setHours(0, 0, 0, 0); // Normalize max date
 
       if (selectedDate < minDate || selectedDate > maxDate) {
         return {
           dateRange: {
             minDate: minDateStr,
             maxDate: maxDateStr,
-            actual: control.value
-          }
+            actual: control.value,
+          },
         };
       }
       return null;
@@ -499,27 +517,56 @@ export class HousePageComponent implements OnInit {
       this.showToast('Fecha u hora inválida.', 'error');
       return;
     }
-    
+
     const payload = {
       startTime: startTimeStr,
       endTime: endTimeStr,
-      houseId: houseId
+      houseId: houseId,
     };
 
     this.appointmentSlotService.createAppointmentSlot(payload).subscribe({
       next: (response) => {
-        const message = typeof response === 'string' ? response : (response as any)?.message || 'Horario creado exitosamente';
+        const message =
+          typeof response === 'string'
+            ? response
+            : (response as any)?.message || 'Horario creado exitosamente';
         this.showToast(message, 'success');
         this.closeCreateSlotModal();
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || error?.message || 'Error al crear el horario';
+        const errorMessage = this.translateErrorMessage(error);
         this.showToast(errorMessage, 'error');
-      }
+      },
     });
   }
 
-  onTableAction(event: { type: string, row: HouseResponse }): void {
+  private translateErrorMessage(error: any): string {
+    const originalMessage = error?.error?.message || error?.message || '';
+
+    if (
+      originalMessage === 'The visit time overlaps with an existing schedule.'
+    ) {
+      return 'El horario de visita se superpone con un horario existente.';
+    }
+
+    if (
+      originalMessage ===
+      'An appointment slot already exists for this date and time.'
+    ) {
+      return 'Ya existe un horario para esta fecha y hora. Por favor, elige otro horario.';
+    }
+
+    if (
+      originalMessage ===
+      'The startTime must be within the next 3 weeks from now.'
+    ) {
+      return 'La fecha de inicio debe estar dentro de las próximas 3 semanas y/o la hora debe ser mayor a ahora.';
+    }
+
+    return 'Error al crear el horario. Por favor, inténtalo de nuevo.';
+  }
+
+  onTableAction(event: { type: string; row: HouseResponse }): void {
     if (event.type === 'createSlot') {
       this.openCreateSlotModal(event.row);
     }
