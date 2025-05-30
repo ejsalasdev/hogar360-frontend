@@ -40,8 +40,68 @@
           (pageChange)="onPageChange($event)"
           [sort]="sort"
           (sortChange)="onSortChange($event)"
+          [actions]="houseTableActions"
+          (action)="onTableAction($event)"
           class="house__table"
         ></org-table>
       </div>
     </div>
   </div>
+
+<app-modal-organism
+  [isVisible]="isCreateSlotModalVisible"
+  [showCloseButton]="true"
+  [closeOnOutsideClick]="true"
+  [closeOnEscape]="true"
+  (close)="closeCreateSlotModal()"
+>
+  <h3 modal-header>Crear Horario de Visita para {{ selectedHouseForSlot?.name }}</h3>
+
+  <div modal-body>
+    <form [formGroup]="appointmentSlotForm" (ngSubmit)="onSaveAppointmentSlot()" class="appointment-slot-form">
+      <div class="form-field">
+        <atm-input
+          label="Fecha de Visita"
+          type="date"
+          formControlName="fechaVisita"
+          [formControl]="$any(appointmentSlotForm.controls['fechaVisita'])"
+          id="fechaVisita"
+        ></atm-input>
+      </div>
+
+      <div class="form-field">
+        <atm-input
+          label="Hora de Inicio"
+          type="time"
+          formControlName="horaInicio"
+          [formControl]="$any(appointmentSlotForm.controls['horaInicio'])"
+          id="horaInicio"
+        ></atm-input>
+      </div>
+
+      <div class="form-field">
+        <atm-input
+          label="Hora de Fin"
+          type="time"
+          formControlName="horaFin"
+          [formControl]="$any(appointmentSlotForm.controls['horaFin'])"
+          id="horaFin"
+        ></atm-input>
+      </div>
+
+      <div *ngIf="appointmentSlotForm.errors?.['endTimeAfterStartTime'] && (appointmentSlotForm.controls['horaInicio'].touched || appointmentSlotForm.controls['horaFin'].touched)" class="error-messages form-group-error">
+        <small>La hora de fin debe ser posterior a la hora de inicio.</small>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 20px;">
+        <atm-button
+          label="Guardar Horario"
+          type="submit" 
+          styleType="primary"
+          [disabled]="appointmentSlotForm.invalid"
+        ></atm-button>
+      </div>
+
+    </form>
+  </div>
+</app-modal-organism>

@@ -53,3 +53,36 @@ body,
     padding-bottom: 1rem;
   }
 }
+
+.appointment-slot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .error-messages {
+    small {
+      color: $color-error;
+      font-size: 0.8rem;
+    }
+  }
+  .form-group-error {
+    margin-top: -0.5rem; // Adjust to align with other field errors
+    small {
+      color: $color-error;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}

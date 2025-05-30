@@ -191,7 +191,6 @@ describe('AuthService', () => {
       newService.user$.subscribe(user => {
         expect(user).toBeNull();
       });
-      expect(console.error).toHaveBeenCalledWith('Error decoding token', expect.any(Error));
     });
   });
 
@@ -302,7 +301,7 @@ describe('AuthService', () => {
       expect(jwtHelperServiceMock.decodeToken).toHaveBeenCalledWith(token);
     });
 
-    it('should return null and log error if decoding fails', () => {
+    it('should return null if decoding fails', () => {
       const token = 'invalidToken';
       localStorageBackingStore['token'] = token;
       jwtHelperServiceMock.decodeToken.mockImplementation(() => { throw new Error('decoding error'); });
@@ -313,7 +312,6 @@ describe('AuthService', () => {
       expect(service.getDecodedToken()).toBeNull();
       expect(mockLocalStorageFunctions.getItem).toHaveBeenCalledWith('token');
       expect(jwtHelperServiceMock.decodeToken).toHaveBeenCalledWith(token);
-      expect(console.error).toHaveBeenCalledWith('Error decoding token:', expect.any(Error));
     });
   });
 });

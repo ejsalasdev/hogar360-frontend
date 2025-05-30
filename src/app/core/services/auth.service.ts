@@ -23,12 +23,12 @@ export interface UserInfo {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.userApiUrl}/api/v1/auth`;
+  private userApiUrl = `${environment.userApiUrl}/api/v1/auth`;
   private userSubject = new BehaviorSubject<UserInfo | null>(null);
-  
+
   user$ = this.userSubject.asObservable();
 
   constructor(
@@ -41,9 +41,10 @@ export class AuthService {
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request)
+    return this.http
+      .post<LoginResponse>(`${this.userApiUrl}/login`, request)
       .pipe(
-        tap(response => {
+        tap((response) => {
           localStorage.setItem('token', response.token);
           this.loadUserInfo();
         })
@@ -61,40 +62,44 @@ export class AuthService {
     if (!token) {
       return false;
     }
-    
+
     return !this.jwtHelper.isTokenExpired(token);
   }
-  
+
   hasRole(role: string): boolean {
     return this.roleService.hasRole(role);
   }
-  
+
   getDecodedToken(): any {
     const token = localStorage.getItem('token');
     if (!token) {
       return null;
     }
-    
+
     try {
       return this.jwtHelper.decodeToken(token);
     } catch (error) {
-      console.error('Error decoding token:', error);
       return null;
     }
   }
-  
+
+  // Force reload user information - useful for ensuring state consistency
+  reloadUserInfo(): void {
+    this.loadUserInfo();
+  }
+
   private loadUserInfo(): void {
     const token = localStorage.getItem('token');
     if (!token) {
       this.userSubject.next(null);
       return;
     }
-    
+
     if (this.jwtHelper.isTokenExpired(token)) {
       this.logout();
       return;
     }
-    
+
     try {
       const decodedToken = this.jwtHelper.decodeToken(token);
       let roles: string[] = [];
@@ -107,19 +112,20 @@ export class AuthService {
           roles = decodedToken.authorities;
         }
       }
-      
+
       const userInfo: UserInfo = {
         id: decodedToken.sub || 0,
         name: decodedToken.name || 'Usuario',
         email: decodedToken.email || '',
-        roles: roles
+        roles: roles,
       };
-      
-      console.log('User info created:', userInfo);
+
       this.userSubject.next(userInfo);
     } catch (error) {
-      console.error('Error decoding token', error);
+      // Clear invalid token and redirect to login
+      localStorage.removeItem('token');
       this.userSubject.next(null);
+      this.router.navigate(['/login']);
     }
   }
 }

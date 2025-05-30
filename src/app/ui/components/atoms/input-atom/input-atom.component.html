@@ -7,27 +7,28 @@
       #inputElement
       [type]="type"
       [placeholder]="placeholder"
-      [maxlength]="maxlength"
+      [attr.maxlength]="maxlength"
       [required]="required"
-      [formControl]="formControl"
+      [value]="currentValue"
       (input)="onInputChange($event)"
+      (blur)="onBlur()"
       [ngClass]="{
         'input-atom__control': true,
-        'input-atom--error': formControl.invalid && (formControl.dirty || formControl.touched)
+        'input-atom--error': formControl && formControl.invalid && (formControl.dirty || formControl.touched)
       }"
     />
     <span
       *ngIf="maxlength"
       class="input-atom__character-counter"
-      [ngClass]="{'input-atom__character-counter--over': formControl.value?.length > maxlength}"
+      [ngClass]="{'input-atom__character-counter--over': (currentValue.length || 0) > maxlength}"
     >
-      {{ formControl.value ? formControl.value.length : 0 }}/{{ maxlength }}
+      {{ currentValue ? currentValue.length : 0 }}/{{ maxlength }}
     </span>
   </div>
   <div class="input-atom__error">
     <span *ngIf="externalError; else internalError">{{ externalError }}</span>
     <ng-template #internalError>
-      <span *ngIf="formControl.invalid && (formControl.dirty || formControl.touched)">
+      <span *ngIf="formControl && formControl.invalid && (formControl.dirty || formControl.touched)">
         {{ getErrorMessage() }}
       </span>
     </ng-template>

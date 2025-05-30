@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   FormControl,
+  AbstractControl,
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
@@ -32,17 +33,21 @@ export class InputAtomComponent implements ControlValueAccessor {
   @Input() placeholder: string = '';
   @Input() maxlength: number | null = null;
   @Input() required: boolean = false;
-  @Input() formControl!: FormControl;
+  @Input() formControl?: AbstractControl;
   @Input() externalError: string | null = null;
   @Input() patternError: string | null = null;
 
   @ViewChild('inputElement') inputElement?: ElementRef<HTMLInputElement>;
 
-  private _value: string = '';
+  public _value: string = '';
   private _onChange: (value: string) => void = () => {};
   private _onTouched: () => void = () => {};
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  get currentValue(): string {
+    return this.formControl ? this.formControl.value || '' : this._value;
+  }
 
   get value(): string {
     return this._value;
@@ -78,7 +83,20 @@ export class InputAtomComponent implements ControlValueAccessor {
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.value = target.value;
+    const value = target.value;
+    
+    if (this.formControl) {
+      this.formControl.setValue(value);
+      this.formControl.markAsTouched();
+    } else {
+      this.value = value;
+    }
+  }
+
+  onBlur(): void {
+    if (this.formControl) {
+      this.formControl.markAsTouched();
+    }
     this._onTouched();
   }
 
@@ -87,30 +105,39 @@ export class InputAtomComponent implements ControlValueAccessor {
   }
 
   getErrorMessage(): string {
-    if (!this.formControl) return '';
-    if (this.formControl.hasError('required'))
+    const control = this.formControl;
+    if (!control || !control.errors) return '';
+    
+    if (control.hasError('required'))
       return 'Este campo es obligatorio';
-    if (this.formControl.hasError('adult')) {
+    if (control.hasError('adult')) {
       return 'Debes ser mayor de 18 años';
     }
-    if (this.formControl.hasError('email'))
+    if (control.hasError('email'))
       return 'El correo electrónico no es válido';
-    if (this.formControl.hasError('minlength')) {
+    if (control.hasError('minlength')) {
       return `${this.label || 'Este campo'} debe tener al menos ${
-        this.formControl.getError('minlength').requiredLength
+        control.getError('minlength').requiredLength
       } caracteres`;
     }
-    if (this.formControl.hasError('maxlength'))
+    if (control.hasError('maxlength'))
       return `${this.label || 'Este campo'} debe tener máximo ${
-        this.formControl.getError('maxlength').requiredLength
+        control.getError('maxlength').requiredLength
       } caracteres`;
-    if (this.formControl.hasError('beforeToday')) {
+    if (control.hasError('beforeToday')) {
       return 'La fecha debe ser igual o posterior a hoy';
     }
-    if (this.formControl.hasError('maxOneMonth')) {
+    if (control.hasError('maxOneMonth')) {
       return 'La fecha no puede ser mayor a 1 mes desde hoy';
     }
-    if (this.formControl.hasError('pattern'))
+    if (control.hasError('dateRange')) {
+      const error = control.getError('dateRange');
+      return `La fecha debe estar entre ${error.minDate} y ${error.maxDate}`;
+    }
+    if (control.hasError('timeFormat')) {
+      return 'El formato de hora debe ser HH:mm';
+    }
+    if (control.hasError('pattern'))
       return this.patternError || 'Formato inválido';
     return '';
   }

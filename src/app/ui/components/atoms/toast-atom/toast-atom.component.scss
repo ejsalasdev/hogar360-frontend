@@ -4,18 +4,19 @@
   right: 2rem;
   left: auto;
   min-width: 220px;
-  max-width: 90vw;
+  max-width: 400px;
+  width: auto;
   padding: 1rem 2rem;
   border-radius: 8px;
   font-size: 1rem;
-  z-index: 9999;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  z-index: 10000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-20px);
   transition: opacity 0.4s, transform 0.4s;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 
@@ -27,14 +28,25 @@
 
   &__content {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     flex: 1;
+    min-width: 0;
+
+    .fa {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
   }
 
   &__message {
     font-size: 1rem;
     line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    text-align: justify;
   }
 
   &__close {
@@ -45,6 +57,8 @@
     color: inherit;
     opacity: 0.7;
     transition: opacity 0.2s;
+    flex-shrink: 0;
+    margin-top: 2px;
 
     &:hover {
       opacity: 1;
@@ -52,20 +66,47 @@
   }
 
   &.success {
-    background: rgba(34, 197, 94, 0.15);
-    color: #15803d;
-    border: 1px solid #22c55e;
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #16a34a;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
   }
 
   &.error {
-    background: rgba(239, 68, 68, 0.15);
-    color: #b91c1c;
-    border: 1px solid #ef4444;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #dc2626;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
   }
 
   &.info {
-    background: rgba(37, 99, 235, 0.15);
-    color: #1e40af;
+    background: #dbeafe;
+    color: #1e3a8a;
     border: 1px solid #2563eb;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+  }
+
+  // Estilos mejorados para mejor visibilidad sobre modal overlay
+  &.over-modal {
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+    backdrop-filter: blur(1px);
+    
+    &.success {
+      background: #f0fdf4;
+      border: 2px solid #16a34a;
+      box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4);
+    }
+
+    &.error {
+      background: #fef2f2;
+      border: 2px solid #dc2626;
+      box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
+    }
+
+    &.info {
+      background: #eff6ff;
+      border: 2px solid #2563eb;
+      box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
+    }
   }
 } 

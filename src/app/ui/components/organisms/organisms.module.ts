@@ -5,13 +5,15 @@ import { HeaderOrganismComponent } from './header-organism/header-organism.compo
 import { SideMenuOrganismComponent } from './side-menu-organism/side-menu-organism.component';
 import { TableOrganismComponent } from './table-organism/table-organism.component';
 import { FooterOrganismComponent } from './footer-organism/footer-organism.component';
+import { ModalOrganismComponent } from './modal-organism/modal-organism.component';
 
 @NgModule({
   declarations: [
     HeaderOrganismComponent,
     SideMenuOrganismComponent,
     TableOrganismComponent,
-    FooterOrganismComponent
+    FooterOrganismComponent,
+    ModalOrganismComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,7 @@ import { FooterOrganismComponent } from './footer-organism/footer-organism.compo
     SideMenuOrganismComponent,
     TableOrganismComponent,
     FooterOrganismComponent,
+    ModalOrganismComponent
   ]
 })
-export class OrganismsModule {} 
+export class OrganismsModule {}

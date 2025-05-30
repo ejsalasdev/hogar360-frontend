@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CategoryPageComponent } from './ui/components/pages/category-page/category-page.component';
-import { LocationPageComponent } from './ui/components/pages/location-page/location-page.component';
-import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
-import { UserPageComponent } from './ui/components/pages/user-page/user-page.component';
-import { HousePageComponent } from './ui/components/pages/house-page/house-page.component';
-import { LoginPageComponent } from './ui/components/pages/login-page/login-page.component';
-import { HomePageComponent } from './ui/components/pages/home-page/home-page.component';
-import { DashboardPageComponent } from './ui/components/pages/dashboard-page/dashboard-page.component';
-import { AccessDeniedPageComponent } from './ui/components/pages/access-denied-page/access-denied-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { AccessDeniedPageComponent } from './ui/components/pages/access-denied-page/access-denied-page.component';
+import { CategoryPageComponent } from './ui/components/pages/category-page/category-page.component';
+import { DashboardPageComponent } from './ui/components/pages/dashboard-page/dashboard-page.component';
+import { HomePageComponent } from './ui/components/pages/home-page/home-page.component';
+import { HousePageComponent } from './ui/components/pages/house-page/house-page.component';
+import { LocationPageComponent } from './ui/components/pages/location-page/location-page.component';
+import { LoginPageComponent } from './ui/components/pages/login-page/login-page.component';
+import { UserPageComponent } from './ui/components/pages/user-page/user-page.component';
+import { MainLayoutComponent } from './ui/layout/main-layout/main-layout.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -21,9 +21,9 @@ const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { 
-        path: 'dashboard', 
-        component: DashboardPageComponent 
+      {
+        path: 'dashboard',
+        component: DashboardPageComponent,
       },
       {
         path: 'admin/categories',
@@ -35,25 +35,25 @@ const routes: Routes = [
         path: 'admin/locations',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'SELLER'] },
-        component: LocationPageComponent
+        component: LocationPageComponent,
       },
       {
         path: 'admin/users',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] },
-        component: UserPageComponent
+        component: UserPageComponent,
       },
       {
         path: 'admin/houses',
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'SELLER'] },
-        component: HousePageComponent
+        component: HousePageComponent,
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   // Ruta de fallback
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

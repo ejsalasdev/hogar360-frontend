@@ -29,6 +29,7 @@ const DEFAULT_CONFIG: HeaderConfig = {
 export class HeaderOrganismComponent implements OnInit {
   @Input() set config(value: Partial<HeaderConfig>) {
     this._config = { ...DEFAULT_CONFIG, ...value };
+    console.log('Header config updated:', this._config);
     if (this.cdr) {
       this.cdr.markForCheck();
     }
@@ -54,11 +55,18 @@ export class HeaderOrganismComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = this.authService.getDecodedToken();
+    this.isAdminView = this.checkIfAdminView();
     
     this.router.events.subscribe(() => {
+      const wasAdminView = this.isAdminView;
       this.isAdminView = this.checkIfAdminView();
+      
+      if (wasAdminView !== this.isAdminView) {
+        this.cdr.markForCheck();
+      }
     });
+
+    this.cdr.markForCheck();
   }
 
   private checkIfAdminView(): boolean {
@@ -84,7 +92,6 @@ export class HeaderOrganismComponent implements OnInit {
   }
 
   get userRole(): string {
-    // Depuración
     console.log('userRole from config:', this._config.userRole);
     return this._config.userRole || '';
   }
