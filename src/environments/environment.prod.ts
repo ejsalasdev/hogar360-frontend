@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080' // TODO: Cambiar por la URL de producción cuando esté disponible
+  propertyApiUrl: 'https://property.hogar360.site',
+  userApiUrl: 'https://user.hogar360.site',
+  visitApiUrl: 'https://visit.hogar360.site'
 }; 

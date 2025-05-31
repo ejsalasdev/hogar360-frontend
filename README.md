@@ -74,6 +74,29 @@ npm run test:coverage # Tests con reporte de cobertura
 npm run lint       # Linting del código
 ```
 
+## 🌍 Configuración de Entornos
+
+La aplicación está configurada para usar diferentes URLs según el entorno:
+
+### Desarrollo (Localhost)
+```bash
+ng serve  # Usa automáticamente localhost:8081, 8082, 8083
+```
+
+### Producción (Hogar360.site)
+```bash
+npm run build -- --configuration production  # Usa automáticamente hogar360.site domains
+```
+
+### URLs por Entorno
+| Servicio | Desarrollo | Producción |
+|----------|------------|------------|
+| Property API | `http://localhost:8081` | `https://property.hogar360.site` |
+| User API | `http://localhost:8082` | `https://user.hogar360.site` |
+| Visit API | `http://localhost:8083` | `https://visit.hogar360.site` |
+
+**Nota**: El cambio de entorno es automático según el comando de build que uses.
+
 ## 🏗️ Arquitectura
 
 ### Estructura del Proyecto
