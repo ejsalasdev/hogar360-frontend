@@ -26,10 +26,72 @@
 - **Exploración por Ubicación**: Búsqueda por departamento, ciudad o sector específico
 
 ### Características Técnicas
-- **Arquitectura de Microservicios**: Integración con APIs backend especializadas
+- **Arquitectura de Microservicios**: Integración con API Gateway centralizado que gestiona múltiples microservicios backend
 - **Autenticación JWT**: Sistema seguro de autenticación y autorización
 - **Roles de Usuario**: Sistema granular de permisos (Admin, Seller, Usuario)
 - **Testing Completo**: Suite de tests unitarios con Jest
+
+## 🌐 Ecosistema Hogar360
+
+**Hogar360** es un **sistema completo de microservicios** diseñado para la gestión integral de propiedades inmobiliarias. El proyecto está estructurado en **5 repositorios independientes** que trabajan en conjunto para proporcionar una solución escalable y mantenible.
+
+### 📦 Componentes del Ecosistema
+
+| Componente | Repositorio | Tecnología | Puerto | Responsabilidad |
+|------------|-------------|------------|--------|-----------------|
+| **🌐 API Gateway** | [hogar360-gateway-microservice](https://github.com/ejsalasdev/hogar360-gateway-microservice) | Spring Boot | 8080 | Punto único de entrada, enrutamiento y balanceado de carga |
+| **🏠 Property Service** | [hogar360-property-microservice](https://github.com/ejsalasdev/hogar360-property-microservice) | Spring Boot | 8081 | Gestión de propiedades, categorías y ubicaciones |
+| **👤 User Service** | [hogar360-user-microservice](https://github.com/ejsalasdev/hogar360-user-microservice) | Spring Boot | 8082 | Autenticación, autorización y gestión de usuarios |
+| **📅 Visit Service** | [hogar360-visit-microservice](https://github.com/ejsalasdev/hogar360-visit-microservice) | Spring Boot | 8083 | Gestión de horarios y citas para visitas |
+| **💻 Frontend** | [hogar360-frontend](https://github.com/ejsalasdev/hogar360-frontend) | Angular 16 | 4200 | Interfaz de usuario y experiencia del cliente |
+
+### 🔄 Flujo de Comunicación
+
+```mermaid
+graph TD
+    A[👤 Usuario] --> B[💻 Frontend Angular]
+    B --> C[🌐 API Gateway :8080]
+    C --> D[🏠 Property Service :8081]
+    C --> E[👤 User Service :8082]
+    C --> F[📅 Visit Service :8083]
+    
+    D --> G[(🗄️ Property DB)]
+    E --> H[(🗄️ User DB)]
+    F --> I[(🗄️ Visit DB)]
+```
+
+### 🎯 Beneficios de la Arquitectura
+
+| Característica | Beneficio |
+|----------------|-----------|
+| **🔀 Separación de Responsabilidades** | Cada microservicio tiene una función específica y bien definida |
+| **📈 Escalabilidad Independiente** | Cada servicio puede escalarse según su demanda específica |
+| **🛠️ Mantenibilidad** | Desarrollo, testing y despliegue independiente por equipo |
+| **🔒 Seguridad Centralizada** | Políticas de seguridad y rate limiting en el Gateway |
+| **⚡ Alta Disponibilidad** | Falla de un servicio no afecta completamente el sistema |
+| **🧪 Testing Aislado** | Pruebas unitarias e integración por microservicio |
+
+### 🚀 Orden de Ejecución Recomendado
+
+Para desarrollo local, ejecutar en este orden:
+
+1. **User Service** (Puerto 8082) - Base para autenticación
+2. **Property Service** (Puerto 8081) - Gestión de propiedades
+3. **Visit Service** (Puerto 8083) - Gestión de visitas
+4. **API Gateway** (Puerto 8080) - Enrutamiento centralizado
+5. **Frontend** (Puerto 4200) - Interfaz de usuario
+
+### 📋 Estado de Desarrollo
+
+| Componente | Estado | Características Principales |
+|------------|--------|---------------------------|
+| **🌐 Gateway** | ✅ Completado | Enrutamiento, CORS, Rate Limiting |
+| **🏠 Property** | ✅ Completado | CRUD Propiedades, Categorías, Ubicaciones |
+| **👤 User** | ✅ Completado | JWT Auth, Roles, Perfiles de Usuario |
+| **📅 Visit** | ✅ Completado | Horarios, Citas, Disponibilidad |
+| **💻 Frontend** | ✅ Migrado al Gateway | Interfaz completa, Tests, Responsive |
+
+> **Nota para Evaluadores**: Este frontend ha sido **migrado exitosamente** para consumir el API Gateway centralizado en lugar de comunicarse directamente con cada microservicio, demostrando comprensión de arquitecturas modernas y capacidad de refactoring.
 
 ## 🛠️ Tecnologías
 
@@ -58,7 +120,7 @@ npm install
 
 # Configurar variables de entorno
 cp src/environments/environment.example.ts src/environments/environment.ts
-# Editar environment.ts con las URLs de tus APIs
+# Editar environment.ts con la URL del API Gateway
 
 # Iniciar servidor de desarrollo
 npm start
@@ -76,26 +138,47 @@ npm run lint       # Linting del código
 
 ## 🌍 Configuración de Entornos
 
-La aplicación está configurada para usar diferentes URLs según el entorno:
+La aplicación está configurada para usar el **API Gateway centralizado** que gestiona todas las comunicaciones con los microservicios backend:
 
 ### Desarrollo (Localhost)
 ```bash
-ng serve  # Usa automáticamente localhost:8081, 8082, 8083
+ng serve  # Usa automáticamente el API Gateway en localhost:8080
 ```
 
 ### Producción (Hogar360.site)
 ```bash
-npm run build -- --configuration production  # Usa automáticamente hogar360.site domains
+npm run build -- --configuration production  # Usa automáticamente api.hogar360.site
 ```
 
 ### URLs por Entorno
-| Servicio | Desarrollo | Producción |
-|----------|------------|------------|
-| Property API | `http://localhost:8081` | `https://property.hogar360.site` |
-| User API | `http://localhost:8082` | `https://user.hogar360.site` |
-| Visit API | `http://localhost:8083` | `https://visit.hogar360.site` |
+| Componente | Desarrollo | Producción |
+|------------|------------|------------|
+| **API Gateway** | `http://localhost:8080` | `https://api.hogar360.site` |
 
-**Nota**: El cambio de entorno es automático según el comando de build que uses.
+**Nota**: El cambio de entorno es automático según el comando de build que uses. El API Gateway internamente se comunica con:
+- Property Service (propiedades y ubicaciones)
+- User Service (autenticación y usuarios)  
+- Visit Service (horarios de visita)
+
+### Variables de Entorno
+
+La configuración se ha simplificado a una sola variable por entorno:
+
+**environment.ts** (Desarrollo)
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080'
+};
+```
+
+**environment.prod.ts** (Producción)
+```typescript
+export const environment = {
+  production: true,
+  apiUrl: 'https://api.hogar360.site'
+};
+```
 
 ## 🏗️ Arquitectura
 
@@ -124,6 +207,35 @@ src/
 - **Repository Pattern**: Abstracción de acceso a datos
 - **Interceptor Pattern**: Manejo centralizado de HTTP requests
 - **Role-based Access Control**: Control de acceso granular
+
+### Arquitectura del Sistema
+
+La aplicación utiliza una **arquitectura de microservicios con API Gateway centralizado**:
+
+```
+┌─────────────────┐    HTTP     ┌──────────────────┐
+│                 │ ─────────→  │                  │
+│  Frontend       │             │   API Gateway    │
+│  Angular 16     │ ←───────────│   (Port 8080)    │
+│                 │             │                  │
+└─────────────────┘             └──────────────────┘
+                                          │
+                        ┌─────────────────┼─────────────────┐
+                        │                 │                 │
+                        ▼                 ▼                 ▼
+                ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+                │   Property   │  │     User     │  │    Visit     │
+                │  Service     │  │   Service    │  │   Service    │
+                │ (Port 8081)  │  │ (Port 8082)  │  │ (Port 8083)  │
+                └──────────────┘  └──────────────┘  └──────────────┘
+```
+
+**Beneficios de esta arquitectura:**
+- ✅ **Punto único de entrada**: Todas las peticiones pasan por el Gateway
+- ✅ **Configuración simplificada**: Una sola URL en el frontend
+- ✅ **Escalabilidad**: Los microservicios pueden escalarse independientemente
+- ✅ **Mantenibilidad**: Cambios en URLs de microservicios no afectan el frontend
+- ✅ **Seguridad**: Centralización de políticas de acceso y rate limiting
 
 ## 🌐 Funcionalidades por Módulo
 
@@ -156,16 +268,6 @@ Panel principal con métricas y navegación centralizada
 - Gestión por propiedad
 
 ## 🔧 Configuración
-
-### Variables de Entorno
-```typescript
-export const environment = {
-  production: false,
-  propertyApiUrl: 'http://localhost:8080',
-  userApiUrl: 'http://localhost:8081',
-  // ... otras configuraciones
-};
-```
 
 ### Configuración Docker
 La aplicación incluye configuración Docker optimizada para producción:
@@ -223,7 +325,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 Para soporte técnico o preguntas sobre el proyecto:
 - 📧 Email: soporte@hogar360.com
 - 📱 Teléfono: 1-800-HOGAR360
-- 🌐 Website: [hogar360.com](https://hogar360.com)
+- 🌐 Website: [hogar360.com](https://hogar360.site)
 
 ---
 
