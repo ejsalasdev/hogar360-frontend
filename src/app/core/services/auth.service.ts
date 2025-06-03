@@ -26,7 +26,7 @@ export interface UserInfo {
   providedIn: 'root',
 })
 export class AuthService {
-  private userApiUrl = `${environment.userApiUrl}/api/v1/auth`;
+  private userApiUrl = `${environment.apiUrl}/api/v1/auth`;
   private userSubject = new BehaviorSubject<UserInfo | null>(null);
 
   user$ = this.userSubject.asObservable();

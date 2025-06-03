@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AppointmentSlotService {
-  private visitApiUrl = `${environment.visitApiUrl}/api/v1/appointmentslot`;
+  private visitApiUrl = `${environment.apiUrl}/api/v1/appointmentslot`;
 
   constructor(private http: HttpClient) {}
 

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class HouseService {
-  private propertyUrl = `${environment.propertyApiUrl}/api/v1/house`;
+  private propertyUrl = `${environment.apiUrl}/api/v1/house`;
 
   constructor(private http: HttpClient) {}
 

@@ -12,7 +12,7 @@ export interface Department {
   providedIn: 'root'
 })
 export class DepartmentService {
-  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/departments`;
+  private propertyApiUrl = `${environment.apiUrl}/api/v1/departments`;
 
   constructor(private http: HttpClient) {}
 

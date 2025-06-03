@@ -12,7 +12,7 @@ export interface City {
   providedIn: 'root'
 })
 export class CityService {
-  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/cities`;
+  private propertyApiUrl = `${environment.apiUrl}/api/v1/cities`;
 
   constructor(private http: HttpClient) {}
 

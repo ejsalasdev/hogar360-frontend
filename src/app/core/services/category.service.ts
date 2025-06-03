@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class CategoryService {
-  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/category`;
+  private propertyApiUrl = `${environment.apiUrl}/api/v1/category`;
 
   constructor(private http: HttpClient) {}
 

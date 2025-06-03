@@ -15,7 +15,7 @@ export interface SaveUbicationRequest {
   providedIn: 'root'
 })
 export class UbicationService {
-  private propertyApiUrl = `${environment.propertyApiUrl}/api/v1/ubication`;
+  private propertyApiUrl = `${environment.apiUrl}/api/v1/ubication`;
 
   constructor(private http: HttpClient) {}
 
