@@ -81,18 +81,6 @@ Para desarrollo local, ejecutar en este orden:
 4. **API Gateway** (Puerto 8080) - Enrutamiento centralizado
 5. **Frontend** (Puerto 4200) - Interfaz de usuario
 
-### 📋 Estado de Desarrollo
-
-| Componente | Estado | Características Principales |
-|------------|--------|---------------------------|
-| **🌐 Gateway** | ✅ Completado | Enrutamiento, CORS, Rate Limiting |
-| **🏠 Property** | ✅ Completado | CRUD Propiedades, Categorías, Ubicaciones |
-| **👤 User** | ✅ Completado | JWT Auth, Roles, Perfiles de Usuario |
-| **📅 Visit** | ✅ Completado | Horarios, Citas, Disponibilidad |
-| **💻 Frontend** | ✅ Migrado al Gateway | Interfaz completa, Tests, Responsive |
-
-> **Nota para Evaluadores**: Este frontend ha sido **migrado exitosamente** para consumir el API Gateway centralizado en lugar de comunicarse directamente con cada microservicio, demostrando comprensión de arquitecturas modernas y capacidad de refactoring.
-
 ## 🛠️ Tecnologías
 
 - **Frontend**: Angular 16, TypeScript, SCSS
