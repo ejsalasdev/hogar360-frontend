@@ -141,7 +141,7 @@ describe('CategoryPageComponent', () => {
     fixture.detectChanges();
 
     const req = httpMock.expectOne(
-      'http://localhost:8081/api/v1/category/create'
+      'http://localhost:8080/api/v1/category/create'
     );
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(testCategory);
@@ -200,7 +200,7 @@ describe('CategoryPageComponent', () => {
     fixture.detectChanges();
 
     const req = httpMock.expectOne(
-      'http://localhost:8081/api/v1/category/create'
+      'http://localhost:8080/api/v1/category/create'
     );
     req.flush(
       { message: 'Category already exists' },
@@ -240,7 +240,7 @@ describe('CategoryPageComponent', () => {
     fixture.detectChanges();
 
     const req = httpMock.expectOne(
-      'http://localhost:8081/api/v1/category/create'
+      'http://localhost:8080/api/v1/category/create'
     );
     req.flush(
       { message: 'Server error' },
@@ -491,7 +491,7 @@ describe('CategoryPageComponent', () => {
     fixture.detectChanges();
 
     const req = httpMock.expectOne(
-      `http://localhost:8081/api/v1/category/${testCategory.id}`
+      `http://localhost:8080/api/v1/category/${testCategory.id}`
     );
     expect(req.request.method).toBe('DELETE');
     req.flush({ message: 'Category deleted successfully' });
@@ -539,7 +539,7 @@ describe('CategoryPageComponent', () => {
     fixture.detectChanges();
 
     const req = httpMock.expectOne(
-      `http://localhost:8081/api/v1/category/${testCategory.id}`
+      `http://localhost:8080/api/v1/category/${testCategory.id}`
     );
     req.flush(
       { message: 'Error deleting category' },

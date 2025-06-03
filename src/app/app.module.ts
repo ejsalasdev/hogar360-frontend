@@ -24,7 +24,7 @@ import { RoleInterceptor } from './core/interceptors/role.interceptor';
     JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem('token'),
-        allowedDomains: [environment.userApiUrl.replace(/^https?:\/\//, '')]
+        allowedDomains: [environment.apiUrl.replace(/^https?:\/\//, '')]
       }
     }),
     AtomsModule,

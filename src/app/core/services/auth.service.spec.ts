@@ -206,7 +206,7 @@ describe('AuthService', () => {
         expect(response).toEqual(mockLoginResponse);
       });
 
-      const req = httpMock.expectOne(`${environment.userApiUrl}/api/v1/auth/login`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/auth/login`);
       expect(req.request.method).toBe('POST');
       req.flush(mockLoginResponse);
 
